@@ -12,6 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.content.Intent;
+import android.net.Uri;
+import java.io.InputStream;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class MainActivity extends Activity {
     private static final int ACTIVITY_SELECT_IMAGE=1;
@@ -62,19 +66,30 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
         switch(requestCode) {
-        case ACTIVITY_SELECT_IMAGE      :
+        case ACTIVITY_SELECT_IMAGE:
             if(resultCode == RESULT_OK){
+		Uri selectedImage = imageReturnedIntent.getData();
 		Context ctx = getApplicationContext();
 		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(ctx, "The intent worked!",
+		Toast toast = Toast.makeText(ctx, selectedImage.getPath(),
 					     duration);
 		toast.show();
-                //Uri selectedImage = imageReturnedIntent.getData();
-                //InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                //Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+		// NOTE: at this stage, image can be downscaled on the fly.
+		// might not be a good idea to do this as we would be
+		// bandwidth limited...
+		InputStream imageStream = null;
+		try {
+		    imageStream = getContentResolver().openInputStream(selectedImage);
+		}
+		catch (Exception e) {
+		    // What should I do here?!
+		    return;
+		}
+		// Also note that this is just proof of concept code
+		// and is not intended to be in the final app.
+                Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
             }
         }
     }
 
-    protected configureLoadCard(View)
 }
