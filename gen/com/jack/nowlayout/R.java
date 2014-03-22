@@ -29,6 +29,7 @@ public final class R {
         public static final int ic_launcher=0x7f020003;
     }
     public static final class id {
+        public static final int action_select=0x7f0a0007;
         public static final int action_settings=0x7f0a0000;
         public static final int button1=0x7f0a0004;
         public static final int card_action=0x7f0a0003;
@@ -50,11 +51,12 @@ public final class R {
         public static final int actionbar_main=0x7f090000;
     }
     public static final class string {
+        public static final int action_select=0x7f070001;
         public static final int action_settings=0x7f070000;
-        public static final int app_name=0x7f070001;
-        public static final int card_body_default=0x7f070004;
-        public static final int hello_world=0x7f070002;
-        public static final int title_activity_main=0x7f070003;
+        public static final int app_name=0x7f070002;
+        public static final int card_body_default=0x7f070005;
+        public static final int hello_world=0x7f070003;
+        public static final int title_activity_main=0x7f070004;
     }
     public static final class style {
         public static final int CardActionButton=0x7f080000;

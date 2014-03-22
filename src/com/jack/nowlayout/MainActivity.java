@@ -11,9 +11,10 @@ import android.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.content.Intent;
 
 public class MainActivity extends Activity {
-
+    private static final int ACTIVITY_SELECT_IMAGE=1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,14 +41,40 @@ public class MainActivity extends Activity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
         case R.id.action_settings:
-	    Context ctx = getApplicationContext();
-	    int duration = Toast.LENGTH_SHORT;
-	    Toast toast = Toast.makeText(ctx, "This is a test action!",
-					 duration);
-	    toast.show();
+            Context ctx = getApplicationContext();
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(ctx, "This is a test action!",
+                                         duration);
+            toast.show();
             return true;
+
+        case R.id.action_select:
+            Intent i = new Intent(Intent.ACTION_PICK,
+                                  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, ACTIVITY_SELECT_IMAGE);
         default:
             return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+        case ACTIVITY_SELECT_IMAGE      :
+            if(resultCode == RESULT_OK){
+		Context ctx = getApplicationContext();
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(ctx, "The intent worked!",
+					     duration);
+		toast.show();
+                //Uri selectedImage = imageReturnedIntent.getData();
+                //InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+                //Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+            }
+        }
+    }
+
+    protected configureLoadCard(View)
 }
