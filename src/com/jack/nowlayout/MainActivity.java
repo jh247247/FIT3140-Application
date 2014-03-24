@@ -16,7 +16,7 @@ import android.net.Uri;
 import java.io.InputStream;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import java.util.List;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     /*This is where all the constants for this activity live.*/
@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
     /*This is all the changing data lives, ones that should be saved upon
       shutdown. I don't know whether or not there should be a database
       for this or  something.*/
-    private List<Bitmap> m_imageBuffer;
+    private ArrayList<Bitmap> m_imageBuffer;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 	// We should restore state at this point, I think.
 	// Have to look into how android talks to apps and how they do
 	// states and stuff.
-	m_imageBuffer = new List<Bitmap>();
+	m_imageBuffer = new ArrayList<Bitmap>();
     }
 
     // TODO: read the android guidelines for saving state etc.
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
 		    // What should I do here?!
 		    return;
 		}
-                m_imageBuffer.append(BitmapFactory.decodeStream(imageStream));
+                m_imageBuffer.add(BitmapFactory.decodeStream(imageStream));
             }
         }
     }
