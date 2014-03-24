@@ -1,4 +1,4 @@
-package com.shardul.nowlayout;
+package com.jack.nowlayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
