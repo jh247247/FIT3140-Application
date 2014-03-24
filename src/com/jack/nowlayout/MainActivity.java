@@ -16,22 +16,38 @@ import android.net.Uri;
 import java.io.InputStream;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import java.util.List;
 
 public class MainActivity extends Activity {
+    /*This is where all the constants for this activity live.*/
     private static final int ACTIVITY_SELECT_IMAGE=1;
+    /*This is all the changing data lives, ones that should be saved upon
+      shutdown. I don't know whether or not there should be a database
+      for this or  something.*/
+    private List<Bitmap> m_imageBuffer;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+	// This is testing stuff for template layout inflating.
+	// I have yet to decide the best way to implement this dynamically
         Context context = getApplicationContext();
         LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
         LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(context);
         View test = inflater.inflate(R.layout.card_action, null);
         container.addView(test);
-        View test2 = inflater.inflate(R.layout.card_action, null);
+        View test2 = inflater.inflate(R.layout.card_info, null);
         container.addView(test2);
+
+	// We should restore state at this point, I think.
+	// Have to look into how android talks to apps and how they do
+	// states and stuff.
+	m_imageBuffer = new List<Bitmap>();
     }
+
+    // TODO: read the android guidelines for saving state etc.
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -85,9 +101,7 @@ public class MainActivity extends Activity {
 		    // What should I do here?!
 		    return;
 		}
-		// Also note that this is just proof of concept code
-		// and is not intended to be in the final app.
-                Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+                m_imageBuffer.append(BitmapFactory.decodeStream(imageStream));
             }
         }
     }
