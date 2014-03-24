@@ -39,12 +39,5 @@
         android:layout_height="wrap_content"
         android:text="@string/card_body_default"
         android:textColor="@color/cardTextDark"/>
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/cardTextLight"
-        />
-
-
   </LinearLayout>
 </LinearLayout>
