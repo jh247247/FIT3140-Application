@@ -24,7 +24,9 @@ import android.widget.ImageView;
 
 
 public class ImageUtils {
-    public static Bitmap convertUriToBitmap(Uri loc, Context ctx) {
+    // note that bitmapfactory does not care if options is null.
+    public static Bitmap convertUriToBitmap(Uri loc, Context ctx,
+					    BitmapFactory.Options opt) {
         InputStream imageStream = null;
         try {
             imageStream = ctx.getContentResolver().openInputStream(loc);
@@ -33,7 +35,7 @@ public class ImageUtils {
             // What should I do here?!
             return null;
         }
-        return BitmapFactory.decodeStream(imageStream);
+        return BitmapFactory.decodeStream(imageStream, null, opt);
     }
 
     public static View getCardImage(Bitmap img, Context ctx) {

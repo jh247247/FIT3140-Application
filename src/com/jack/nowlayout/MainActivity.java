@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     /*This is all the changing data lives, ones that should be saved upon
       shutdown. I don't know whether or not there should be a database
       for this or  something.*/
-    private ArrayList<Bitmap> m_imageBuffer;
+    private ArrayList<Uri> m_imageLocBuffer;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         // We should restore state at this point, I think.
         // Have to look into how android talks to apps and how they do
         // states and stuff.
-        m_imageBuffer = new ArrayList<Bitmap>();
+        m_imageLocBuffer = new ArrayList<Uri>();
     }
 
     // TODO: read the android guidelines for saving state etc.
@@ -80,39 +80,32 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
         switch(requestCode) {
         case ACTIVITY_SELECT_IMAGE:
             if(resultCode == RESULT_OK){
-                Uri selectedImage = imageReturnedIntent.getData();
+		// get data needed for loading
                 Context ctx = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(ctx, selectedImage.getPath(),
-                                             duration);
-                toast.show();
-                // NOTE: at this stage, image can be downscaled on the fly.
-                // might not be a good idea to do this as we would be
-                // bandwidth limited...
-                InputStream imageStream = null;
-                try {
-                    imageStream = getContentResolver().openInputStream(selectedImage);
-                }
-                catch (Exception e) {
-                    // What should I do here?!
-                    return;
-                }
-                m_imageBuffer.add(BitmapFactory.decodeStream(imageStream));
-                Context context = getApplicationContext();
+                Uri selectedImage = imageReturnedIntent.getData();
+
+		// store Uri so that image can be loaded again later.
+		// maybe a new class should be added that stores
+		// everything we need for loading the full resolution
+		// image (or halftoned image) later.
+		m_imageLocBuffer.add(selectedImage);
+
+		BitmapFactory.Options opt = new BitmapFactory.Options();
+		opt.inSampleSize = 100; // downscale , should change
+		                        // to be dynamic
+		// load and add image to gui wrapped in a card.
                 LinearLayout container = (LinearLayout)
                     findViewById(R.id.mainLayout);
-                LayoutInflater inflater = (LayoutInflater)
-                    LayoutInflater.from(context);
-                View imageTest = inflater.inflate(R.layout.card_image, null);
-                ImageView img = (ImageView)
-                    imageTest.findViewById(R.id.card_image);
-                img.setImageBitmap(m_imageBuffer.get(m_imageBuffer.size()-1));
+                Bitmap img = ImageUtils.convertUriToBitmap(selectedImage,
+							   ctx, opt);
+                View imageTest = ImageUtils.getCardImage(img, ctx);
                 container.addView(imageTest);
             }
         }

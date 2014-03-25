@@ -1,4 +1,5 @@
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes.dex : \
+/home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jac/nowlayout/ImageUtils.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$attr.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/BuildConfig.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$layout.class \
@@ -8,7 +9,7 @@
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$style.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$string.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/MainActivity.class \
-/home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/NowLayout.class \
+/home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/ImageUtils.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$id.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$color.class \
