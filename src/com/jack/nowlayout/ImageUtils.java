@@ -1,0 +1,51 @@
+// This data structure is supposed to do simple image stuff.
+// i.e: loading, saving and other things that really should not belong
+// in an activity
+
+package com.jack.nowlayout;
+
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.view.View;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.content.Context;
+import android.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import android.content.Intent;
+import android.net.Uri;
+import java.io.InputStream;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import java.util.ArrayList;
+import android.widget.ImageView;
+
+
+public class ImageUtils {
+    public static Bitmap convertUriToBitmap(Uri loc, Context ctx) {
+        InputStream imageStream = null;
+        try {
+            imageStream = ctx.getContentResolver().openInputStream(loc);
+        }
+        catch (Exception e) {
+            // What should I do here?!
+            return null;
+        }
+        return BitmapFactory.decodeStream(imageStream);
+    }
+
+    public static View getCardImage(Bitmap img, Context ctx) {
+        // Have to add the image to the layout somehow.
+        LayoutInflater inflater = (LayoutInflater)
+            LayoutInflater.from(ctx);
+
+        View imageCard = inflater.inflate(R.layout.card_image, null);
+        ImageView imageInCard = (ImageView)
+            imageCard.findViewById(R.id.card_image);
+        imageInCard.setImageBitmap(img);
+	return imageCard;
+    }
+
+}
