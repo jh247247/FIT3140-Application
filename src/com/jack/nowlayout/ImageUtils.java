@@ -6,6 +6,7 @@ package com.jack.nowlayout;
 
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -32,7 +33,7 @@ public class ImageUtils {
             imageStream = ctx.getContentResolver().openInputStream(loc);
         }
         catch (Exception e) {
-            // What should I do here?!
+            Log.w("ImageUtils", "openInputStream() threw exception: " + e);
             return null;
         }
         return BitmapFactory.decodeStream(imageStream, null, opt);
