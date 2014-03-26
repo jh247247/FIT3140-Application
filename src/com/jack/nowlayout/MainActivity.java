@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.util.ArrayList;
 import android.widget.ImageView;
+import android.util.DisplayMetrics;
 
 public class MainActivity extends Activity {
     /*This is where all the constants for this activity live.*/
@@ -97,9 +98,18 @@ public class MainActivity extends Activity {
 		// image (or halftoned image) later.
 		m_imageLocBuffer.add(selectedImage);
 
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+
+
+
+		BitmapFactory.Options dims =
+		    ImageUtils.getImageDimsFromUri(selectedImage, ctx);
+
 		BitmapFactory.Options opt = new BitmapFactory.Options();
-		opt.inSampleSize = 100; // downscale , should change
-		                        // to be dynamic
+		opt.inSampleSize = metrics.widthPixels/dims.outWidth;
+
 		// load and add image to gui wrapped in a card.
                 LinearLayout container = (LinearLayout)
                     findViewById(R.id.mainLayout);

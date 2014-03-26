@@ -50,4 +50,13 @@ public class ImageUtils {
 	return imageCard;
     }
 
+    // I would like to make this not need the context, but whatever.
+    public static BitmapFactory.Options getImageDimsFromUri(Uri img,
+							     Context ctx) {
+	BitmapFactory.Options ret = new BitmapFactory.Options();
+	ret.inJustDecodeBounds = true;
+	convertUriToBitmap(img, ctx, ret);
+
+	return ret;
+    }
 }
