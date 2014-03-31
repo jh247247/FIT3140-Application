@@ -1,5 +1,4 @@
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes.dex : \
-/home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jac/nowlayout/ImageUtils.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$attr.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/BuildConfig.class \
 /home/jack/Dropbox/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$layout.class \

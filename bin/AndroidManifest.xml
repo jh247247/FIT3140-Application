@@ -6,7 +6,11 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
- 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+ 	<uses-permission
+	    android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<!-- Camera is not required for app to run, remember to handle
+	     this in the UI -->
+	<uses-feature android:name="android.hardware.camera"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -22,6 +26,6 @@
             </intent-filter>
         </activity>
     </application>
-    
+
 
 </manifest>

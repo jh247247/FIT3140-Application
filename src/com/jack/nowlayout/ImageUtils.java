@@ -23,6 +23,9 @@ import android.graphics.BitmapFactory;
 import java.util.ArrayList;
 import android.widget.ImageView;
 
+// This class is meant to be a helper class to load images and whatnot.
+// In most cases though, I don't know what kind of monstrosity it
+// could become if misused.
 
 public class ImageUtils {
     // note that bitmapfactory does not care if options is null.
@@ -60,4 +63,5 @@ public class ImageUtils {
 
         return ret;
     }
+
 }

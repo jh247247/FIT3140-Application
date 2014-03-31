@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
+	case R.id.action_imageFromCamera:
         case R.id.action_settings:
             Context ctx = getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
@@ -73,10 +74,13 @@ public class MainActivity extends Activity {
             toast.show();
             return true;
 
-        case R.id.action_select:
+        case R.id.action_imageFromFile:
+
             Intent i = new Intent(Intent.ACTION_PICK,
                                   android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(i, ACTIVITY_SELECT_IMAGE);
+
+
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -100,6 +104,8 @@ public class MainActivity extends Activity {
                 // image (or halftoned image) later.
                 m_imageLocBuffer.add(selectedImage);
 
+                // maybe this code could be put into a method, but seriously.
+                // this is only test code for now, so we should worry later.
                 DisplayMetrics metrics = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
@@ -108,7 +114,7 @@ public class MainActivity extends Activity {
 
                 BitmapFactory.Options opt = new BitmapFactory.Options();
                 opt.inSampleSize = dims.outWidth*
-		    IMAGE_LOAD_DOWNSCALE_FACTOR/metrics.widthPixels;
+                    IMAGE_LOAD_DOWNSCALE_FACTOR/metrics.widthPixels;
 
 
                 // load and add image to gui wrapped in a card.
@@ -116,6 +122,8 @@ public class MainActivity extends Activity {
                     findViewById(R.id.mainLayout);
                 Bitmap img = ImageUtils.convertUriToBitmap(selectedImage,
                                                            ctx, opt);
+                // Should also put a ViewHolder or something here so
+                // we can modify the view later on.
                 View imageTest = ImageUtils.getCardImage(img, ctx);
                 container.addView(imageTest);
             }

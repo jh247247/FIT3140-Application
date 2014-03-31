@@ -1,8 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+  <item android:id="@+id/action_imageFromFile"
+        android:title="@string/action_imageFromFile"
+        android:icon="@drawable/ic_action_picture"
+        android:showAsAction="ifRoom"/>
+  <item android:id="@+id/action_imageFromCamera"
+        android:title="@string/action_imageFromCamera"
+        android:icon="@drawable/ic_action_camera"
+        android:showAsAction="ifRoom"/>
   <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
-          android:showAsAction="never" />
-    <item android:id="@+id/action_select"
-          android:title="@string/action_select"
-          android:showAsAction="never" />
+        android:title="@string/action_settings"
+        android:showAsAction="never" />
 </menu>

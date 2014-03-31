@@ -1,6 +1,7 @@
 <resources>
   <string name="action_settings">Settings</string>
-  <string name="action_select">Select Image</string>
+  <string name="action_imageFromFile">Load From File</string>
+  <string name="action_imageFromCamera">Load From Camera</string>
   <string name="app_name">NowLayout</string>
   <string name="hello_world">Hello World!</string>
   <string name="title_activity_main">Now Layout</string>
