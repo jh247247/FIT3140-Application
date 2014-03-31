@@ -24,6 +24,8 @@ import android.util.DisplayMetrics;
 public class MainActivity extends Activity {
     /*This is where all the constants for this activity live.*/
     private static final int ACTIVITY_SELECT_IMAGE=1;
+    private static final int IMAGE_LOAD_DOWNSCALE_FACTOR = 2;
+
     /*This is all the changing data lives, ones that should be saved upon
       shutdown. I don't know whether or not there should be a database
       for this or  something.*/
@@ -88,33 +90,32 @@ public class MainActivity extends Activity {
         switch(requestCode) {
         case ACTIVITY_SELECT_IMAGE:
             if(resultCode == RESULT_OK){
-		// get data needed for loading
+                // get data needed for loading
                 Context ctx = getApplicationContext();
                 Uri selectedImage = imageReturnedIntent.getData();
 
-		// store Uri so that image can be loaded again later.
-		// maybe a new class should be added that stores
-		// everything we need for loading the full resolution
-		// image (or halftoned image) later.
-		m_imageLocBuffer.add(selectedImage);
+                // store Uri so that image can be loaded again later.
+                // maybe a new class should be added that stores
+                // everything we need for loading the full resolution
+                // image (or halftoned image) later.
+                m_imageLocBuffer.add(selectedImage);
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                DisplayMetrics metrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+                BitmapFactory.Options dims =
+                    ImageUtils.getImageDimsFromUri(selectedImage, ctx);
+
+                BitmapFactory.Options opt = new BitmapFactory.Options();
+                opt.inSampleSize = dims.outWidth*
+		    IMAGE_LOAD_DOWNSCALE_FACTOR/metrics.widthPixels;
 
 
-
-
-		BitmapFactory.Options dims =
-		    ImageUtils.getImageDimsFromUri(selectedImage, ctx);
-
-		BitmapFactory.Options opt = new BitmapFactory.Options();
-		opt.inSampleSize = metrics.widthPixels/dims.outWidth;
-
-		// load and add image to gui wrapped in a card.
+                // load and add image to gui wrapped in a card.
                 LinearLayout container = (LinearLayout)
                     findViewById(R.id.mainLayout);
                 Bitmap img = ImageUtils.convertUriToBitmap(selectedImage,
-							   ctx, opt);
+                                                           ctx, opt);
                 View imageTest = ImageUtils.getCardImage(img, ctx);
                 container.addView(imageTest);
             }

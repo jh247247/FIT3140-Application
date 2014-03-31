@@ -27,7 +27,7 @@ import android.widget.ImageView;
 public class ImageUtils {
     // note that bitmapfactory does not care if options is null.
     public static Bitmap convertUriToBitmap(Uri loc, Context ctx,
-					    BitmapFactory.Options opt) {
+                                            BitmapFactory.Options opt) {
         InputStream imageStream = null;
         try {
             imageStream = ctx.getContentResolver().openInputStream(loc);
@@ -48,16 +48,16 @@ public class ImageUtils {
         ImageView imageInCard = (ImageView)
             imageCard.findViewById(R.id.card_image);
         imageInCard.setImageBitmap(img);
-	return imageCard;
+        return imageCard;
     }
 
     // I would like to make this not need the context, but whatever.
     public static BitmapFactory.Options getImageDimsFromUri(Uri img,
-							     Context ctx) {
-	BitmapFactory.Options ret = new BitmapFactory.Options();
-	ret.inJustDecodeBounds = true;
-	convertUriToBitmap(img, ctx, ret);
+                                                            Context ctx) {
+        BitmapFactory.Options ret = new BitmapFactory.Options();
+        ret.inJustDecodeBounds = true;
+        convertUriToBitmap(img, ctx, ret);
 
-	return ret;
+        return ret;
     }
 }
