@@ -23,7 +23,11 @@ import android.util.DisplayMetrics;
 
 public class MainActivity extends Activity {
     /*This is where all the constants for this activity live.*/
+    /* Intent IDs */
     private static final int ACTIVITY_SELECT_IMAGE=1;
+    private static final int ACTIVITY_CAPTURE_IMAGE=2;
+
+    /* Other constants */
     private static final int IMAGE_LOAD_DOWNSCALE_FACTOR = 2;
 
     /*This is all the changing data lives, ones that should be saved upon
@@ -65,7 +69,14 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-	case R.id.action_imageFromCamera:
+        case R.id.action_imageFromCamera:
+            Intent cameraIntent = new
+                Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(cameraIntent,
+                                       ACTIVITY_CAPTURE_IMAGE);
+            }
+            return true;
         case R.id.action_settings:
             Context ctx = getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
@@ -76,9 +87,9 @@ public class MainActivity extends Activity {
 
         case R.id.action_imageFromFile:
 
-            Intent i = new Intent(Intent.ACTION_PICK,
-                                  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(i, ACTIVITY_SELECT_IMAGE);
+            Intent imageIntent = new Intent(Intent.ACTION_PICK,
+                                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
 
 
         default:
