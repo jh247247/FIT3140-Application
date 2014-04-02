@@ -89,7 +89,9 @@ public class MainActivity extends Activity {
 
             Intent imageIntent = new Intent(Intent.ACTION_PICK,
                                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
+	    if (imageIntent.resolveActivity(getPackageManager()) != null) {
+		startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
+	    }
 
 
         default:
