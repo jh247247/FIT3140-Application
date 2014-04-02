@@ -1,0 +1,24 @@
+#+Title: Chunky Spikes
+
+* TODO Loading
+** DONE From file
+   Using an android intent so that saves time and will actually
+   integrate with the interface that the user is used to .
+** TODO From camera
+   Load the image, save the image and display the bitmap
+* TODO Processing
+** TODO Edit picture (basic)
+** TODO Halftoning (basic)
+   Halftoning with different dot sizes
+** TODO Halftoning (advanced)
+   Halftoning with color
+** TODO Halftoning (wow, much halftone)
+   Haltoning with different dot types/angles whatever.
+** TODO Adding text
+** TODO "Old newspaper effect"
+* TODO Integration
+** TODO Intent to share
+   Have an intent to share with any app that will accept an image
+   (hopefully facebook etc)
+** TODO Save image to file
+   Save the processed image to a file, so that the user can look at it later
