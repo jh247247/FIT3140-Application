@@ -140,6 +140,20 @@ public class MainActivity extends Activity {
                 View imageTest = ImageUtils.getCardImage(img, ctx);
                 container.addView(imageTest);
             }
+        case ACTIVITY_CAPTURE_IMAGE:
+            if(resultCode == RESULT_OK){
+                // get data needed for loading
+                Context ctx = getApplicationContext();
+                
+                // load and add image to gui wrapped in a card.
+                LinearLayout container = (LinearLayout)
+                    findViewById(R.id.mainLayout);
+                Bitmap img = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                // Should also put a ViewHolder or something here so
+                // we can modify the view later on.
+                View imageTest = ImageUtils.getCardImage(img, ctx);
+                container.addView(imageTest);
+            }
         }
     }
 }
