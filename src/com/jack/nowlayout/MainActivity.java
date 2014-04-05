@@ -76,30 +76,30 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
+	Context ctx = getApplicationContext();
         switch (item.getItemId()) {
         case R.id.action_imageFromCamera:
-        	
-        	//Timestamp filenames mean they won't be overwritten and they are
-        	//sorted chronologically... you know, 'cause that's so important.
-        	Date date = new Date();
-        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-        	String timestamp = sdf.format(date);
-        	
-        	File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-        			+ "/" + timestamp + ".jpg");
-        	Uri outputFileUri = Uri.fromFile(file);
-        	
+
+            //Timestamp filenames mean they won't be overwritten and they are
+            //sorted chronologically... you know, 'cause that's so important.
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+            String timestamp = sdf.format(date);
+
+            File file = new File(ctx.getExternalFilesDir(null)
+                                 + "/" + timestamp + ".jpg");
+            Uri outputFileUri = Uri.fromFile(file);
+
             Intent cameraIntent = new
                 Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            
+
             if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(cameraIntent,
                                        ACTIVITY_CAPTURE_IMAGE);
             }
             return true;
         case R.id.action_settings:
-            Context ctx = getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(ctx, "This is a test action!",
                                          duration);
@@ -110,9 +110,9 @@ public class MainActivity extends Activity {
 
             Intent imageIntent = new Intent(Intent.ACTION_PICK,
                                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-	    if (imageIntent.resolveActivity(getPackageManager()) != null) {
-		startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
-	    }
+            if (imageIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
+            }
 
 
         default:
@@ -165,7 +165,7 @@ public class MainActivity extends Activity {
             if(resultCode == RESULT_OK){
                 // get data needed for loading
                 Context ctx = getApplicationContext();
-                
+
                 // load and add image to gui wrapped in a card.
                 LinearLayout container = (LinearLayout)
                     findViewById(R.id.mainLayout);
