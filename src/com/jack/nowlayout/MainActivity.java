@@ -169,11 +169,16 @@ public class MainActivity extends Activity {
                 // load and add image to gui wrapped in a card.
                 LinearLayout container = (LinearLayout)
                     findViewById(R.id.mainLayout);
+
+		// TODO: need to fix this, it seems that sometimes the
+                // returned data is null!
+
+		if(imageReturnedIntent == null) return;
                 Bitmap img = (Bitmap) imageReturnedIntent.getExtras().get("data");
                 // Should also put a ViewHolder or something here so
                 // we can modify the view later on.
-                View imageTest = ImageUtils.getCardImage(img, ctx);
-                container.addView(imageTest);
+		View imageTest = ImageUtils.getCardImage(img, ctx);
+		container.addView(imageTest);
             }
         }
     }
