@@ -2,6 +2,8 @@ package com.jack.nowlayout;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.view.View;
@@ -14,10 +16,16 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import android.content.Intent;
 import android.net.Uri;
+
+import java.io.File;
 import java.io.InputStream;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import android.widget.ImageView;
 import android.util.DisplayMetrics;
 
@@ -70,8 +78,21 @@ public class MainActivity extends Activity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
         case R.id.action_imageFromCamera:
+        	
+        	//Timestamp filenames mean they won't be overwritten and they are
+        	//sorted chronologically... you know, 'cause that's so important.
+        	Date date = new Date();
+        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+        	String timestamp = sdf.format(date);
+        	
+        	File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+        			+ "/" + timestamp + ".jpg");
+        	Uri outputFileUri = Uri.fromFile(file);
+        	
             Intent cameraIntent = new
                 Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            
             if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(cameraIntent,
                                        ACTIVITY_CAPTURE_IMAGE);
