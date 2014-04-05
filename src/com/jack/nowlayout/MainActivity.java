@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.widget.ImageView;
-import android.util.DisplayMetrics;
 
 import android.util.Log;
 
@@ -38,7 +37,7 @@ public class MainActivity extends Activity {
     private static final int ACTIVITY_CAPTURE_IMAGE=2;
 
     /* Other constants */
-    private static final int IMAGE_LOAD_DOWNSCALE_FACTOR = 2;
+
 
     /*This is all the changing data lives, ones that should be saved upon
       shutdown. I don't know whether or not there should be a database
@@ -72,8 +71,8 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.v("MainActivity", "onCreateOptionsMenu called!");
-            // Inflate the menu items for use in the action bar
-            MenuInflater inflater = getMenuInflater();
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.actionbar_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -81,14 +80,14 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v("MainActivity", "onOptionsItemSelected called!");
-            // Handle presses on the action bar items
-            Context ctx = getApplicationContext();
+        // Handle presses on the action bar items
+        Context ctx = getApplicationContext();
         switch (item.getItemId()) {
         case R.id.action_imageFromCamera:
             Log.v("MainActivity", "Calling intent for capturing image from camera");
-                //Timestamp filenames mean they won't be overwritten and they are
-                //sorted chronologically... you know, 'cause that's so important.
-                Date date = new Date();
+            //Timestamp filenames mean they won't be overwritten and they are
+            //sorted chronologically... you know, 'cause that's so important.
+            Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
             String timestamp = sdf.format(date);
 
@@ -108,97 +107,90 @@ public class MainActivity extends Activity {
 
             if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                 Log.v("MainActivity", "Found an app to take picture.");
-                      startActivityForResult(cameraIntent,
-                                             ACTIVITY_CAPTURE_IMAGE);
-                      }
-                    return true;
-            case R.id.action_settings:
-                Log.v("MainActivity", "Calling up settings...");
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(ctx, "This is a test action!",
-                                             duration);
-                toast.show();
-                return true;
-
-            case R.id.action_imageFromFile:
-                Log.v("MainActivity", "Calling intent to load image from file.");
-                Intent imageIntent = new Intent(Intent.ACTION_PICK,
-                                                android.provider.MediaStore.
-						Images.Media.EXTERNAL_CONTENT_URI);
-                if (imageIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
-                }
-
-
-            default:
-		Log.wtf("MainActivity", "How did we end up in the default case...");
-                return super.onOptionsItemSelected(item);
+                startActivityForResult(cameraIntent,
+                                       ACTIVITY_CAPTURE_IMAGE);
             }
-        }
+            return true;
+        case R.id.action_settings:
+            Log.v("MainActivity", "Calling up settings...");
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(ctx, "This is a test action!",
+                                         duration);
+            toast.show();
+            return true;
 
-        @Override
-            protected void onActivityResult(int requestCode, int resultCode,
-                                            Intent imageReturnedIntent) {
-            super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-            switch(requestCode) {
-            case ACTIVITY_SELECT_IMAGE:
-		Log.v("MainActivity", "Intent to load image from file finished.");
-                if(resultCode == RESULT_OK){
-		    Log.v("MainActivity", "Result was good.");
-                    // get data needed for loading
-                    Context ctx = getApplicationContext();
-                    Uri selectedImage = imageReturnedIntent.getData();
-
-                    // store Uri so that image can be loaded again later.
-                    // maybe a new class should be added that stores
-                    // everything we need for loading the full resolution
-                    // image (or halftoned image) later.
-                    m_prevImageLoc = selectedImage;
-
-                    // maybe this code could be put into a method, but seriously.
-                    // this is only test code for now, so we should worry later.
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-                    BitmapFactory.Options dims =
-                        ImageUtils.getImageDimsFromUri(selectedImage, ctx);
-
-                    BitmapFactory.Options opt = new BitmapFactory.Options();
-                    opt.inSampleSize = dims.outWidth*
-                        IMAGE_LOAD_DOWNSCALE_FACTOR/metrics.widthPixels;
-
-
-                    // load and add image to gui wrapped in a card.
-                    LinearLayout container = (LinearLayout)
-                        findViewById(R.id.mainLayout);
-                    Bitmap img = ImageUtils.convertUriToBitmap(selectedImage,
-                                                               ctx, opt);
-                    // Should also put a ViewHolder or something here so
-                    // we can modify the view later on.
-                    View imageTest = ImageUtils.getCardImage(img, ctx);
-                    container.addView(imageTest);
-                }
-            case ACTIVITY_CAPTURE_IMAGE:
-		Log.v("MainActivity", "Finished intent for loading image from camera");
-                if(resultCode == RESULT_OK){
-		    Log.v("MainActivity", "Result was good.");
-                    // get data needed for loading
-                    Context ctx = getApplicationContext();
-
-                    // load and add image to gui wrapped in a card.
-                    LinearLayout container = (LinearLayout)
-                        findViewById(R.id.mainLayout);
-
-                    // TODO: need to fix this, it seems that sometimes the
-                    // returned data is null!
-
-                    Bitmap img = (Bitmap) ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
-                    // Should also put a ViewHolder or something here so
-                    // we can modify the view later on.
-                    View imageTest = ImageUtils.getCardImage(img, ctx);
-                    container.addView(imageTest);
-                }
+        case R.id.action_imageFromFile:
+            Log.v("MainActivity", "Calling intent to load image from file.");
+            Intent imageIntent = new Intent(Intent.ACTION_PICK,
+                                            android.provider.MediaStore.
+                                            Images.Media.EXTERNAL_CONTENT_URI);
+            if (imageIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
             }
+            return true;
+
+        default:
+            Log.wtf("MainActivity", "How did we end up in the default case...");
+            return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+        case ACTIVITY_SELECT_IMAGE:
+            Log.v("MainActivity", "Intent to load image from file finished.");
+            if(resultCode == RESULT_OK){
+                Log.v("MainActivity", "Result was good.");
+                // get data needed for loading
+                Context ctx = getApplicationContext();
+                Uri selectedImage = imageReturnedIntent.getData();
+
+                // store Uri so that image can be loaded again later.
+                // maybe a new class should be added that stores
+                // everything we need for loading the full resolution
+                // image (or halftoned image) later.
+                m_prevImageLoc = selectedImage;
+
+                // load and add image to gui wrapped in a card.
+                Bitmap img = ImageUtils.loadImageScaledToScreenWidth(selectedImage, ctx);
+
+                LinearLayout container = (LinearLayout)
+                    findViewById(R.id.mainLayout);
+
+
+                // Should also put a ViewHolder or something here so
+                // we can modify the view later on.
+                View imageTest = ImageUtils.getCardImage(img, ctx);
+                container.addView(imageTest);
+            }
+            break;
+        case ACTIVITY_CAPTURE_IMAGE:
+            Log.v("MainActivity", "Finished intent for loading image from camera");
+            if(resultCode == RESULT_OK){
+                Log.v("MainActivity", "Result was good.");
+                // get data needed for loading
+                Context ctx = getApplicationContext();
+
+		// this where the stored URI comes into play, since it
+		// means that we can now load the image from file.
+		// This is kind of a hack since the image is probably
+		// given up in the intent somehow, but this way is how
+		// it works in kit kat apparently.
+
+                Bitmap img = ImageUtils.loadImageScaledToScreenWidth(m_prevImageLoc, ctx);
+
+                LinearLayout container = (LinearLayout)
+                    findViewById(R.id.mainLayout);
+                // Should also put a ViewHolder or something here so
+                // we can modify the view later on.
+                View imageTest = ImageUtils.getCardImage(img, ctx);
+                container.addView(imageTest);
+            }
+	    break;
+        }
+    }
+}
