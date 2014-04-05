@@ -43,7 +43,10 @@ public class MainActivity extends Activity {
     /*This is all the changing data lives, ones that should be saved upon
       shutdown. I don't know whether or not there should be a database
       for this or  something.*/
-    private ArrayList<Uri> m_imageLocBuffer;
+
+    // This variable saves the previous location of the data loaded.
+    // Planned to be used for loading the full res image when needed.
+    private Uri m_prevImageLoc;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +65,6 @@ public class MainActivity extends Activity {
         // We should restore state at this point, I think.
         // Have to look into how android talks to apps and how they do
         // states and stuff.
-        m_imageLocBuffer = new ArrayList<Uri>();
     }
 
     // TODO: read the android guidelines for saving state etc.
@@ -98,7 +100,7 @@ public class MainActivity extends Activity {
             // Since we can't get the proper path from the result
             // call, we need to store it at to load later instead.
             // Hacky, but it should work.
-            m_imageLocBuffer.add(outputFileUri);
+            m_prevImageLoc = outputFileUri;
 
             Intent cameraIntent = new
                 Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -152,7 +154,7 @@ public class MainActivity extends Activity {
                     // maybe a new class should be added that stores
                     // everything we need for loading the full resolution
                     // image (or halftoned image) later.
-                    m_imageLocBuffer.add(selectedImage);
+                    m_prevImageLoc = selectedImage;
 
                     // maybe this code could be put into a method, but seriously.
                     // this is only test code for now, so we should worry later.
@@ -191,8 +193,7 @@ public class MainActivity extends Activity {
                     // TODO: need to fix this, it seems that sometimes the
                     // returned data is null!
 
-                    if(imageReturnedIntent == null) return;
-                    Bitmap img = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                    Bitmap img = (Bitmap) ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
                     // Should also put a ViewHolder or something here so
                     // we can modify the view later on.
                     View imageTest = ImageUtils.getCardImage(img, ctx);
