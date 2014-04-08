@@ -16,6 +16,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import android.content.Intent;
 import android.net.Uri;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 
 import java.io.File;
 import java.io.InputStream;
@@ -194,28 +198,21 @@ public class MainActivity extends Activity {
     	if(uri == null) return; // cbf.
         Context ctx = getApplicationContext();
         Bitmap img = ImageUtils.loadImageScaledToScreenWidth(uri, ctx);
-        
+
         final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
         Bitmap greyImg = Bitmap.createBitmap(WIDTH, HEIGHT, Config.ARGB_8888);
-        
-        int[] pixels = new int[WIDTH * HEIGHT];
-        int pixel, alpha, red, green, blue, grey;
-        img.getPixels(pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT);
-        
-        for (int i = 0; i < pixels.length; i++) {
-			pixel = pixels[i];
-			
-			alpha = Color.alpha(pixel);
-			red = Color.red(pixel);
-			green = Color.green(pixel);
-			blue = Color.blue(pixel);
-			
-			grey = greytone(red, green, blue);
-			pixels[i] = Color.argb(alpha, grey, grey, grey);
-        }
-        
-        greyImg.setPixels(pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT);
-        
+
+	Canvas c = new Canvas(greyImg);
+	Paint paint = new Paint();
+	ColorMatrix cm = new ColorMatrix();
+	cm.setSaturation(0);
+	ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+	paint.setColorFilter(f);
+	c.drawBitmap(img, 0, 0, paint);
+	// proof of concept drawing
+	Paint black = new Paint(Color.BLACK);
+	c.drawCircle(WIDTH/2, HEIGHT/2, 100, black);
+
         LinearLayout container = (LinearLayout)
             findViewById(R.id.mainLayout);
         // Should also put a ViewHolder or something here so
@@ -223,7 +220,7 @@ public class MainActivity extends Activity {
         View imageTest = ImageUtils.getCardImage(greyImg, ctx);
         container.addView(imageTest);
     }
-    
+
     public int greytone(int r, int g, int b) {
     	//A common algorithm used by image editors:
     	int value = (r * 3 / 10) + (g * 59 / 100) + (b * 11 / 100);
