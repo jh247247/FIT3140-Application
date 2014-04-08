@@ -61,9 +61,22 @@ public class MainActivity extends Activity {
         View test2 = inflater.inflate(R.layout.card_info, null);
         container.addView(test2);
 
-        // We should restore state at this point, I think.
-        // Have to look into how android talks to apps and how they do
-        // states and stuff.
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        // Handle intents from other apps
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+		addImageToUI((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM));
+            }
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+            // What do we do with multiple images?!
+            if (type.startsWith("image/")) {
+                //handleSendMultipleImages(intent); // Handle multiple images being sent
+            }
+        }
     }
 
     // TODO: read the android guidelines for saving state etc.
@@ -155,42 +168,37 @@ public class MainActivity extends Activity {
                 // image (or halftoned image) later.
                 m_prevImageLoc = selectedImage;
 
-                // load and add image to gui wrapped in a card.
-                Bitmap img = ImageUtils.loadImageScaledToScreenWidth(selectedImage, ctx);
-
-                LinearLayout container = (LinearLayout)
-                    findViewById(R.id.mainLayout);
-
-
-                // Should also put a ViewHolder or something here so
-                // we can modify the view later on.
-                View imageTest = ImageUtils.getCardImage(img, ctx);
-                container.addView(imageTest);
+		// does what it says on the tin.
+		addImageToUI(selectedImage);
             }
             break;
         case ACTIVITY_CAPTURE_IMAGE:
             Log.v("MainActivity", "Finished intent for loading image from camera");
             if(resultCode == RESULT_OK){
                 Log.v("MainActivity", "Result was good.");
-                // get data needed for loading
-                Context ctx = getApplicationContext();
+                // this where the stored URI comes into play, since it
+                // means that we can now load the image from file.
+                // This is kind of a hack since the image is probably
+                // given up in the intent somehow, but this way is how
+                // it works in kit kat apparently.
 
-		// this where the stored URI comes into play, since it
-		// means that we can now load the image from file.
-		// This is kind of a hack since the image is probably
-		// given up in the intent somehow, but this way is how
-		// it works in kit kat apparently.
-
-                Bitmap img = ImageUtils.loadImageScaledToScreenWidth(m_prevImageLoc, ctx);
-
-                LinearLayout container = (LinearLayout)
-                    findViewById(R.id.mainLayout);
-                // Should also put a ViewHolder or something here so
-                // we can modify the view later on.
-                View imageTest = ImageUtils.getCardImage(img, ctx);
-                container.addView(imageTest);
+		addImageToUI(m_prevImageLoc);
             }
-	    break;
+            break;
         }
+    }
+
+    private void addImageToUI(Uri uri) {
+	if(uri == null) return; // cbf.
+        Context ctx = getApplicationContext();
+
+        Bitmap img = ImageUtils.loadImageScaledToScreenWidth(uri, ctx);
+
+        LinearLayout container = (LinearLayout)
+            findViewById(R.id.mainLayout);
+        // Should also put a ViewHolder or something here so
+        // we can modify the view later on.
+        View imageTest = ImageUtils.getCardImage(img, ctx);
+        container.addView(imageTest);
     }
 }
