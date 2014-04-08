@@ -20,7 +20,9 @@ import android.net.Uri;
 import java.io.File;
 import java.io.InputStream;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -182,23 +184,49 @@ public class MainActivity extends Activity {
                 // given up in the intent somehow, but this way is how
                 // it works in kit kat apparently.
 
-		addImageToUI(m_prevImageLoc);
+                addImageToUI(m_prevImageLoc);
             }
             break;
         }
     }
 
     private void addImageToUI(Uri uri) {
-	if(uri == null) return; // cbf.
+    	if(uri == null) return; // cbf.
         Context ctx = getApplicationContext();
-
         Bitmap img = ImageUtils.loadImageScaledToScreenWidth(uri, ctx);
-
+        
+        final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
+        Bitmap greyImg = Bitmap.createBitmap(WIDTH, HEIGHT, Config.ARGB_8888);
+        
+        int[] pixels = new int[WIDTH * HEIGHT];
+        int pixel, alpha, red, green, blue, grey;
+        img.getPixels(pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT);
+        
+        for (int i = 0; i < pixels.length; i++) {
+			pixel = pixels[i];
+			
+			alpha = Color.alpha(pixel);
+			red = Color.red(pixel);
+			green = Color.green(pixel);
+			blue = Color.blue(pixel);
+			
+			grey = greytone(red, green, blue);
+			pixels[i] = Color.argb(alpha, grey, grey, grey);
+        }
+        
+        greyImg.setPixels(pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT);
+        
         LinearLayout container = (LinearLayout)
             findViewById(R.id.mainLayout);
         // Should also put a ViewHolder or something here so
         // we can modify the view later on.
-        View imageTest = ImageUtils.getCardImage(img, ctx);
+        View imageTest = ImageUtils.getCardImage(greyImg, ctx);
         container.addView(imageTest);
+    }
+    
+    public int greytone(int r, int g, int b) {
+    	//A common algorithm used by image editors:
+    	int value = (r * 3 / 10) + (g * 59 / 100) + (b * 11 / 100);
+		return value;
     }
 }
