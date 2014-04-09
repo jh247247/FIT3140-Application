@@ -2,39 +2,21 @@ package com.jack.nowlayout;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.view.View;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.content.Context;
-import android.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.content.Intent;
 import android.net.Uri;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
-
 import java.io.File;
-import java.io.InputStream;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
-import android.widget.ImageView;
-import android.view.View;
-import android.widget.Button;
 import android.view.ViewGroup;
 
 import android.util.Log;
@@ -167,8 +149,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.v("MainActivity", "Intent to load image from file finished.");
             if(resultCode == RESULT_OK){
                 Log.v("MainActivity", "Result was good.");
-                // get data needed for loading
-                Context ctx = getApplicationContext();
                 Uri selectedImage = imageReturnedIntent.getData();
 
                 // store Uri so that image can be loaded again later.
@@ -200,29 +180,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void addImageToUI(Uri uri) {
         if(uri == null) return; // cbf.
         Context ctx = getApplicationContext();
-        Bitmap img = ImageUtils.loadImageScaledToScreenWidth(uri, ctx);
+        Bitmap img = ImageUtils.convertUriToBitmap(uri, ctx, null);
+        
+        Bitmap halftoneImg = ImageUtils.makeHalftoneImage(img, 10);
 
-        final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
-        Bitmap greyImg = Bitmap.createBitmap(WIDTH, HEIGHT, Config.ARGB_8888);
+        Uri halfUri = ImageUtils.saveImage(halftoneImg, ctx);
 
-        Canvas c = new Canvas(greyImg);
-        Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
-        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        paint.setColorFilter(f);
-        c.drawBitmap(img, 0, 0, paint);
-        // proof of concept drawing
-        Paint black = new Paint(Color.BLACK);
-        c.drawCircle(WIDTH/2, HEIGHT/2, 100, black);
+        Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(halfUri, ctx);
 
         LinearLayout container = (LinearLayout)
             findViewById(R.id.mainLayout);
         // Should also put a ViewHolder or something here so
         // we can modify the view later on.
-        View imageTest = ImageUtils.getCardImage(greyImg, ctx, this,
+        View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
 						 (ViewGroup)findViewById(R.id.mainLayout));
-
     }
 
     public void onClickSave(View v){
@@ -231,11 +202,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
     public void onClickShare(View view) {
-	Log.v("anon Onclicklistener", "Managed to get into the onclick listener");
-	Intent share = new Intent(Intent.ACTION_SEND);
-	share.setType("image/jpeg");
-	share.putExtra(Intent.EXTRA_STREAM, m_prevImageLoc);;
-	startActivity(Intent.createChooser(share, "Share Image"));
+    	Log.v("anon Onclicklistener", "Managed to get into the onclick listener");
+    	Intent share = new Intent(Intent.ACTION_SEND);
+    	share.setType("image/jpeg");
+    	share.putExtra(Intent.EXTRA_STREAM, m_prevImageLoc);;
+    	startActivity(Intent.createChooser(share, "Share Image"));
     }
 
     @Override
