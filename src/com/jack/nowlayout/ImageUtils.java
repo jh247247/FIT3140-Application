@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import android.widget.ImageView;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.view.View;
+import android.view.ViewGroup;
 
 
 // This class is meant to be a helper class to load images and whatnot.
@@ -47,16 +50,23 @@ public class ImageUtils {
         return BitmapFactory.decodeStream(imageStream, null, opt);
     }
 
-    public static View getCardImage(Bitmap img, Context ctx) {
+    public static View getCardImage(Bitmap img, Context ctx,
+				    Activity act, ViewGroup parent) {
         // Have to add the image to the layout somehow.
         LayoutInflater inflater = (LayoutInflater)
             LayoutInflater.from(ctx);
 
-        View imageCard = inflater.inflate(R.layout.card_image, null);
+        View imageCard = inflater.from(act).inflate(R.layout.card_image,
+						    parent, true);
         ImageView imageInCard = (ImageView)
             imageCard.findViewById(R.id.card_image);
         imageInCard.setImageBitmap(img);
         return imageCard;
+    }
+
+
+    public void saveImage(View view) {
+
     }
 
     // I would like to make this not need the context, but whatever.

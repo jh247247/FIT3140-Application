@@ -33,10 +33,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.widget.ImageView;
+import android.view.View;
+import android.widget.Button;
+import android.view.ViewGroup;
 
 import android.util.Log;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
     /*This is where all the constants for this activity live.*/
     /* Intent IDs */
     private static final int ACTIVITY_SELECT_IMAGE=1;
@@ -75,7 +78,7 @@ public class MainActivity extends Activity {
         // Handle intents from other apps
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-		addImageToUI((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM));
+                addImageToUI((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM));
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
             // What do we do with multiple images?!
@@ -174,8 +177,8 @@ public class MainActivity extends Activity {
                 // image (or halftoned image) later.
                 m_prevImageLoc = selectedImage;
 
-		// does what it says on the tin.
-		addImageToUI(selectedImage);
+                // does what it says on the tin.
+                addImageToUI(selectedImage);
             }
             break;
         case ACTIVITY_CAPTURE_IMAGE:
@@ -195,35 +198,48 @@ public class MainActivity extends Activity {
     }
 
     private void addImageToUI(Uri uri) {
-    	if(uri == null) return; // cbf.
+        if(uri == null) return; // cbf.
         Context ctx = getApplicationContext();
         Bitmap img = ImageUtils.loadImageScaledToScreenWidth(uri, ctx);
 
         final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
         Bitmap greyImg = Bitmap.createBitmap(WIDTH, HEIGHT, Config.ARGB_8888);
 
-	Canvas c = new Canvas(greyImg);
-	Paint paint = new Paint();
-	ColorMatrix cm = new ColorMatrix();
-	cm.setSaturation(0);
-	ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-	paint.setColorFilter(f);
-	c.drawBitmap(img, 0, 0, paint);
-	// proof of concept drawing
-	Paint black = new Paint(Color.BLACK);
-	c.drawCircle(WIDTH/2, HEIGHT/2, 100, black);
+        Canvas c = new Canvas(greyImg);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(img, 0, 0, paint);
+        // proof of concept drawing
+        Paint black = new Paint(Color.BLACK);
+        c.drawCircle(WIDTH/2, HEIGHT/2, 100, black);
 
         LinearLayout container = (LinearLayout)
             findViewById(R.id.mainLayout);
         // Should also put a ViewHolder or something here so
         // we can modify the view later on.
-        View imageTest = ImageUtils.getCardImage(greyImg, ctx);
-        container.addView(imageTest);
+        View imageTest = ImageUtils.getCardImage(greyImg, ctx, this,
+						 (ViewGroup)findViewById(R.id.mainLayout));
+
     }
 
-    public int greytone(int r, int g, int b) {
-    	//A common algorithm used by image editors:
-    	int value = (r * 3 / 10) + (g * 59 / 100) + (b * 11 / 100);
-		return value;
+    public void onClickSave(View v){
+
+    }
+
+
+    public void onClickShare(View view) {
+	Log.v("anon Onclicklistener", "Managed to get into the onclick listener");
+	Intent share = new Intent(Intent.ACTION_SEND);
+	share.setType("image/jpeg");
+	share.putExtra(Intent.EXTRA_STREAM, m_prevImageLoc);;
+	startActivity(Intent.createChooser(share, "Share Image"));
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

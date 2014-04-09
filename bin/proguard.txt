@@ -1,3 +1,9 @@
 # view AndroidManifest.xml #generated:21
 -keep class com.jack.nowlayout.MainActivity { <init>(...); }
 
+# onClick res/layout/card_image.xml #generated:57
+-keepclassmembers class * { *** onClickSave(...); }
+
+# onClick res/layout/card_image.xml #generated:47
+-keepclassmembers class * { *** onClickShare(...); }
+
