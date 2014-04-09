@@ -106,7 +106,7 @@ public class ImageUtils {
     	black.setColor(Color.BLACK);
     	white.setColor(Color.WHITE);
     	int[] pixels = new int[grid * grid];
-    	float[] hsv = new float[3];
+    	int red, green, blue;
     	
     	float totalValue, maxValue, averageValue;
     	float dotRadius;
@@ -121,17 +121,25 @@ public class ImageUtils {
     			img.getPixels(pixels, 0, grid, x, y,
     					Math.min(grid, WIDTH - x), Math.min(grid, HEIGHT - y));
     			for (int i = 0; i < pixels.length; i++) {
-    				Color.colorToHSV(pixels[i], hsv);
-    				totalValue += hsv[2];
+    				red = Color.red(pixels[i]);
+    				green = Color.green(pixels[i]);
+    				blue = Color.blue(pixels[i]);
+    				totalValue += (0.3f * red + 0.59f * green + 0.11f * blue) / 255.0f;
     				maxValue += 1.0f;
     			}
     			
-    			averageValue = 1.0f - (totalValue / maxValue);
+    			//With this line, averageValue now represents "the
+    			//percentage of blackness in the grid square"
+    			averageValue = 100.0f * (1.0f - (totalValue / maxValue));
     			
-    			//This is some formula I came up with in Assignment 1
-    			dotRadius = (float) (Math.sqrt(averageValue + 0.08) - 0.02) * grid * 0.8f;
-    			if (averageValue > 0.9f) {
-    				dotRadius += (float) Math.pow(averageValue - 0.9f, 2) / 100;
+    			Log.v("deletethis", "averageValue is " + averageValue);
+    			
+    			//This function roughly maps out to making the area
+    			//of the dots equal to averageValue% of the area of
+    			//the grid square.
+    			dotRadius = (float) (Math.sqrt(averageValue + 8) - 2) * grid * 2 / 25;
+    			if (averageValue > 90.0f) {
+    				dotRadius += (float) Math.pow(averageValue - 90.0f, 2) / 100;
     			}
     			
     	    	c.drawCircle(x + grid / 2, y + grid / 2, dotRadius, black);
