@@ -27,20 +27,24 @@ public final class R {
         public static final int bg_cardbutton=0x7f020001;
         public static final int ic_action_camera=0x7f020002;
         public static final int ic_action_picture=0x7f020003;
-        public static final int ic_action_search=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
+        public static final int ic_action_save=0x7f020004;
+        public static final int ic_action_search=0x7f020005;
+        public static final int ic_action_share=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
     }
     public static final class id {
-        public static final int action_imageFromCamera=0x7f0a0009;
-        public static final int action_imageFromFile=0x7f0a0008;
+        public static final int action_imageFromCamera=0x7f0a000b;
+        public static final int action_imageFromFile=0x7f0a000a;
         public static final int action_settings=0x7f0a0000;
         public static final int button1=0x7f0a0004;
         public static final int card_action=0x7f0a0003;
         public static final int card_body=0x7f0a0002;
         public static final int card_heading=0x7f0a0001;
         public static final int card_image=0x7f0a0005;
-        public static final int imageView=0x7f0a0006;
-        public static final int mainLayout=0x7f0a0007;
+        public static final int imageView=0x7f0a0008;
+        public static final int mainLayout=0x7f0a0009;
+        public static final int saveButton=0x7f0a0007;
+        public static final int shareButton=0x7f0a0006;
     }
     public static final class integer {
         public static final int config_slide_time=0x7f060000;
@@ -63,6 +67,8 @@ public final class R {
         public static final int app_name=0x7f070003;
         public static final int card_body_default=0x7f070006;
         public static final int hello_world=0x7f070004;
+        public static final int save=0x7f070008;
+        public static final int share=0x7f070007;
         public static final int title_activity_main=0x7f070005;
     }
     public static final class style {

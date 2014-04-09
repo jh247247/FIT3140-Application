@@ -7,5 +7,7 @@
   <string name="title_activity_main">Now Layout</string>
   <string name="card_body_default">This is the default body text,
   you should never see this.</string>
+  <string name="share">Share</string>
+  <string name="save">Save</string>
 
 </resources>

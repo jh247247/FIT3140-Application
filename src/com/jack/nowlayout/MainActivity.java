@@ -59,13 +59,13 @@ public class MainActivity extends Activity {
 
         // This is testing stuff for template layout inflating.
         // I have yet to decide the best way to implement this dynamically
-        Context context = getApplicationContext();
-        LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
-        LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(context);
-        View test = inflater.inflate(R.layout.card_action, null);
-        container.addView(test);
-        View test2 = inflater.inflate(R.layout.card_info, null);
-        container.addView(test2);
+        //Context context = getApplicationContext();
+        //LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
+        //LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(context);
+        //View test = inflater.inflate(R.layout.card_action, null);
+        //container.addView(test);
+        //View test2 = inflater.inflate(R.layout.card_info, null);
+        //container.addView(test2);
 
         // Get intent, action and MIME type
         Intent intent = getIntent();

@@ -35,8 +35,34 @@
         android:paddingBottom="4dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-	android:adjustViewBounds="true"
+        android:adjustViewBounds="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:id="@+id/card_action"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+	android:gravity="right|center_vertical"
+        android:layout_height="wrap_content">
+      <Button
+          android:id="@+id/shareButton"
+          style="@style/CardActionButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+	  android:gravity="left|center_vertical"
+	  android:drawableLeft="@drawable/ic_action_share"
+	  android:layout_alignParentRight="true"
+          android:text="@string/share" />
+      <Button
+          android:id="@+id/saveButton"
+          style="@style/CardActionButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+	  android:gravity="left|center_vertical"
+	  android:drawableLeft="@drawable/ic_action_save"
+	  android:layout_toRightOf="@id/shareButton"
+	  android:layout_alignParentLeft="true"
+          android:text="@string/save" />
+      </LinearLayout>
   </LinearLayout>
 </LinearLayout>
