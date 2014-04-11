@@ -21,6 +21,13 @@ import android.view.ViewGroup;
 
 import android.util.Log;
 
+/**
+ * MainActivity is the activity that android first launches when being
+ * started by the user.
+ *
+ * @author <a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
+ * @version 1.0
+ */
 public class MainActivity extends Activity implements View.OnClickListener {
     /*This is where all the constants for this activity live.*/
     /* Intent IDs */
@@ -37,6 +44,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
     // This variable saves the previous location of the data loaded.
     // Planned to be used for loading the full res image when needed.
     private Uri m_prevImageLoc;
+
+    /**
+     * onCreate is the method called to recreate the activity when it
+     * is killed by either the user or the android task manager.
+     *
+     * It takes in the state that the app was in last time, and should
+     * restore the state depending on what data is in there. Currently
+     * it does not do that.
+     *
+     * @param param savedInstanceState is the state that the app was
+     * in when it was closed. Data should be restored from there.
+     * @return None
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +90,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    // TODO: read the android guidelines for saving state etc.
+    /**
+     * onCreateOptionsMenu is called when the menu button is pressed
+     * (on devices that have it) or when the overflow button in the
+     * actionbar is pressed.
+     *
+     * @param menu is the menu view that (should be) inflated when
+     * this method is called
+     * @return true when the menu is displayed and false when it is not
+     */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +109,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Called whenever an option item is selected.
+     *
+     * @param item the item that was selected
+     * @return false if the menu is to persist, true if it is to be destroyed
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v("MainActivity", "onOptionsItemSelected called!");
@@ -139,17 +173,25 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Called whenever a launched activity returns with or without data.
+     *
+     * @param requestCode code that the activity was called with
+     * @param resultCode code that the activity returned with
+     * @param data Data that was returned from the activity
+     * @return None
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
         switch(requestCode) {
         case ACTIVITY_SELECT_IMAGE:
             Log.v("MainActivity", "Intent to load image from file finished.");
             if(resultCode == RESULT_OK){
                 Log.v("MainActivity", "Result was good.");
-                Uri selectedImage = imageReturnedIntent.getData();
+                Uri selectedImage = data.getData();
 
                 // store Uri so that image can be loaded again later.
                 // maybe a new class should be added that stores
@@ -177,14 +219,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    // This is a class level reference to the latest half-tone image.
+    Bitmap m_halfToneImage = null;
+
+    /**
+     * Loads an image from a Uri, scales it to the screen and adds it
+     * to the main LinearLayout.
+     *
+     * @param uri Uri of the image to add
+     * @return Noneh
+     */
     private void addImageToUI(Uri uri) {
         if(uri == null) return; // cbf.
         Context ctx = getApplicationContext();
         Bitmap img = ImageUtils.convertUriToBitmap(uri, ctx, null);
-        
-        Bitmap halftoneImg = ImageUtils.makeHalftoneImage(img, 10);
 
-        Uri halfUri = ImageUtils.saveImage(halftoneImg, ctx);
+	m_halfToneImage = ImageUtils.makeHalftoneImage(img, 10);
+
+        Uri halfUri = ImageUtils.saveImage(m_halfToneImage, ctx);
 
         Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(halfUri, ctx);
 
@@ -195,11 +247,26 @@ public class MainActivity extends Activity implements View.OnClickListener {
         View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
 						 (ViewGroup)findViewById(R.id.mainLayout));
     }
-
+    /**
+     * Save the processed image from the UI.
+     * TODO
+     *
+     * @param v The view that caused the click event
+     * @return None
+     */
     public void onClickSave(View v){
-
+	Context ctx = getApplicationContext();
+	// make the button actually do something.
+	ImageUtils.saveImage(m_halfToneImage,ctx);
     }
 
+    /**
+     * onClickShare is called whenever the share button is pressed in
+     * the imageCard.
+     *
+     * @param view The view that caused the click event
+     * @return None
+     */
 
     public void onClickShare(View view) {
     	Log.v("anon Onclicklistener", "Managed to get into the onclick listener");

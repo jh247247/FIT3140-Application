@@ -67,10 +67,6 @@ public class ImageUtils {
     }
 
 
-    public void saveImage(View view) {
-
-    }
-
     // I would like to make this not need the context, but whatever.
     public static BitmapFactory.Options getImageDimsFromUri(Uri img,
                                                             Context ctx) {
@@ -95,10 +91,10 @@ public class ImageUtils {
         return ImageUtils.convertUriToBitmap(img,
                                              ctx, opt);
     }
-    
+
     public static Bitmap makeHalftoneImage(Bitmap img, int grid) {
     	final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
-    	
+
     	Bitmap halftoneImg = Bitmap.createBitmap(WIDTH, HEIGHT, Config.ARGB_8888);
     	Canvas c = new Canvas(halftoneImg);
     	Paint black = new Paint(),
@@ -107,17 +103,17 @@ public class ImageUtils {
     	white.setColor(Color.WHITE);
     	int[] pixels = new int[grid * grid];
     	int red, green, blue;
-    	
+
     	float totalValue, maxValue, averageValue;
     	float dotRadius;
 
     	c.drawRect(0, 0, WIDTH, HEIGHT, white);
-    	
+
     	for (int x = 0; x < WIDTH; x += grid) {
     		for (int y = 0; y < HEIGHT; y += grid) {
     			totalValue = 0;
     			maxValue = 0;
-    			
+
     			img.getPixels(pixels, 0, grid, x, y,
     					Math.min(grid, WIDTH - x), Math.min(grid, HEIGHT - y));
     			for (int i = 0; i < pixels.length; i++) {
@@ -127,13 +123,13 @@ public class ImageUtils {
     				totalValue += (0.3f * red + 0.59f * green + 0.11f * blue) / 255.0f;
     				maxValue += 1.0f;
     			}
-    			
+
     			//With this line, averageValue now represents "the
     			//percentage of blackness in the grid square"
     			averageValue = 100.0f * (1.0f - (totalValue / maxValue));
-    			
+
     			Log.v("deletethis", "averageValue is " + averageValue);
-    			
+
     			//This function roughly maps out to making the area
     			//of the dots equal to averageValue% of the area of
     			//the grid square.
@@ -141,14 +137,14 @@ public class ImageUtils {
     			if (averageValue > 90.0f) {
     				dotRadius += (float) Math.pow(averageValue - 90.0f, 2) / 100;
     			}
-    			
+
     	    	c.drawCircle(x + grid / 2, y + grid / 2, dotRadius, black);
     		}
     	}
-    
+
 		return halftoneImg;
     }
-    
+
     public static Uri saveImage(Bitmap img, Context ctx) {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
@@ -158,16 +154,16 @@ public class ImageUtils {
                              + "/" + timestamp + ".jpg");
         try {
         	FileOutputStream outStream = new FileOutputStream(file);
-        	img.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        	img.compress(Bitmap.CompressFormat.JPEG, 50, outStream);
         	outStream.close();
         } catch (Exception e) {
         	Log.w("ImageUtils.saveImage", "OutputStream threw exception: " + e);
         }
-        
+
         Uri imgUri = Uri.fromFile(file);
-        
+
         return imgUri;
-        
+
     }
 
 }
