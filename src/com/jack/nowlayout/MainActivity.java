@@ -236,7 +236,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	m_halfToneImage = ImageUtils.makeHalftoneImage(img, 10);
 
-        Uri halfUri = ImageUtils.saveImage(m_halfToneImage, ctx);
+        Uri halfUri = ImageUtils.saveImagePrivate(m_halfToneImage, ctx);
 
         Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(halfUri, ctx);
 
@@ -257,7 +257,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClickSave(View v){
 	Context ctx = getApplicationContext();
 	// make the button actually do something.
-	ImageUtils.saveImage(m_halfToneImage,ctx);
+	ImageUtils.saveImagePublic(m_halfToneImage,ctx);
     }
 
     /**

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.LayoutInflater;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +30,7 @@ import java.util.Date;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 // This class is meant to be a helper class to load images and whatnot.
@@ -145,7 +147,7 @@ public class ImageUtils {
 		return halftoneImg;
     }
 
-    public static Uri saveImage(Bitmap img, Context ctx) {
+    public static Uri saveImagePrivate(Bitmap img, Context ctx) {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
         String timestamp = sdf.format(date);
@@ -165,5 +167,34 @@ public class ImageUtils {
         return imgUri;
 
     }
+
+    public static Uri saveImagePublic(Bitmap img, Context ctx) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+        String timestamp = sdf.format(date);
+
+        File file = new
+	    File(Environment.getExternalStoragePublicDirectory(
+
+							       Environment.DIRECTORY_PICTURES)
+                             + "/" + timestamp + ".jpg");
+        try {
+        	FileOutputStream outStream = new FileOutputStream(file);
+        	img.compress(Bitmap.CompressFormat.JPEG, 50, outStream);
+        	outStream.close();
+        } catch (Exception e) {
+        	Log.w("ImageUtils.saveImage", "OutputStream threw exception: " + e);
+        }
+
+	Toast.makeText(ctx, file.getAbsolutePath(),
+		       Toast.LENGTH_SHORT).show();
+
+        Uri imgUri = Uri.fromFile(file);
+
+        return imgUri;
+
+    }
+
+
 
 }
