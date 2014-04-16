@@ -178,7 +178,7 @@ public class ImageUtils {
                 //percentage of blackness in the grid square"
                 averageValue = 100.0f * (1.0f - (totalValue / maxValue));
 
-                Log.v("deletethis", "averageValue is " + averageValue);
+                //Log.v("deletethis", "averageValue is " + averageValue);
 
                 //This function roughly maps out to making the area
                 //of the dots equal to averageValue% of the area of

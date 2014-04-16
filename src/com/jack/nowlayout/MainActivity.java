@@ -232,11 +232,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void addImageToUI(Uri uri) {
         if(uri == null) return; // cbf.
         Context ctx = getApplicationContext();
+	Toast.makeText(ctx, "Loading image...",
+		       Toast.LENGTH_SHORT).show();
         Bitmap img = ImageUtils.convertUriToBitmap(uri, ctx, null);
 
-	m_halfToneImage = ImageUtils.makeHalftoneImage(img, 10);
+	Toast.makeText(ctx, "Halftoning image...",
+		       Toast.LENGTH_SHORT).show();
+	m_halfToneImage = ImageUtils.makeHalftoneImage(img, 20);
 
         Uri halfUri = ImageUtils.saveImagePrivate(m_halfToneImage, ctx);
+	m_prevImageLoc = halfUri; // have to do something with this uri...
 
         Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(halfUri, ctx);
 
@@ -246,6 +251,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         // we can modify the view later on.
         View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
 						 (ViewGroup)findViewById(R.id.mainLayout));
+	Toast.makeText(ctx, "Done!",
+		       Toast.LENGTH_SHORT).show();
     }
     /**
      * Save the processed image from the UI.
