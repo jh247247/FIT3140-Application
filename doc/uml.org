@@ -1,30 +1,36 @@
 #+AUTHOR: Jack Hosemans
 
+
 * UML diagram
 #+begin_src plantuml :file main.png
 'skinparam monochrome true 
 package com.fit3140.halftoneApp {
-MainActivity *- SettingsView
-MainActivity *- ImageDisplayFragment
+MainActivity +-- HalftoneInterfaceAdapter
+MainActivity *-- ImageDisplayFragment
 
 class MainActivity {
-#m_settings : SettingsView
+#m_settings : HalftoneInterfaceAdapter
 #m_display : ImageDisplayFragment
+setOriginalImage()
+setHalftonedImage()
 }
 
-class SettingsView {
-m_parent : Activity
+class HalftoneInterfaceAdapter {
+#m_origImage : Bitmap
++setSourceImage()
 }
 
 class ImageDisplayFragment {
-m_parent : Activity
+#m_origImage : Bitmap
+#m_halftonedImage : Bitmap
++setHalftonedImage()
 }
 
 }
 BasicHalftone <|- Halftone
 AdvancedHalftone <|.. Halftone
-SettingsView *- BasicHalftone
-SettingsView *.. AdvancedHalftone
+HalftoneInterfaceAdapter *- BasicHalftone
+HalftoneInterfaceAdapter *.. AdvancedHalftone
 
 
 class BasicHalftone {
@@ -32,21 +38,37 @@ class BasicHalftone {
 +setGridSize(gridSize)
 }
 
-note bottom of BasicHalftone: callback should start a thread\n to process image
-note left of AdvancedHalftone: Example of possible \nimprovement
+note bottom of BasicHalftone: callback should start at least one\n thread to process image
+note right of AdvancedHalftone: Example of possible \nimprovement
 interface Halftone {
 
 #m_image : Bitmap
 +apply()
-+getImage() : Bitmap
 +setImage() : Bitmap
 }
 
 #+end_src
 
+* Dictionary
+  - Fragment: An graphical element independent from any other element.
+
 * Descriptions of classes
 ** MainActivity
+   This class should just be a joiner class for all the fragments.
 
+   
+*** setOriginalImage
+    This should only be called by the ImageDisplayFragment when the
+    source image changes.
+
+    It changes the reference to the =m_origImage= value to be a
+    reference to the image in the ImageDisplayFragment so that it can
+    be easily be passed on to be halftoned.
+
+*** setHalftonedImage
+    This should call the =setHalftonedImage()= method in the
+    =ImageDisplayFragment= class so that a resultant halftoned image
+    can be displayed to the user.
 
 ** ImageDisplayFragment
    This fragment should show the user images before and after halftoning.
@@ -55,19 +77,36 @@ interface Halftone {
    should be made so that swapping back to the original image should
    be painless and automatic when settings are changed.
 
+*** setHalftonedImage
+    Set the displayed image to the halftoned image.
+    Should also bring the image to the forefront so that the user can
+    see the results.
    
-** SettingsView
-   This is what displays the settings for the current halftoning mode.
+** HalftoneInterfaceAdapter
+   Note that this is an inner class of =MainActivity=.
+
+   This is what displays the settings for the current halftoning
+   mode, mostly for encapsulation within the =MainActivity= so that
+   no "special case" code has to be implemented in it.
    
-   Should have sliders or number input so that the user can change
-   the settings for halftoning.
+   Should implement a =ViewPager= so that the user can swipe between
+   the halftoning modes that are implemented. Hopefully there will be
+   more than one otherwise this will be wasted.
+   
+   Each element in the =ViewPager= should be a fragment that
+   implements its own interface to the user.
 
-   Probably the best way to do this will be a ViewPager so that
-   swapping between the different setting screens will be easy.
-
+*** setImage
+    Sets the reference image to be passed on to the halftone
+    implementation when the user presses "Apply"
+   
+   
 ** Halftone
    This is an interface that all halftoning methods should implement.
    Basic stuff.
+
+*** setImage
+    Called when the 
 
 ** BasicHalftone
    This is the meat of the app, applys the halftoning that we all
