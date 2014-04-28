@@ -1,47 +1,78 @@
 #+AUTHOR: Jack Hosemans
 
-
 * UML diagram
+Note that android boilerplate code has been omitted for brevity.
+
 #+begin_src plantuml :file main.png
 'skinparam monochrome true 
 package com.fit3140.halftoneApp {
 MainActivity +-- HalftoneInterfaceAdapter
-MainActivity *-- ImageDisplayFragment
+MainActivity +-- ImageDisplayAdapter
 
-class MainActivity {
+class MainActivity <extends android.app.Activity>{
+extends Android.app.Activity
+..
 #m_settings : HalftoneInterfaceAdapter
 #m_display : ImageDisplayFragment
-setOriginalImage()
-setHalftonedImage()
-}
-
-class HalftoneInterfaceAdapter {
-#m_origImage : Bitmap
-+setSourceImage()
-}
-
-class ImageDisplayFragment {
-#m_origImage : Bitmap
-#m_halftonedImage : Bitmap
+--
++setOriginalImage()
 +setHalftonedImage()
 }
 
+class HalftoneInterfaceAdapter {
+extends android.support.v4.FragmentPagerAdapter
+..
+#m_origImage : Bitmap
+--
++setSourceImage()
 }
-BasicHalftone <|- Halftone
-AdvancedHalftone <|.. Halftone
-HalftoneInterfaceAdapter *- BasicHalftone
-HalftoneInterfaceAdapter *.. AdvancedHalftone
 
+class ImageDisplayAdapter {
+extends android.support.v4.FragmentPagerAdapter
+..
++setHalftonedImage(image)
++setOriginalImage(image)
+}
+
+}
+BasicHalftone -|> Halftone
+AdvancedHalftone ..|> Halftone
+HalftoneInterfaceAdapter -o BasicHalftone
+HalftoneInterfaceAdapter ..o AdvancedHalftone
+ImageDisplayAdapter --o OriginalImageDisplayFragment
+ImageDisplayAdapter --o HalftonedImageDisplayFragment
+
+class OriginalImageDisplayFragment {
+extends Android.app.Fragment
+..
+#m_origImage : Bitmap
+}
+
+class HalftonedImageDisplayFragment {
+extends Android.app.Fragment
+..
+#m_halftonedImage : Bitmap
+--
++setImage(image)
+}
 
 class BasicHalftone {
+extends Android.app.Fragment
+implements Halftone
+..
 #m_gridSize : int
+--
 +setGridSize(gridSize)
 }
 
-note bottom of BasicHalftone: callback should start at least one\n thread to process image
-note right of AdvancedHalftone: Example of possible \nimprovement
-interface Halftone {
+class AdvancedHalftone {
+extends Android.app.Fragment
+implements Halftone
+}
 
+note bottom of BasicHalftone: callback should start at least one\n thread to process image
+note left of AdvancedHalftone: Example of possible \nimprovement
+interface Halftone {
 #m_image : Bitmap
 +apply()
 +setImage() : Bitmap
@@ -51,6 +82,12 @@ interface Halftone {
 
 * Dictionary
   - Fragment: An graphical element independent from any other element.
+  - Adapter: A class designed to adapt the interface of one class with
+    the interface of another.
+  - Thread: a process that runs within the application. Takes messages from
+    the current program execution and acts upon it.
+  - Callback: A method that passed on to other code to be executed at
+    some later time.
 
 * Descriptions of classes
 ** MainActivity
@@ -70,18 +107,45 @@ interface Halftone {
     =ImageDisplayFragment= class so that a resultant halftoned image
     can be displayed to the user.
 
-** ImageDisplayFragment
+** ImageDisplayAdapter
+   This is supposed to showcase the original image as well as the
+   halftoned image, swapping to the halftoned image when it updates.
+
+*** setHalftonedImage
+    Sets the halftoned image to the passed in variable.
+    Should also bring the image to the forefront so that the user can
+    see the results.
+
+*** setOriginalImage
+    Callback for when the user selects an new image source.
+    This sets the =m_origImage= reference in the =MainActivity= so that it can be
+    passed onto the =HalftoneInterfaceAdapter= when the user decides
+    to apply settings.
+
+** OriginalImageDisplayFragment
    This fragment should show the user images before and after halftoning.
+
+   Should also be able to select images from file and camera.
+   Maybe those buttons should be in the actionbar instead, so that
+   they are visible all the time. Not a big issue right now though.
 
    Right now it does not matter how it is done, but something nice
    should be made so that swapping back to the original image should
    be painless and automatic when settings are changed.
 
-*** setHalftonedImage
-    Set the displayed image to the halftoned image.
-    Should also bring the image to the forefront so that the user can
-    see the results.
-   
+   Interfacing is done via a callback to the host class that
+   implements a method to set the source image globally.
+
+** HalftonedImageDisplayFragment
+   Shows the user the resultant image from the halftoning once it is
+   done.
+   Otherwise, the user should not be able to swap to this fragment if
+   the image has not been processed yet. Also, buttons for
+   sharing/saving the image are only displayed when the image has been
+   processed.
+*** setImage
+    Sets the displayed image (as well as the image for sharing/saving)
+    to the passed in bitmap.
 ** HalftoneInterfaceAdapter
    Note that this is an inner class of =MainActivity=.
 
@@ -99,17 +163,17 @@ interface Halftone {
 *** setImage
     Sets the reference image to be passed on to the halftone
     implementation when the user presses "Apply"
-   
-   
+      
 ** Halftone
    This is an interface that all halftoning methods should implement.
    Basic stuff.
 
 *** setImage
-    Called when the 
-
+    Sets the source image that the halftoning should be applied to
+    once the user presses apply.
+    
 ** BasicHalftone
-   This is the meat of the app, applys the halftoning that we all
+   This is the meat of the app, applies the halftoning that we all
    know and love(?).
 
    Should be able so set the grid size, there really shouldn't be
@@ -140,5 +204,8 @@ interface Halftone {
    Implementations:
    - Different colors
    - Different angles
-   - dithering?
+   - Adding text
+   - Background colors
+   - Sepia
+   - dithering
    
