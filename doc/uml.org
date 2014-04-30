@@ -16,7 +16,6 @@ extends Android.app.Activity
 #m_filterInterface
 #m_imageDisplay
 --
-+setFilteredImage()
 +setSourceImage()
 +setFilteredImage()
 +addImageToView()
@@ -61,17 +60,15 @@ class BasicHalftone {
 
 note top of BasicHalftone: Filters should start at least one\n thread to process image
 note right of AdvancedHalftone: Example of possible \nimprovement
-class Filter {
+abstract class Filter {
 extends Android.app.Fragment
-..
 #m_image
---
 +{abstract}apply()
 +{abstract}setImage()
 }
 Filter <|-- BasicHalftone
 Filter <|-- AdvancedHalftone
-FilterInterfaceAdapter o-- Filter
+FilterInterfaceAdapter o-- Filter : defined in xml
 
 Filter +- FilterCallBack
 class FilterCallBack {
