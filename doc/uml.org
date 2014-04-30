@@ -1,192 +1,188 @@
 #+AUTHOR: Jack Hosemans
 
 * UML diagram
-Note that android boilerplate code has been omitted for brevity.
+Note that android boilerplate code has been omitted for brevity,
+instead inherited classes from the android api have been used.
 
 #+begin_src plantuml :file main.png
-'skinparam monochrome true 
+'skinparam monochrome true
 package com.fit3140.halftoneApp {
-MainActivity +-- HalftoneInterfaceAdapter
-MainActivity +-- ImageDisplayAdapter
+MainActivity o-- FilterInterfaceAdapter
+MainActivity o-- ImageViewer
 
 class MainActivity <extends android.app.Activity>{
 extends Android.app.Activity
 ..
-#m_settings : HalftoneInterfaceAdapter
-#m_display : ImageDisplayFragment
+#m_filterInterface
+#m_imageDisplay
 --
-+setOriginalImage()
-+setHalftonedImage()
++setFilteredImage()
++setSourceImage()
++setFilteredImage()
++addImageToView()
 }
 
-class HalftoneInterfaceAdapter {
-extends android.support.v4.FragmentPagerAdapter
+class FilterInterfaceCallback {
++addImageToView()
+}
+
+FilterInterfaceCallback  --+ FilterInterfaceAdapter
+
+class FilterInterfaceAdapter {
+extends android.support.v4.FragmentPagerAdaper
 ..
-#m_origImage : Bitmap
+#m_sourceImage
 --
 +setSourceImage()
 }
 
-class ImageDisplayAdapter {
-extends android.support.v4.FragmentPagerAdapter
-..
-+setHalftonedImage(image)
-+setOriginalImage(image)
-}
 
-}
-BasicHalftone -|> Halftone
-AdvancedHalftone ..|> Halftone
-HalftoneInterfaceAdapter -o BasicHalftone
-HalftoneInterfaceAdapter ..o AdvancedHalftone
-ImageDisplayAdapter --o OriginalImageDisplayFragment
-ImageDisplayAdapter --o HalftonedImageDisplayFragment
-
-class OriginalImageDisplayFragment {
-extends Android.app.Fragment
+class ImageViewer {
+extends android.support.v4.ViewPager
 ..
-#m_origImage : Bitmap
-}
-
-class HalftonedImageDisplayFragment {
-extends Android.app.Fragment
-..
-#m_halftonedImage : Bitmap
+#m_imageList
 --
-+setImage(image)
++addImage(image)
+#clearAllImages()
+}
+
+ImageViewerCallback --+ ImageViewer
+
+class ImageViewerCallback {
++setSourceImage()
 }
 
 class BasicHalftone {
-extends Android.app.Fragment
-implements Halftone
-..
-#m_gridSize : int
+#m_gridSize
 --
 +setGridSize(gridSize)
 }
 
-class AdvancedHalftone {
+
+note top of BasicHalftone: Filters should start at least one\n thread to process image
+note right of AdvancedHalftone: Example of possible \nimprovement
+class Filter {
 extends Android.app.Fragment
-implements Halftone
+..
+#m_image
+--
++{abstract}apply()
++{abstract}setImage()
 }
+Filter <|-- BasicHalftone
+Filter <|-- AdvancedHalftone
+FilterInterfaceAdapter o-- Filter
 
-note bottom of BasicHalftone: callback should start at least one\n thread to process image
-note left of AdvancedHalftone: Example of possible \nimprovement
-interface Halftone {
-#m_image : Bitmap
-+apply()
-+setImage() : Bitmap
+Filter +- FilterCallBack
+class FilterCallBack {
++setFilteredImage()
 }
-
+}
 #+end_src
 
 * Dictionary
-  - Fragment: An graphical element independent from any other element.
+  - Fragment: An graphical view independent from any other element.
   - Adapter: A class designed to adapt the interface of one class with
     the interface of another.
   - Thread: a process that runs within the application. Takes messages from
     the current program execution and acts upon it.
   - Callback: A method that passed on to other code to be executed at
     some later time.
+  - Extends: A class inherits the methods and data values of another
+    class.
+  - Implements: A class inherits the methods of an interface.
+  - Interface: A class that implements no functionality, but defines a
+    signature for it's methods that other classes can use.
+
+#+BEGIN_SRC plantuml :file template.png
+package PackageName {
+class ClassName {
++Public Method()
+#Protected Method()
++{abstract} AbstractMethod()
+--
++Public Member
+#Protected Member
+..
+#element : Element
+}
+ClassName +-- InnerClass : Has a
+ClassName <|-- ExtendedClass : Extends
+ClassName o-- Element : Has a
+}
+
+
+#+END_SRC
+
 
 * Descriptions of classes
 ** MainActivity
-   This class should just be a joiner class for all the fragments.
-
-   
-*** setOriginalImage
-    This should only be called by the ImageDisplayFragment when the
-    source image changes.
-
-    It changes the reference to the =m_origImage= value to be a
-    reference to the image in the ImageDisplayFragment so that it can
-    be easily be passed on to be halftoned.
-
-*** setHalftonedImage
-    This should call the =setHalftonedImage()= method in the
-    =ImageDisplayFragment= class so that a resultant halftoned image
-    can be displayed to the user.
-
-** ImageDisplayAdapter
-   This is supposed to showcase the original image as well as the
-   halftoned image, swapping to the halftoned image when it updates.
-
-*** setHalftonedImage
-    Sets the halftoned image to the passed in variable.
-    Should also bring the image to the forefront so that the user can
-    see the results.
+This class should be the avenue that the filters get/add images to
+the user interface
 
 *** setOriginalImage
-    Callback for when the user selects an new image source.
-    This sets the =m_origImage= reference in the =MainActivity= so that it can be
-    passed onto the =HalftoneInterfaceAdapter= when the user decides
-    to apply settings.
+This should only be called by the ImageViewer when the
+source image changes.
 
-** OriginalImageDisplayFragment
-   This fragment should show the user images before and after halftoning.
+It calls the =setSourceImage= method in the
+=FilterInterfaceAdapter= class to change the image filtered when
+the user presses apply.
 
-   Should also be able to select images from file and camera.
-   Maybe those buttons should be in the actionbar instead, so that
-   they are visible all the time. Not a big issue right now though.
+*** addImageToView
+This should call the =addImageToView= method in the =ImageViewer=
+class in order to allow the user to view the results of the previous filter.
 
-   Right now it does not matter how it is done, but something nice
-   should be made so that swapping back to the original image should
-   be painless and automatic when settings are changed.
+** ImageViewer
+This class is to show the image results to the user.
 
-   Interfacing is done via a callback to the host class that
-   implements a method to set the source image globally.
+*** getCurrentImage
+Sets the current =Bitmap= being viewed by the user by calling the
+=setSourceImage= method in the parent =MainActivity= via the callback
+class =FilterInterfaceCallback=.
 
-** HalftonedImageDisplayFragment
-   Shows the user the resultant image from the halftoning once it is
-   done.
-   Otherwise, the user should not be able to swap to this fragment if
-   the image has not been processed yet. Also, buttons for
-   sharing/saving the image are only displayed when the image has been
-   processed.
-*** setImage
-    Sets the displayed image (as well as the image for sharing/saving)
-    to the passed in bitmap.
-** HalftoneInterfaceAdapter
-   Note that this is an inner class of =MainActivity=.
 
-   This is what displays the settings for the current halftoning
-   mode, mostly for encapsulation within the =MainActivity= so that
-   no "special case" code has to be implemented in it.
-   
+*** setOriginalImage
+Clears all current images then sets the new source image to the
+=Bitmap= passed in.
+
+** FilterInterfaceAdapter
+This allows for swapping between the
+
    Should implement a =ViewPager= so that the user can swipe between
    the halftoning modes that are implemented. Hopefully there will be
    more than one otherwise this will be wasted.
-   
+
    Each element in the =ViewPager= should be a fragment that
    implements its own interface to the user.
 
 *** setImage
     Sets the reference image to be passed on to the halftone
     implementation when the user presses "Apply"
-      
-** Halftone
-   This is an interface that all halftoning methods should implement.
-   Basic stuff.
+
+** Filter
+This is an abstract class that forces any filter to implement an
+user interface via the =Fragment= api from android while adding
+it's own methods to do filtering on an image.
 
 *** setImage
-    Sets the source image that the halftoning should be applied to
-    once the user presses apply.
-    
+    Sets the source image that the filtering should be applied to
+    the image once the user presses apply.
+
+*** apply
+Applies the given filter to the set image.
+
 ** BasicHalftone
-   This is the meat of the app, applies the halftoning that we all
-   know and love(?).
+This is an example of a basic filter, does basic halftoning to a
+given image with a given grid size.
 
-   Should be able so set the grid size, there really shouldn't be
-   much more than that in this implementation.
+Note that this current takes quite a while to apply.
 
-   Side note: 
-
-*** Proposal: 
-    Halftoning usually takes a long time (>10s for large images.) 
+*** Proposal for improvement
+    Halftoning usually takes a long time (>10s for large images.)
     A solution should be made for this.
 
     - multiple threads could be used to work around the slowness of
-      the application. 
+      the application.
       - This would give the advantage of not slowing down the GUI
       - However, it would be harder to code. Maybe another spike is
         in order for implementation?
@@ -196,7 +192,6 @@ interface Halftone {
       - Worse output due to each dot being bigger than any other way.
       - Not using the full power of the processor (We need all we can
         get)
-
 ** AdvancedHalftone
    This is currently just a placeholder in case we extend the
    application to do more than basic halftoning.
@@ -208,4 +203,3 @@ interface Halftone {
    - Background colors
    - Sepia
    - dithering
-   
