@@ -1,9 +1,9 @@
 package com.fit3140.halftoneApp;
 
-import Android.app.Fragment;
-import Android.graphics.Bitmap;
+import android.app.Fragment;
+import android.graphics.Bitmap;
 
-class Filter extends Android.app.Fragment {
+abstract class Filter extends android.app.Fragment {
   /**
    * This method is supposed to take in an image and return the class
    * defined filter to it.
