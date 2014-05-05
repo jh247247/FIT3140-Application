@@ -1,7 +1,7 @@
 // This data structure is supposed to do simple image stuff.
 // i.e: loading, saving and other things that really should not belong
 // in an activity
-package com.jack.nowlayout;
+package com.fit3140.newspaper;
 
 import android.app.Activity;
 import android.widget.ImageView;

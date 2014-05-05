@@ -1,4 +1,4 @@
-package com.jack.nowlayout;
+package com.fit3140.newspaper;
 
 import android.app.Activity;
 import android.os.Bundle;

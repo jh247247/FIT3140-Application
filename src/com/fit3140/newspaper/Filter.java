@@ -1,4 +1,4 @@
-package com.fit3140.halftoneApp;
+package com.fit3140.newspaper;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;

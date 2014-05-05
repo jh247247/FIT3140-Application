@@ -1,5 +1,5 @@
 # view AndroidManifest.xml #generated:21
--keep class com.jack.nowlayout.MainActivity { <init>(...); }
+-keep class com.fit3140.newspaper.MainActivity { <init>(...); }
 
 # onClick res/layout/card_image.xml #generated:57
 -keepclassmembers class * { *** onClickSave(...); }
