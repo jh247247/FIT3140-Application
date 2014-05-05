@@ -14,4 +14,5 @@
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$string.class \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/bin/classes/com/jack/nowlayout/R$style.class \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/bin/classes/com/fit3140/halftoneApp/Filter.class \
+/media/D1/backup/Documents/FIT3140/ASSIGN/app/bin/classes/com/fit3140/halftoneApp/HalftoneFilter.class \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/bin/dexedLibs/android-support-v4-c60646075eedf4abe3435087e244ad05.jar \
