@@ -23,6 +23,7 @@
 	android:id="@+id/grid_size_header"/>
     <SeekBar
 	android:id="@+id/grid_size_seekbar"
+	android:layout_weight="1"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_alignParentRight="true"

@@ -15,7 +15,13 @@
 	android:layout_height="0dp"
 	android:paddingTop="10dp"
 	android:paddingBottom="10dp"
-	android:id="@+id/mainLayout"/>
+	android:id="@+id/mainLayout">
+      <fragment
+	  android:id="@+id/testFragment"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  class="com.fit3140.newspaper.HalftoneFilter" ></fragment>
+    </LinearLayout>
 
   </ScrollView>
 </LinearLayout>

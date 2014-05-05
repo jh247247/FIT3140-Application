@@ -1,6 +1,7 @@
 package com.fit3140.newspaper;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.LinearLayout;

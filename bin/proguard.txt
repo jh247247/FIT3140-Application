@@ -1,3 +1,6 @@
+# view res/layout/main.xml #generated:19
+-keep class com.fit3140.newspaper.HalftoneFilter { <init>(...); }
+
 # view AndroidManifest.xml #generated:21
 -keep class com.fit3140.newspaper.MainActivity { <init>(...); }
 
