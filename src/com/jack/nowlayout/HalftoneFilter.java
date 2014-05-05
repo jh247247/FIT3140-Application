@@ -1,4 +1,5 @@
-package com.fit3140.halftoneApp;
+//package com.fit3140.halftoneApp;
+package com.jack.nowlayout;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -31,10 +32,9 @@ class HalftoneFilter extends Filter{
 			   ViewGroup container,
 			   Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    //return inflater.inflate(R.layout.example_fragment,
-    //container,
-    //false);
-    return null; // TODO
+    return inflater.inflate(R.layout.fragment_filter_halftone,
+			    container,
+			    false);
   }
   /**
    * This method should set the grid size for the halftoning when the
