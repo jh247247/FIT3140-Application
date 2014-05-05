@@ -9,5 +9,5 @@
   you should never see this.</string>
   <string name="share">Share</string>
   <string name="save">Save</string>
-
+  <string name="gridsize">Grid Size</string>
 </resources>
