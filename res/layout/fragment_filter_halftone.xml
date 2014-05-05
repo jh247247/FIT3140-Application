@@ -16,18 +16,28 @@
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:fontFamily="sans-serif-condensed"
-	android:text="@string/hello_world"
-	android:textColor="@color/cardTextMed"
+	android:text="@string/gridsize"
+	android:textColor="@color/cardTextDark"
 	android:textSize="28dp"
 	android:textStyle="italic"
 	android:id="@+id/grid_size_header"/>
     <SeekBar
-	android:id="@+id/grid_size_seekbar"
-	android:layout_weight="1"
+	  android:id="@+id/grid_size_seekbar"
+	  android:layout_weight="1"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_alignParentRight="true"
+	  android:layout_below="@id/grid_size_header"
+	  android:max="100"/>
+    <TextView
+	android:id="@+id/grid_size_text"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_alignParentRight="true"
-	android:layout_below="@+id/grid_size_header"
-	android:max="100"/>
+	android:layout_above="@id/grid_size_seekbar"
+	android:textColor="@color/cardTextMed"
+	android:textSize="16dp"
+	android:textStyle="italic"
+	android:text="@string/hello_world"/>
   </RelativeLayout>
 </LinearLayout>
