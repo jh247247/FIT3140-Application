@@ -16,6 +16,16 @@ import android.view.ViewGroup;
  */
 
 class HalftoneFilter extends Filter{
+  // This is a setting for basic halftoning, other implementations
+  // come later.
+  protected int m_gridsize;
+  // These are just here because they were easy to write.
+  // Should give ideas on how to implement the more advance halftoning
+  // later on. Uncomment so that they are actually defined when we
+  // need them.
+  //protected double m_gridAngle;
+  //protected enum m_shapeType {CIRCLE, DIAMOND, RECTANGLE}
+
   @Override
   public View onCreateView(LayoutInflater inflater,
 			   ViewGroup container,
@@ -35,6 +45,12 @@ class HalftoneFilter extends Filter{
     // TODO
   }
 
+  /**
+   * This should apply the halftoning filter to the image by making
+   * several threads that process each line(?) or block of the
+   * image. Should be faster/smarter/better than the other basic implementation.
+   *
+   */
   @Override
   public Bitmap apply (Bitmap img) {
     return null;
