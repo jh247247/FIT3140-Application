@@ -2,6 +2,7 @@
  : /media/D1/backup/Documents/FIT3140/ASSIGN/app/res/layout/actionbar_main.xml \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/res/layout/main.xml \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/res/layout/card_action.xml \
+/media/D1/backup/Documents/FIT3140/ASSIGN/app/res/layout/fragment_filter_halftone.xml \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/res/layout/card_info.xml \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/res/layout/card_image.xml \
 /media/D1/backup/Documents/FIT3140/ASSIGN/app/res/layout/image.xml \
