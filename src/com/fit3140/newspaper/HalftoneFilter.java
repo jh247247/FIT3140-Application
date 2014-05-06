@@ -43,6 +43,7 @@ class HalftoneFilter extends Filter implements OnSeekBarChangeListener
     View ret = inflater.inflate(R.layout.fragment_filter_halftone,
 				container,
 				false);
+
     m_gridSizeText = (TextView)ret.findViewById(R.id.grid_size_text);
     m_gridSizeBar = (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
 

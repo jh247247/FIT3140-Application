@@ -24,9 +24,9 @@ An example fragment that can:
 
 * Dates
 - Planned start date:
-  - 5^{th} April 2014
+  - 5^{th} May 2014
 - Deadline:
-  - 6^{th} April 2014
+  - 6^{th} May 2014
 
 * Planning notes
 Fragments are similar to Activities in the android framework, but are
