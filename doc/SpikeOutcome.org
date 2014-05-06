@@ -1,0 +1,38 @@
+#+AUTHOR: Jack Hosemans
+#+Title: Spike Outcome: Fragments
+
+* Goals/Deliverables
+Example fragment for a simple filter that can be used as a base for
+other filters.
+
+
+* Personnel
+Jack Hosemans, Thomas Parasiuk
+
+
+* Technologies used
+Java, Emacs, Git, Android API
+
+* Tasks undertaken
+- Added a simple abstract base class that can be used for filters in
+  the coming sprint.
+- Added a simple class that inherits from the base class and adds the
+  capability to interact with the user.
+- Added the fragment to the UI to be interacted with.
+
+* What we found out
+- Fragments are like an Activity and a View at the same time.
+  - They can create intents and have views of their own
+  - Have to be encapsulated within an activity so that it can be seen
+    by the user.
+- They have to be inflated into the view before they can edit their
+    child ui elements.
+
+* Open issues/Risks
+Lack of communication between partners caused this sprint to be only
+implemented by Jack. This should really be addressed quickly to
+facilitate better collaboration.
+
+* Recommendations
+An IRC server or some other communication avenue should be made so
+that partners can communicate faster than over email or the like.

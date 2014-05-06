@@ -1,0 +1,42 @@
+#+AUTHOR: Jack Hosemans
+#+Title: Spike Plan: Fragments
+
+
+* Context
+There is a requirement for the UI elements that we create to be
+re-ordered in different device orientations. This can be made easy by
+the use of Fragments which are given in the android API.
+
+
+* Gap
+Since this is a new API, an example needs to be created that can
+communicate with other UI elements. It also needs to be able to
+handle orientation changes from the user.
+
+
+* Goals/Deliverables
+An example fragment that can:
+- Be interacted with and change some other child UI element.
+- Be encapsulated in a layout so that it can handle UI changes on the
+  fly.
+- Take in input from the final application to execute some code on
+  some given data.
+
+* Dates
+- Planned start date:
+  - 5^{th} April 2014
+- Deadline:
+  - 6^{th} April 2014
+
+* Planning notes
+Fragments are similar to Activities in the android framework, but are
+slightly different in that they require being /inside/ an Activity.
+This means that they keep the ability to execute arb. code in the
+sense of methods, but can also be defined in a layout in xml.
+
+To keep this useful for the current sprint:
+- Should be able to be pulled forward as a simple filter later on.
+  - If not being an entire filter, should be at least be a base for
+    one.
+- Does not have to actually implement the filter, this can be done in
+  the actual sprint.
