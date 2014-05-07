@@ -1,6 +1,6 @@
 package com.fit3140.newspaper;
 
-
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -27,6 +27,10 @@ class HalftoneFilter extends Filter implements OnSeekBarChangeListener
   private SeekBar m_gridSizeBar;
   private TextView m_gridSizeText;
 
+  // Parent typecasted to this so that we can actually call some stuff
+  // on it.
+  private Filter.FilterCallBack m_parent;
+
 
   // These are just here because they were easy to write.
   // Should give ideas on how to implement the more advance halftoning
@@ -34,6 +38,28 @@ class HalftoneFilter extends Filter implements OnSeekBarChangeListener
   // need them.
   //protected double m_gridAngle;
   //protected enum m_shapeType {CIRCLE, DIAMOND, RECTANGLE}
+
+  /**
+   * This method is called when the fragment is attached to an
+   * activity. Fortunately the activity also passes in itself to
+   * this. This means that we can override it and use the passed in
+   * activity to attach a callback to the Activity.
+   *
+   */
+  @Override
+  public void onAttach(Activity activity) {
+    // do whatever the inherited function is supposed to do.
+    super.onAttach(activity);
+
+    // try to typecast the Activity to the callback interface declared
+    // in the Filter class. This gets called upon completion of the filtering.
+    try {
+      m_parent = (Filter.FilterCallBack) activity;
+    } catch (ClassCastException e) {
+      throw new ClassCastException(activity.toString() +
+				   " must implement Filter.FilterCallBack");
+    }
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater,

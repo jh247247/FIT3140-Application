@@ -17,7 +17,7 @@ abstract
    * used for saying that we finished filtering an image.
    *
    */
-  class FilterCallBack {
+  public interface FilterCallBack {
     /**
      * This is the only thing from the parent that this child is
      * supposed to have access to.
