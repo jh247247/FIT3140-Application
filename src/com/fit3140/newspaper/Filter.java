@@ -13,11 +13,24 @@ import android.graphics.Bitmap;
 abstract
   class Filter extends android.app.Fragment {
   /**
+   * This is a class that the parent is typecasted to. Mainly it is
+   * used for saying that we finished filtering an image.
+   *
+   */
+  class FilterCallBack {
+    /**
+     * This is the only thing from the parent that this child is
+     * supposed to have access to.
+     *
+     */
+    public void filterFinishedCallback(Bitmap filteredImage);
+  }
+
+  /**
    * This method is supposed to take in an image and return the class
    * defined filter to it.
    * @arg img The image to apply the filter to.
    * @return image that has the defined filter to it.
    */
   public abstract Bitmap apply(Bitmap img);
-
 }
