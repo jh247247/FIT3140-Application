@@ -11,6 +11,10 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
 /**
  * This class applies a halftoning filter to the passed in
  * image. Shouldn't be too complicated but should also be flexible
@@ -120,7 +124,55 @@ class HalftoneFilter extends Filter implements OnSeekBarChangeListener
    */
   @Override
   public Bitmap apply (Bitmap img) {
-    m_parent.filterFinishedCallback(null);
-    return null;
+    final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
+
+    Bitmap halftoneImg = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
+    Canvas c = new Canvas(halftoneImg);
+    Paint black = new Paint(),
+      white = new Paint();
+    black.setColor(Color.BLACK);
+    white.setColor(Color.WHITE);
+    int[] pixels = new int[m_gridSize * m_gridSize];
+    int red, green, blue;
+
+    float totalValue, maxValue, averageValue;
+    float dotRadius;
+
+    c.drawRect(0, 0, WIDTH, HEIGHT, white);
+
+    for (int x = 0; x < WIDTH; x += m_gridSize) {
+      for (int y = 0; y < HEIGHT; y += m_gridSize) {
+	totalValue = 0;
+	maxValue = 0;
+
+	img.getPixels(pixels, 0, m_gridSize, x, y,
+		      Math.min(m_gridSize, WIDTH - x), Math.min(m_gridSize, HEIGHT - y));
+	for (int i = 0; i < pixels.length; i++) {
+	  red = Color.red(pixels[i]);
+	  green = Color.green(pixels[i]);
+	  blue = Color.blue(pixels[i]);
+	  totalValue += (0.3f * red + 0.59f * green + 0.11f * blue) / 255.0f;
+	  maxValue += 1.0f;
+	}
+
+	//With this line, averageValue now represents "the
+	//percentage of blackness in the m_gridSize square"
+	averageValue = 100.0f * (1.0f - (totalValue / maxValue));
+
+	//Log.v("deletethis", "averageValue is " + averageValue);
+
+	//This function roughly maps out to making the area
+	//of the dots equal to averageValue% of the area of
+	//the m_gridSize square.
+	dotRadius = (float) (Math.sqrt(averageValue + 8) - 2) * m_gridSize * 2 / 25;
+	if (averageValue > 90.0f) {
+	  dotRadius += (float) Math.pow(averageValue - 90.0f, 2) / 100;
+	}
+
+	c.drawCircle(x + m_gridSize / 2, y + m_gridSize / 2, dotRadius, black);
+      }
+    }
+
+    return halftoneImg;
   }
 }

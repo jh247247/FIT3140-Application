@@ -143,56 +143,7 @@ public class ImageUtils {
      * @return A halftoned image
      */
     public static Bitmap makeHalftoneImage(Bitmap img, int grid) {
-        final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
-
-        Bitmap halftoneImg = Bitmap.createBitmap(WIDTH, HEIGHT, Config.ARGB_8888);
-        Canvas c = new Canvas(halftoneImg);
-        Paint black = new Paint(),
-            white = new Paint();
-        black.setColor(Color.BLACK);
-        white.setColor(Color.WHITE);
-        int[] pixels = new int[grid * grid];
-        int red, green, blue;
-
-        float totalValue, maxValue, averageValue;
-        float dotRadius;
-
-        c.drawRect(0, 0, WIDTH, HEIGHT, white);
-
-        for (int x = 0; x < WIDTH; x += grid) {
-            for (int y = 0; y < HEIGHT; y += grid) {
-                totalValue = 0;
-                maxValue = 0;
-
-                img.getPixels(pixels, 0, grid, x, y,
-                              Math.min(grid, WIDTH - x), Math.min(grid, HEIGHT - y));
-                for (int i = 0; i < pixels.length; i++) {
-                    red = Color.red(pixels[i]);
-                    green = Color.green(pixels[i]);
-                    blue = Color.blue(pixels[i]);
-                    totalValue += (0.3f * red + 0.59f * green + 0.11f * blue) / 255.0f;
-                    maxValue += 1.0f;
-                }
-
-                //With this line, averageValue now represents "the
-                //percentage of blackness in the grid square"
-                averageValue = 100.0f * (1.0f - (totalValue / maxValue));
-
-                //Log.v("deletethis", "averageValue is " + averageValue);
-
-                //This function roughly maps out to making the area
-                //of the dots equal to averageValue% of the area of
-                //the grid square.
-                dotRadius = (float) (Math.sqrt(averageValue + 8) - 2) * grid * 2 / 25;
-                if (averageValue > 90.0f) {
-                    dotRadius += (float) Math.pow(averageValue - 90.0f, 2) / 100;
-                }
-
-                c.drawCircle(x + grid / 2, y + grid / 2, dotRadius, black);
-            }
-        }
-
-        return halftoneImg;
+      return null;
     }
 
     /**
