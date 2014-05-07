@@ -1,5 +1,6 @@
 package com.fit3140.newspaper;
 
+import android.app.FragmentManager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -29,7 +30,8 @@ import android.util.Log;
  * @author <a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
  * @version 1.0
  */
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements
+					     View.OnClickListener, Filter.FilterCallBack{
     /*This is where all the constants for this activity live.*/
     /* Intent IDs */
     private static final int ACTIVITY_SELECT_IMAGE=1;
@@ -46,6 +48,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
     // Planned to be used for loading the full res image when needed.
     private Uri m_prevImageLoc;
 
+  @Override
+  public void filterFinishedCallback(Bitmap filteredImage) {
+    Log.v("MainActivity", "Image used callback!");
+    Context ctx = getApplicationContext();
+    int duration = Toast.LENGTH_SHORT;
+    Toast toast = Toast.makeText(ctx, "This is from the callback!",
+                                 duration);
+    toast.show();
+  }
+
     /**
      * onCreate is the method called to recreate the activity when it
      * is killed by either the user or the android task manager.
@@ -58,6 +70,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
      * in when it was closed. Data should be restored from there.
      * @return None
      */
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +87,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         //View test2 = inflater.inflate(R.layout.card_info, null);
         //container.addView(test2);
 
+	FragmentManager man = getFragmentManager();
+	Filter testFilter = (Filter)man.findFragmentById(R.id.testFragment);
+	testFilter.apply(null);
+
         // Get intent, action and MIME type
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -81,7 +99,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         // Handle intents from other apps
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                addImageToUI((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM));
+	      addImageToUI((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM));
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
             // What do we do with multiple images?!
@@ -120,7 +138,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v("MainActivity", "onOptionsItemSelected called!");
         // Handle presses on the action bar items
-        Context ctx = getApplicationContext();
+	Context ctx = getApplicationContext();
         switch (item.getItemId()) {
         case R.id.action_imageFromCamera:
             Log.v("MainActivity", "Calling intent for capturing image from camera");
@@ -151,11 +169,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
             return true;
         case R.id.action_settings:
-            Log.v("MainActivity", "Calling up settings...");
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(ctx, "This is a test action!",
-                                         duration);
-            toast.show();
+	  Log.v("MainActivity", "Calling up settings...");
+          int duration = Toast.LENGTH_SHORT;
+          Toast toast = Toast.makeText(ctx, "This is a test action!",
+                                       duration);
+          toast.show();
             return true;
 
         case R.id.action_imageFromFile:

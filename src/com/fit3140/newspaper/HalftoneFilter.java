@@ -120,6 +120,7 @@ class HalftoneFilter extends Filter implements OnSeekBarChangeListener
    */
   @Override
   public Bitmap apply (Bitmap img) {
+    m_parent.filterFinishedCallback(null);
     return null;
   }
 }
