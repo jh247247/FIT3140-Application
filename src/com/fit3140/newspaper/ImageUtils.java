@@ -15,14 +15,9 @@ import android.os.Environment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -72,7 +67,7 @@ public class ImageUtils {
      * Activity as well as a parent.
      *
      * @param img image to add to view
-     * @param ctx The current context fo the application
+     * @param ctx The current context of the application
      * @param act The current activity on the display
      * @param parent The parent view to inflate the card into.
      * @return The inflated view.
@@ -80,11 +75,9 @@ public class ImageUtils {
     public static View getCardImage(Bitmap img, Context ctx,
                                     Activity act, ViewGroup parent) {
         // Have to add the image to the layout somehow.
-        LayoutInflater inflater = (LayoutInflater)
-            LayoutInflater.from(ctx);
-
-        View imageCard = inflater.from(act).inflate(R.layout.card_image,
-                                                    parent, true);
+        View imageCard = LayoutInflater.from(act).inflate(R.layout.card_image,
+        		parent, true);
+        
         ImageView imageInCard = (ImageView)
             imageCard.findViewById(R.id.card_image);
         imageInCard.setImageBitmap(img);
@@ -189,9 +182,8 @@ public class ImageUtils {
 
         File file = new
             File(Environment.getExternalStoragePublicDirectory(
-
-                                                               Environment.DIRECTORY_PICTURES)
-                 + "/" + timestamp + ".jpg");
+            		Environment.DIRECTORY_PICTURES)
+            		+ "/" + timestamp + ".jpg");
         try {
             FileOutputStream outStream = new FileOutputStream(file);
             img.compress(Bitmap.CompressFormat.JPEG, 50, outStream);

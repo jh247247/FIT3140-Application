@@ -23,7 +23,7 @@ import android.graphics.Paint;
  *
  */
 
-class HalftoneFilter extends Filter implements OnSeekBarChangeListener
+public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
 {
   // This is a setting for basic halftoning, other implementations
   // come later.
@@ -77,7 +77,7 @@ class HalftoneFilter extends Filter implements OnSeekBarChangeListener
     m_gridSizeText = (TextView)ret.findViewById(R.id.grid_size_text);
     m_gridSizeBar = (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
 
-    //Fixme
+    //FIXME
     m_gridSizeText.setText("0");
     m_gridSizeBar.setOnSeekBarChangeListener(this);
 
@@ -158,8 +158,6 @@ class HalftoneFilter extends Filter implements OnSeekBarChangeListener
 	//With this line, averageValue now represents "the
 	//percentage of blackness in the m_gridSize square"
 	averageValue = 100.0f * (1.0f - (totalValue / maxValue));
-
-	//Log.v("deletethis", "averageValue is " + averageValue);
 
 	//This function roughly maps out to making the area
 	//of the dots equal to averageValue% of the area of
