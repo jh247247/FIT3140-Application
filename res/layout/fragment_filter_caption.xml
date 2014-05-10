@@ -32,8 +32,6 @@
         android:hint="@string/caption_hint"
         android:inputType="text"
         android:textSize="14sp">
-
-        <requestFocus />
     </EditText>
 
   </RelativeLayout>

@@ -19,6 +19,7 @@ import java.io.File;
 import android.graphics.Bitmap;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import android.support.v4.view.ViewPager;
 
 import android.view.ViewGroup;
 
@@ -56,6 +57,8 @@ public class MainActivity extends Activity implements
   // this gets set by the callback.
   private Bitmap m_filteredImage;
 
+  private FilterInterfaceAdapter m_filterAdapter;
+
   @Override
   public void filterFinishedCallback(Bitmap filteredImage) {
     Log.v("MainActivity", "Image used callback!");
@@ -86,6 +89,10 @@ public class MainActivity extends Activity implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+    ViewPager pager = (ViewPager)findViewById(R.id.filterPager);
+    m_filterAdapter = new FilterInterfaceAdapter(getFragmentManager());
+    pager.setAdapter(m_filterAdapter);
+
     m_tempImageRef = null;
 
     // This is testing stuff for template layout inflating.
@@ -263,9 +270,11 @@ public class MainActivity extends Activity implements
     if(uri == null) return; // cbf.
     Context ctx = getApplicationContext();
 
-    FragmentManager fragMan = getFragmentManager();
-    HalftoneFilter htf = (HalftoneFilter) fragMan.findFragmentById(R.id.halftoneFragment);
-    CaptionFilter cf = (CaptionFilter) fragMan.findFragmentById(R.id.captionFragment);
+    // Hacky!
+    Filter htf = (Filter) m_filterAdapter.getItem(0);
+    Filter cf = (Filter) m_filterAdapter.getItem(1);
+    //HalftoneFilter htf = (HalftoneFilter) fragMan.findFragmentById(R.id.halftoneFragment);
+    //CaptionFilter cf = (CaptionFilter) fragMan.findFragmentById(R.id.captionFragment);
 
     Toast.makeText(ctx, "Loading image...", Toast.LENGTH_SHORT).show();
     Bitmap img = ImageUtils.convertUriToBitmap(uri, ctx, null);
@@ -280,18 +289,18 @@ public class MainActivity extends Activity implements
     m_prevImageLoc = halfUri; // have to do something with this uri...
 
     Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(halfUri,
-								ctx);
+    								ctx);
 
     // if the view has already been made, modify it. Else, make a
     // new card.
     if(m_tempImageRef == null) {
-	  LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
+    	  LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
           View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
-						   (ViewGroup)findViewById(R.id.mainLayout));
-	  m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
-	} else {
-	  m_tempImageRef.setImageBitmap(displayImg);
-	}
+    						   (ViewGroup)findViewById(R.id.mainLayout));
+    	  m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
+    	} else {
+    	  m_tempImageRef.setImageBitmap(displayImg);
+    	}
     	Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
     }
     /**
@@ -304,7 +313,7 @@ public class MainActivity extends Activity implements
     public void onClickSave(View v){
 	Context ctx = getApplicationContext();
 	// make the button actually do something.
-	ImageUtils.saveImagePublic(m_filteredImage);
+	ImageUtils.saveImagePublic(m_filteredImage,ctx);
     }
 
     /**
