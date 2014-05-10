@@ -39,14 +39,6 @@ public class MainActivity extends Activity implements
   private static final int ACTIVITY_CAPTURE_IMAGE=2;
 
   /* Other constants */
-  // This has to be changed later on when the final image view system
-  // is added. Maybe the scrolling will be kept, so that each image
-  //has its own share/save stuff.
-  private ImageView m_tempImageRef;
-
-  // this gets set by the callback.
-  private Bitmap m_filteredImage;
-
 
   /*This is all the changing data lives, ones that should be saved upon
     shutdown. I don't know whether or not there should be a database
@@ -55,6 +47,14 @@ public class MainActivity extends Activity implements
   // This variable saves the previous location of the data loaded.
   // Planned to be used for loading the full res image when needed.
   private Uri m_prevImageLoc;
+
+  // This has to be changed later on when the final image view system
+  // is added. Maybe the scrolling will be kept, so that each image
+  //has its own share/save stuff.
+  private ImageView m_tempImageRef;
+
+  // this gets set by the callback.
+  private Bitmap m_filteredImage;
 
   @Override
   public void filterFinishedCallback(Bitmap filteredImage) {
@@ -304,7 +304,7 @@ public class MainActivity extends Activity implements
     public void onClickSave(View v){
 	Context ctx = getApplicationContext();
 	// make the button actually do something.
-	ImageUtils.saveImagePublic(m_halfToneImage,ctx);
+	ImageUtils.saveImagePublic(m_filteredImage);
     }
 
     /**
