@@ -6,6 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,18 +50,36 @@ public class CaptionFilter extends Filter {
 	
 	@Override
 	public Bitmap apply(Bitmap img) {
-		final int WIDTH = img.getWidth(), HEIGHT = img.getHeight() + 20;
+		String caption = m_edittext.getText().toString();
+		TextPaint text = new TextPaint();
+		final int WIDTH = img.getWidth();
+		
+		text.setColor(Color.BLACK);
+		text.setTextSize(20);
+		
+		StaticLayout layout = new StaticLayout(caption, text, WIDTH,
+				Layout.Alignment.ALIGN_CENTER, 1, 0, true);
+		//A small space is included for a separator between the image and the
+		//caption.
+		int captionHeight = layout.getHeight() + 8;
+		
+		Bitmap captionbmp = Bitmap.createBitmap(WIDTH, captionHeight,
+				Bitmap.Config.ARGB_8888);
+		Canvas captionc = new Canvas(captionbmp);
+		layout.draw(captionc);
+		
+		final int HEIGHT = img.getHeight() + captionHeight;
 
 		Bitmap captionedImg = Bitmap.createBitmap(WIDTH, HEIGHT,
 				Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(captionedImg);
-		Paint black = new Paint(),
-				white = new Paint();
-		black.setColor(Color.BLACK);
+
+		Paint white = new Paint();
 		white.setColor(Color.WHITE);
 
 		c.drawRect(0, 0, WIDTH, HEIGHT, white);
 		c.drawBitmap(img, 0, 0, null);
+		c.drawBitmap(captionbmp, 0, HEIGHT - captionHeight + 4, null);
 		
 		return captionedImg;
 	}

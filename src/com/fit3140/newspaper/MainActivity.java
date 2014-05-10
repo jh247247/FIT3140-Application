@@ -254,14 +254,14 @@ public class MainActivity extends Activity implements
     	
     	FragmentManager fragMan = getFragmentManager();
     	HalftoneFilter htf = (HalftoneFilter) fragMan.findFragmentById(R.id.halftoneFragment);
-    	//CaptionFilter cf = (CaptionFilter) fragMan.findFragmentById(R.id.captionFragment);
+    	CaptionFilter cf = (CaptionFilter) fragMan.findFragmentById(R.id.captionFragment);
     	
     	Toast.makeText(ctx, "Loading image...", Toast.LENGTH_SHORT).show();
     	Bitmap img = ImageUtils.convertUriToBitmap(uri, ctx, null);
 
     	Toast.makeText(ctx, "Halftoning image...", Toast.LENGTH_SHORT).show();
     	m_halfToneImage = htf.apply(img);
-    	//m_halfToneImage = cf.apply(m_halfToneImage);
+    	m_halfToneImage = cf.apply(m_halfToneImage);
 
     	Uri halfUri = ImageUtils.saveImagePrivate(m_halfToneImage, ctx);
     	m_prevImageLoc = halfUri; // have to do something with this uri...
