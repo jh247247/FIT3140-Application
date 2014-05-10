@@ -88,7 +88,7 @@ public class MainActivity extends Activity implements
         //container.addView(test2);
 
 	//FragmentManager man = getFragmentManager();
-	//Filter testFilter = (Filter)man.findFragmentById(R.id.testFragment);
+	//Filter testFilter = (Filter)man.findFragmentById(R.id.halftoneFragment);
 	//testFilter.apply(null);
 
         // Get intent, action and MIME type
@@ -136,60 +136,60 @@ public class MainActivity extends Activity implements
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v("MainActivity", "onOptionsItemSelected called!");
-        // Handle presses on the action bar items
-	Context ctx = getApplicationContext();
-        switch (item.getItemId()) {
-        case R.id.action_imageFromCamera:
-            Log.v("MainActivity", "Calling intent for capturing image from camera");
-            //Timestamp filenames mean they won't be overwritten and they are
-            //sorted chronologically... you know, 'cause that's so important.
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-            String timestamp = sdf.format(date);
+    	Log.v("MainActivity", "onOptionsItemSelected called!");
+    	// Handle presses on the action bar items
+    	Context ctx = getApplicationContext();
+    	switch (item.getItemId()) {
+    	case R.id.action_imageFromCamera:
+    		Log.v("MainActivity", "Calling intent for capturing image from" +
+    				"camera");
+    		
+    		Date date = new Date();
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+    		String timestamp = sdf.format(date);
 
-            File file = new File(ctx.getExternalFilesDir(null)
-                                 + "/" + timestamp + ".jpg");
-            Log.v("MainActivity", "ImagePath: " + file.getAbsolutePath());
-            Uri outputFileUri = Uri.fromFile(file);
+    		File file = new File(ctx.getExternalFilesDir(null)
+    				+ "/" + timestamp + ".jpg");
+    		Log.v("MainActivity", "ImagePath: " + file.getAbsolutePath());
+    		Uri outputFileUri = Uri.fromFile(file);
 
-            // Since we can't get the proper path from the result
-            // call, we need to store it at to load later instead.
-            // Hacky, but it should work.
-            m_prevImageLoc = outputFileUri;
+    		// Since we can't get the proper path from the result
+    		// call, we need to store it at to load later instead.
+    		// Hacky, but it should work.
+    		m_prevImageLoc = outputFileUri;
 
-            Intent cameraIntent = new
-                Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+    		Intent cameraIntent = new
+    				Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+    		cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
 
-            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                Log.v("MainActivity", "Found an app to take picture.");
-                startActivityForResult(cameraIntent,
-                                       ACTIVITY_CAPTURE_IMAGE);
-            }
-            return true;
-        case R.id.action_settings:
-	  Log.v("MainActivity", "Calling up settings...");
-          int duration = Toast.LENGTH_SHORT;
-          Toast toast = Toast.makeText(ctx, "This is a test action!",
-                                       duration);
-          toast.show();
-            return true;
+    		if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+    			Log.v("MainActivity", "Found an app to take picture.");
+    			startActivityForResult(cameraIntent,
+    					ACTIVITY_CAPTURE_IMAGE);
+    		}
+    		return true;
+    	case R.id.action_settings:
+    		Log.v("MainActivity", "Calling up settings...");
+    		int duration = Toast.LENGTH_SHORT;
+    		Toast toast = Toast.makeText(ctx, "This is a test action!",
+    				duration);
+    		toast.show();
+    		return true;
 
-        case R.id.action_imageFromFile:
-            Log.v("MainActivity", "Calling intent to load image from file.");
-            Intent imageIntent = new Intent(Intent.ACTION_PICK,
-                                            android.provider.MediaStore.
-                                            Images.Media.EXTERNAL_CONTENT_URI);
-            if (imageIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
-            }
-            return true;
+    	case R.id.action_imageFromFile:
+    		Log.v("MainActivity", "Calling intent to load image from file.");
+    		Intent imageIntent = new Intent(Intent.ACTION_PICK,
+    				android.provider.MediaStore.
+    				Images.Media.EXTERNAL_CONTENT_URI);
+    		if (imageIntent.resolveActivity(getPackageManager()) != null) {
+    			startActivityForResult(imageIntent, ACTIVITY_SELECT_IMAGE);
+    		}
+    		return true;
 
-        default:
-            Log.wtf("MainActivity", "How did we end up in the default case...");
-            return super.onOptionsItemSelected(item);
-        }
+    	default:
+    		Log.wtf("MainActivity", "How did we end up in the default case...");
+    		return super.onOptionsItemSelected(item);
+    	}
     }
 
     /**
@@ -249,29 +249,32 @@ public class MainActivity extends Activity implements
      * @return Noneh
      */
     private void addImageToUI(Uri uri) {
-        if(uri == null) return; // cbf.
-        Context ctx = getApplicationContext();
-	Toast.makeText(ctx, "Loading image...",
-		       Toast.LENGTH_SHORT).show();
-        Bitmap img = ImageUtils.convertUriToBitmap(uri, ctx, null);
+    	if(uri == null) return; // cbf.
+    	Context ctx = getApplicationContext();
+    	
+    	FragmentManager fragMan = getFragmentManager();
+    	HalftoneFilter htf = (HalftoneFilter) fragMan.findFragmentById(R.id.halftoneFragment);
+    	//CaptionFilter cf = (CaptionFilter) fragMan.findFragmentById(R.id.captionFragment);
+    	
+    	Toast.makeText(ctx, "Loading image...", Toast.LENGTH_SHORT).show();
+    	Bitmap img = ImageUtils.convertUriToBitmap(uri, ctx, null);
 
-	Toast.makeText(ctx, "Halftoning image...",
-		       Toast.LENGTH_SHORT).show();
-	m_halfToneImage = ImageUtils.makeHalftoneImage(img, 20);
+    	Toast.makeText(ctx, "Halftoning image...", Toast.LENGTH_SHORT).show();
+    	m_halfToneImage = htf.apply(img);
+    	//m_halfToneImage = cf.apply(m_halfToneImage);
 
-        Uri halfUri = ImageUtils.saveImagePrivate(m_halfToneImage, ctx);
-	m_prevImageLoc = halfUri; // have to do something with this uri...
+    	Uri halfUri = ImageUtils.saveImagePrivate(m_halfToneImage, ctx);
+    	m_prevImageLoc = halfUri; // have to do something with this uri...
 
-        Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(halfUri, ctx);
+    	Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(halfUri,
+    			ctx);
 
-        LinearLayout container = (LinearLayout)
-            findViewById(R.id.mainLayout);
-        // Should also put a ViewHolder or something here so
-        // we can modify the view later on.
-        View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
-						 (ViewGroup)findViewById(R.id.mainLayout));
-	Toast.makeText(ctx, "Done!",
-		       Toast.LENGTH_SHORT).show();
+    	LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
+    	// Should also put a ViewHolder or something here so
+    	// we can modify the view later on.
+    	View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
+    			(ViewGroup)findViewById(R.id.mainLayout));
+    	Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
     }
     /**
      * Save the processed image from the UI.

@@ -126,20 +126,6 @@ public class ImageUtils {
     }
 
     /**
-     * Takes in a bitmap and applies a simple halftoning algorithm to
-     * it.
-     * Note that this currently consumes a lot of memory. Optimization
-     * by reducing buffering would be for the best.
-     *
-     * @param img image to apply halftoning to.
-     * @param grid grid size to use for halftoning
-     * @return A halftoned image
-     */
-    public static Bitmap makeHalftoneImage(Bitmap img, int grid) {
-      return null;
-    }
-
-    /**
      * saves the given image into the applications private app directory.
      *
      * @param img bitmap to save

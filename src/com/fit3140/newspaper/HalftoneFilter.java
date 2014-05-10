@@ -52,37 +52,36 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
    */
   @Override
   public void onAttach(Activity activity) {
-    // do whatever the inherited function is supposed to do.
-    super.onAttach(activity);
+	  // do whatever the inherited function is supposed to do.
+	  super.onAttach(activity);
 
-    // try to typecast the Activity to the callback interface declared
-    // in the Filter class. This gets called upon completion of the filtering.
-    try {
-      m_parent = (Filter.FilterCallBack) activity;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(activity.toString() +
-				   " must implement Filter.FilterCallBack");
-    }
+	  // try to typecast the Activity to the callback interface declared
+	  // in the Filter class. This gets called upon completion of the filtering.
+	  try {
+		  m_parent = (Filter.FilterCallBack) activity;
+	  } catch (ClassCastException e) {
+		  throw new ClassCastException(activity.toString() +
+				  " must implement Filter.FilterCallBack");
+	  }
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater,
 			   ViewGroup container,
 			   Bundle savedInstanceState) {
+	  
+	  View ret = inflater.inflate(R.layout.fragment_filter_halftone,
+			  container, false);
 
-    View ret = inflater.inflate(R.layout.fragment_filter_halftone,
-				container,
-				false);
+	  m_gridSizeText = (TextView)ret.findViewById(R.id.grid_size_text);
+	  m_gridSizeBar = (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
 
-    m_gridSizeText = (TextView)ret.findViewById(R.id.grid_size_text);
-    m_gridSizeBar = (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
+	  //FIXME
+	  m_gridSizeText.setText("0");
+	  m_gridSizeBar.setOnSeekBarChangeListener(this);
 
-    //FIXME
-    m_gridSizeText.setText("0");
-    m_gridSizeBar.setOnSeekBarChangeListener(this);
-
-    // Inflate the layout for this fragment
-    return ret;
+	  // Inflate the layout for this fragment
+	  return ret;
   }
 
 
