@@ -69,7 +69,7 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
   public View onCreateView(LayoutInflater inflater,
 			   ViewGroup container,
 			   Bundle savedInstanceState) {
-	  
+
 	  View ret = inflater.inflate(R.layout.fragment_filter_halftone,
 			  container, false);
 
@@ -122,7 +122,7 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
    *
    */
   @Override
-  public Bitmap apply (Bitmap img) {
+  public void apply (Bitmap img) {
     final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
 
     Bitmap halftoneImg = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
@@ -170,6 +170,6 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
       }
     }
 
-    return halftoneImg;
+    m_parent.filterFinishedCallback(halftoneImg);
   }
 }
