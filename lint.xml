@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="NewApi">
+        <ignore path="test-test/src/com/fit3140/newspaper/test/SampleTest.java" />
+    </issue>
+</lint>
