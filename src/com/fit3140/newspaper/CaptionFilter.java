@@ -44,8 +44,11 @@ public class CaptionFilter extends Filter {
 	}
 
 	/**
-	 * Unfinished implementation of captioning images. Takes the image
-	 * and puts a white bar underneath it for a hypothetical caption.
+	 * Applies a caption to the given image.
+	 * Current limitations/issues:
+	 * Text size is hardcoded. Should be larger for large images and smaller
+	 * for large captions (or something like that)
+	 * Font is default, could maybe be changed later if there's a better one.
 	 */
 
 	@Override

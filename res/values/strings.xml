@@ -12,6 +12,6 @@
   <string name="caption">Caption</string>
   <string name="caption_hint">Write caption here</string>
   <string name="gridsize">Grid Size</string>
-  
+  <string name="apply">Apply</string>
   
 </resources>

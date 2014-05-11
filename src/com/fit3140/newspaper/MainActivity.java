@@ -105,10 +105,6 @@ public class MainActivity extends Activity implements
     //View test2 = inflater.inflate(R.layout.card_info, null);
     //container.addView(test2);
 
-    //FragmentManager man = getFragmentManager();
-    //Filter testFilter = (Filter)man.findFragmentById(R.id.halftoneFragment);
-    //testFilter.apply(null);
-
     // Get intent, action and MIME type
     Intent intent = getIntent();
     String action = intent.getAction();
