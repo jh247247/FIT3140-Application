@@ -19,9 +19,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
-        android:text="@string/hello_world"
+        android:text="@string/image_header"
         android:textColor="@color/cardTextMed"
-        android:textSize="28dp"
+        android:textSize="20sp"
         android:textStyle="italic"
         android:id="@+id/card_heading"/>
     <TextView

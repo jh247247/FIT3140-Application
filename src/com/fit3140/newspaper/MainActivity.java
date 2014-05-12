@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import java.io.File;
 import android.graphics.Bitmap;
@@ -62,11 +63,11 @@ public class MainActivity extends Activity implements
   @Override
   public void filterFinishedCallback(Bitmap filteredImage) {
     Log.v("MainActivity", "Image used callback!");
-    Context ctx = getApplicationContext();
-    int duration = Toast.LENGTH_SHORT;
-    Toast toast = Toast.makeText(ctx, "This is from the callback!",
-                                 duration);
-    toast.show();
+    //Context ctx = getApplicationContext();
+    //int duration = Toast.LENGTH_SHORT;
+    //Toast toast = Toast.makeText(ctx, "This is from the callback!",
+    //                             duration);
+    //toast.show();
 
     m_filteredImage = filteredImage;
   }
@@ -95,16 +96,6 @@ public class MainActivity extends Activity implements
 
     m_tempImageRef = null;
 
-    // This is testing stuff for template layout inflating.
-    // I have yet to decide the best way to implement this dynamically
-    //Context context = getApplicationContext();
-    //LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
-    //LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(context);
-    //View test = inflater.inflate(R.layout.card_action, null);
-    //container.addView(test);
-    //View test2 = inflater.inflate(R.layout.card_info, null);
-    //container.addView(test2);
-
     // Get intent, action and MIME type
     Intent intent = getIntent();
     String action = intent.getAction();
@@ -121,6 +112,10 @@ public class MainActivity extends Activity implements
 	//handleSendMultipleImages(intent); // Handle multiple images being sent
       }
     }
+    
+    //Use this line to test landscape mode if the emulator/device is usually
+    //forced in to portrait mode.
+    //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
   }
 
   /**

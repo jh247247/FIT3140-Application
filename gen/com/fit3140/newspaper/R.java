@@ -80,6 +80,7 @@ public final class R {
         public static final int card_body_default=0x7f070006;
         public static final int gridsize=0x7f07000b;
         public static final int hello_world=0x7f070004;
+        public static final int image_header=0x7f07000d;
         public static final int save=0x7f070008;
         public static final int share=0x7f070007;
         public static final int title_activity_main=0x7f070005;

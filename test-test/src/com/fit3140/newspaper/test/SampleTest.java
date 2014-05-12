@@ -24,6 +24,8 @@
 package com.fit3140.newspaper.test;
 
 import com.fit3140.newspaper.MainActivity;
+
+import android.content.pm.ActivityInfo;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.util.Log;
@@ -34,6 +36,7 @@ public class SampleTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	private SeekBar gridbar;
 	private TextView gridtext;
+	private MainActivity main;
 	
 	public SampleTest() {
 		super(MainActivity.class);
@@ -49,7 +52,7 @@ public class SampleTest extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		//A kinda janky example of how to get one particular thing in the
 		//application and access it during testing.
-		MainActivity main = getActivity();
+		main = getActivity();
 		gridbar = (SeekBar) main.findViewById(
 				com.fit3140.newspaper.R.id.grid_size_seekbar);
 		gridtext = (TextView) main.findViewById(
@@ -61,6 +64,15 @@ public class SampleTest extends ActivityInstrumentationTestCase2<MainActivity> {
 		TouchUtils.tapView(this, gridbar);
 		//Show this message if this condition does not evaluate to TRUE.
 		assertTrue("grid_size_text did not show 51.", 
+				(gridtext.getText().equals("51")));
+	}
+	
+	public void testOrientation() {
+		//Same thing but in landscape mode.
+		main.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		TouchUtils.clickView(this,  gridbar);
+		assertTrue("grid_size_text did not tap correctly in landscape mode.",
 				(gridtext.getText().equals("51")));
 	}
 

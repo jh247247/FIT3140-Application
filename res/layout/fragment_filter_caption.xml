@@ -20,7 +20,7 @@
         android:paddingLeft="4dp"
         android:text="@string/caption"
         android:textColor="@color/cardTextDark"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:textStyle="italic" />
 
     <EditText
