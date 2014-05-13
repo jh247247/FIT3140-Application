@@ -11,7 +11,7 @@
   <string name="save">Save</string>
   <string name="caption">Caption</string>
   <string name="caption_hint">Write caption here</string>
-  <string name="gridsize">Grid Size</string>
+  <string name="gridsize">Halftone Grid Size</string>
   <string name="apply">Apply</string>
   <string name="image_header">Filtered Image</string>
   

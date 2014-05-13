@@ -1,8 +1,6 @@
 package com.fit3140.newspaper;
 
-import android.app.FragmentManager;
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.LinearLayout;
@@ -14,7 +12,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import java.io.File;
 import android.graphics.Bitmap;

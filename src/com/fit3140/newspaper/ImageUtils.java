@@ -184,6 +184,5 @@ public class ImageUtils {
         Uri imgUri = Uri.fromFile(file);
 
         return imgUri;
-
     }
 }

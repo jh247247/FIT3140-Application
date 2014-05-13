@@ -21,7 +21,7 @@
         android:fontFamily="sans-serif-condensed"
         android:text="@string/hello_world"
         android:textColor="@color/cardTextMed"
-        android:textSize="28dp"
+        android:textSize="28sp"
         android:textStyle="italic"
         android:id="@+id/card_heading"/>
     <TextView
@@ -59,7 +59,7 @@
           android:layout_alignParentLeft="true"
           android:layout_alignParentRight="true"
           android:gravity="left|center_vertical|center_horizontal"
-          android:text="Button" />
+          android:text="@string/card_body_default" />
     </RelativeLayout>
   </LinearLayout>
 </LinearLayout>

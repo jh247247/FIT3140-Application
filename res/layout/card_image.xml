@@ -51,7 +51,6 @@
           android:layout_height="wrap_content"
 	  android:gravity="left|center_vertical"
 	  android:drawableLeft="@drawable/ic_action_share"
-	  android:layout_alignParentRight="true"
 	  android:onClick="onClickShare"
           android:text="@string/share" />
       <Button
@@ -61,8 +60,6 @@
           android:layout_height="wrap_content"
 	  android:gravity="left|center_vertical"
 	  android:drawableLeft="@drawable/ic_action_save"
-	  android:layout_toRightOf="@id/shareButton"
-	  android:layout_alignParentLeft="true"
 	  android:onClick="onClickSave"
           android:text="@string/save" />
       </LinearLayout>
