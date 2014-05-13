@@ -285,9 +285,9 @@ public class MainActivity extends Activity implements
     // if the view has already been made, modify it. Else, make a
     // new card.
     if(m_tempImageRef == null) {
-    	  LinearLayout container = (LinearLayout) findViewById(R.id.mainLayout);
+    	  LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
           View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
-    						   (ViewGroup)findViewById(R.id.mainLayout));
+    						   (ViewGroup)findViewById(R.id.outputArea));
     	  m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
     	} else {
     	  m_tempImageRef.setImageBitmap(displayImg);

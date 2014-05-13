@@ -5,12 +5,18 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
-  <LinearLayout
-      android:id="@+id/mainLayout"
-      android:orientation="horizontal"
+  <ScrollView
+      android:id="@+id/outputScroller"
+      android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_weight="2"/>
+      android:layout_weight="2">
+  	<LinearLayout
+    	android:id="@+id/outputArea"
+     	android:orientation="horizontal"
+      	android:layout_width="match_parent"
+      	android:layout_height="wrap_content"/>
+  </ScrollView>
   <android.support.v4.view.ViewPager
       android:id="@+id/filterPager"
       android:layout_weight="1"
