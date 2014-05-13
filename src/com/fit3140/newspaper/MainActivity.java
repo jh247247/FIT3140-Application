@@ -109,7 +109,7 @@ public class MainActivity extends Activity implements
 	//handleSendMultipleImages(intent); // Handle multiple images being sent
       }
     }
-    
+
     //Use this line to test landscape mode if the emulator/device is usually
     //forced in to portrait mode.
     //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -208,40 +208,40 @@ public class MainActivity extends Activity implements
    */
   @Override
   protected void onActivityResult(int requestCode, int resultCode,
-		  Intent data) {
-	  super.onActivityResult(requestCode, resultCode, data);
+				  Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
 
-	  switch(requestCode) {
-	  case ACTIVITY_SELECT_IMAGE:
-		  Log.v("MainActivity", "Intent to load image from file finished.");
-		  if(resultCode == RESULT_OK){
-			  Log.v("MainActivity", "Result was good.");
-			  Uri selectedImage = data.getData();
+    switch(requestCode) {
+    case ACTIVITY_SELECT_IMAGE:
+      Log.v("MainActivity", "Intent to load image from file finished.");
+      if(resultCode == RESULT_OK){
+	Log.v("MainActivity", "Result was good.");
+	Uri selectedImage = data.getData();
 
-			  // store Uri so that image can be loaded again later.
-			  // maybe a new class should be added that stores
-			  // everything we need for loading the full resolution
-			  // image (or halftoned image) later.
-			  m_prevImageLoc = selectedImage;
+	// store Uri so that image can be loaded again later.
+	// maybe a new class should be added that stores
+	// everything we need for loading the full resolution
+	// image (or halftoned image) later.
+	m_prevImageLoc = selectedImage;
 
-			  // does what it says on the tin.
-			  addImageToUI(selectedImage);
-		  }
-		  break;
-	  case ACTIVITY_CAPTURE_IMAGE:
-		  Log.v("MainActivity", "Finished intent for loading image from camera");
-		  if(resultCode == RESULT_OK){
-			  Log.v("MainActivity", "Result was good.");
-			  // this where the stored URI comes into play, since it
-			  // means that we can now load the image from file.
-			  // This is kind of a hack since the image is probably
-			  // given up in the intent somehow, but this way is how
-			  // it works in kit kat apparently.
+	// does what it says on the tin.
+	addImageToUI(selectedImage);
+      }
+      break;
+    case ACTIVITY_CAPTURE_IMAGE:
+      Log.v("MainActivity", "Finished intent for loading image from camera");
+      if(resultCode == RESULT_OK){
+	Log.v("MainActivity", "Result was good.");
+	// this where the stored URI comes into play, since it
+	// means that we can now load the image from file.
+	// This is kind of a hack since the image is probably
+	// given up in the intent somehow, but this way is how
+	// it works in kit kat apparently.
 
-			  addImageToUI(m_prevImageLoc);
-		  }
-		  break;
-	  }
+	addImageToUI(m_prevImageLoc);
+      }
+      break;
+    }
   }
 
   // This is a class level reference to the latest half-tone image.
@@ -255,101 +255,96 @@ public class MainActivity extends Activity implements
    * @return None
    */
   private void addImageToUI(Uri uri) {
-	  if(uri == null) return; // cbf.
-	  Context ctx = getApplicationContext();
+    if(uri == null) return; // cbf.
+    Context ctx = getApplicationContext();
 
-	  Toast.makeText(ctx, "Loading image...", Toast.LENGTH_SHORT).show();
+    Toast.makeText(ctx, "Loading image...", Toast.LENGTH_SHORT).show();
 
-	  Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(uri,
-			  ctx);
+    // FIXME
+    Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(uri,
+								ctx);
+    m_filteredImage = ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
 
-	  // if the view has already been made, modify it. Else, make a
-	  // new card.
-	  if(m_tempImageRef == null) {
-		  LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
-		  View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
-				  (ViewGroup)findViewById(R.id.outputArea));
-		  m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
-	  } else {
-		  m_tempImageRef.setImageBitmap(displayImg);
-	  }
-	  Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
+    // if the view has already been made, modify it. Else, make a
+    // new card.
+    if(m_tempImageRef == null) {
+      LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
+      View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
+					       (ViewGroup)findViewById(R.id.outputArea));
+      m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
+    } else {
+      m_tempImageRef.setImageBitmap(displayImg);
+    }
+    Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
   }
-  
-    /**
-     * Save the processed image from the UI.
-     * TODO
-     *
-     * @param v The view that caused the click event
-     * @return None
-     */
-  
-    public void onClickSave(View v){
-    	Context ctx = getApplicationContext();
-    	// make the button actually do something.
-    	ImageUtils.saveImagePublic(m_filteredImage,ctx);
+
+  /**
+   * Save the processed image from the UI.
+   * TODO
+   *
+   * @param v The view that caused the click event
+   * @return None
+   */
+
+  public void onClickSave(View v){
+    Context ctx = getApplicationContext();
+    // make the button actually do something.
+    Uri file =
+      ImageUtils.saveImagePublic(m_filteredImage,ctx);
+  }
+
+  /**
+   * onClickShare is called whenever the share button is pressed in
+   * the imageCard.
+   *
+   * @param view The view that caused the click event
+   * @return None
+   */
+
+  public void onClickShare(View view) {
+    Log.v("anon Onclicklistener", "Managed to get into the onclick listener");
+    Intent share = new Intent(Intent.ACTION_SEND);
+    share.setType("image/jpeg");
+    share.putExtra(Intent.EXTRA_STREAM, m_prevImageLoc);;
+    startActivity(Intent.createChooser(share, "Share Image"));
+  }
+
+  /**
+   * Applies the currently paged-to filter to whatever image is loaded in.
+   *
+   * @param view The view that caused the click event
+   * @return None
+   */
+
+  public void onClickApply(View view) {
+    Context ctx = getApplicationContext();
+    Bitmap img = ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
+
+    // much better.
+    ViewPager vp = (ViewPager) findViewById(R.id.filterPager);
+    Filter filter = (Filter) m_filterAdapter.getItem(vp.getCurrentItem());
+    filter.apply(img);
+
+
+    Uri outputUri = ImageUtils.saveImagePrivate(m_filteredImage, ctx);
+    m_prevImageLoc = outputUri;
+    Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(outputUri,
+								ctx);
+    // if there is no displayed image, get one.
+    if(m_tempImageRef == null) {
+      LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
+      View imageTest = ImageUtils.getCardImage(m_filteredImage, ctx, this,
+					       (ViewGroup)findViewById(R.id.outputArea));
+      m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
+    } else {
+      // otherwise, just set.
+      m_tempImageRef.setImageBitmap(m_filteredImage);
     }
+    Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
+  }
 
-    /**
-     * onClickShare is called whenever the share button is pressed in
-     * the imageCard.
-     *
-     * @param view The view that caused the click event
-     * @return None
-     */
+  @Override
+  public void onClick(View v) {
 
-    public void onClickShare(View view) {
-    	Log.v("anon Onclicklistener", "Managed to get into the onclick listener");
-    	Intent share = new Intent(Intent.ACTION_SEND);
-    	share.setType("image/jpeg");
-    	share.putExtra(Intent.EXTRA_STREAM, m_prevImageLoc);;
-    	startActivity(Intent.createChooser(share, "Share Image"));
-    }
-
-    /**
-     * Applies the currently paged-to filter to whatever image is loaded in.
-     * 
-     * @param view The view that caused the click event
-     * @return None
-     */
-    
-    public void onClickApply(View view) {
-    	Context ctx = getApplicationContext();
-    	Bitmap img = ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
-
-    	// Hacky!
-    	Filter htf = (Filter) m_filterAdapter.getItem(0);
-    	Filter cf = (Filter) m_filterAdapter.getItem(1);
-    	//HalftoneFilter htf = (HalftoneFilter) fragMan.findFragmentById(R.id.halftoneFragment);
-    	//CaptionFilter cf = (CaptionFilter) fragMan.findFragmentById(R.id.captionFragment);
-    	
-    	ViewPager vp = (ViewPager) findViewById(R.id.filterPager);
-    	if (vp.getCurrentItem() == 0) {
-    		Toast.makeText(ctx, "Halftoning image...",
-    				Toast.LENGTH_SHORT).show();
-    		htf.apply(img);
-    	} else {
-    		cf.apply(img);
-    	}
-
-    	Uri outputUri = ImageUtils.saveImagePrivate(m_filteredImage, ctx);
-    	m_prevImageLoc = outputUri;
-    	Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(outputUri,
-    			ctx);
-    	
-    	if(m_tempImageRef == null) {
-    		LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
-    		View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
-    				(ViewGroup)findViewById(R.id.outputArea));
-    		m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
-    	} else {
-    		m_tempImageRef.setImageBitmap(displayImg);
-    	}
-    	Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
-    }
-    
-    @Override
-    public void onClick(View v) {
-
-    }
+  }
 }

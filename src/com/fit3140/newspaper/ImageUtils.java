@@ -77,7 +77,7 @@ public class ImageUtils {
         // Have to add the image to the layout somehow.
         View imageCard = LayoutInflater.from(act).inflate(R.layout.card_image,
         		parent, true);
-        
+
         ImageView imageInCard = (ImageView)
             imageCard.findViewById(R.id.card_image);
         imageInCard.setImageBitmap(img);
@@ -162,27 +162,30 @@ public class ImageUtils {
      */
 
     public static Uri saveImagePublic(Bitmap img, Context ctx) {
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-        String timestamp = sdf.format(date);
+      if (img == null) {
+	Log.e("ImageUtils.saveImage",
+	      "Input image is null!");
+      }
+      Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+      String timestamp = sdf.format(date);
 
-        File file = new
-            File(Environment.getExternalStoragePublicDirectory(
-            		Environment.DIRECTORY_PICTURES)
-            		+ "/" + timestamp + ".jpg");
-        try {
-            FileOutputStream outStream = new FileOutputStream(file);
-            img.compress(Bitmap.CompressFormat.JPEG, 50, outStream);
-            outStream.close();
-        } catch (Exception e) {
-            Log.w("ImageUtils.saveImage", "OutputStream threw exception: " + e);
-        }
+      File file = new
+	File(Environment.getExternalStoragePublicDirectory(
+							   Environment.DIRECTORY_PICTURES)
+	     + "/" + timestamp + ".jpg");
+      try {
+	FileOutputStream outStream = new FileOutputStream(file);
+	img.compress(Bitmap.CompressFormat.JPEG, 50, outStream);
+	outStream.close();
+      } catch (Exception e) {
+	Log.e("ImageUtils.saveImage", "OutputStream threw exception: " + e);
+      }
+      Toast.makeText(ctx, file.getAbsolutePath(),
+		     Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(ctx, file.getAbsolutePath(),
-                       Toast.LENGTH_SHORT).show();
+      Uri imgUri = Uri.fromFile(file);
 
-        Uri imgUri = Uri.fromFile(file);
-
-        return imgUri;
+      return imgUri;
     }
 }
