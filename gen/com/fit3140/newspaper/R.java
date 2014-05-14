@@ -33,10 +33,10 @@ public final class R {
         public static final int ic_launcher=0x7f020007;
     }
     public static final class id {
-        public static final int action_imageFromCamera=0x7f0a0016;
-        public static final int action_imageFromFile=0x7f0a0015;
+        public static final int action_imageFromCamera=0x7f0a0017;
+        public static final int action_imageFromFile=0x7f0a0016;
         public static final int action_settings=0x7f0a0000;
-        public static final int apply_filter=0x7f0a0014;
+        public static final int apply_filter=0x7f0a0015;
         public static final int button1=0x7f0a0004;
         public static final int caption_header=0x7f0a0008;
         public static final int caption_text=0x7f0a0009;
@@ -54,6 +54,7 @@ public final class R {
         public static final int oriLayout=0x7f0a000e;
         public static final int outputArea=0x7f0a0011;
         public static final int outputScroller=0x7f0a0010;
+        public static final int pager_title_strip=0x7f0a0014;
         public static final int saveButton=0x7f0a0007;
         public static final int shareButton=0x7f0a0006;
     }

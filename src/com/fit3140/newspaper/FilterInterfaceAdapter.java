@@ -33,4 +33,9 @@ public class FilterInterfaceAdapter extends FragmentPagerAdapter {
     Log.wtf("FilterInterfaceAdapter","Getting item " + position);
     return m_fragmentList.get(position);
   }
+
+  @Override
+  public CharSequence getPageTitle(int position) {
+    return ((Filter)m_fragmentList.get(position)).getFilterName();
+  }
 }

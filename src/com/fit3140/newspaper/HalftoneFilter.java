@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 /**
  * This class applies a halftoning filter to the passed in
@@ -124,6 +125,11 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
    */
   @Override
   public void apply (Bitmap img) {
+    if(img == null) {
+      Log.v("HalftoneFilter","Trying to halftone a null image!");
+      // so for this case, we just never call the callback. Genius!
+      return;
+    }
     final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
 
     Bitmap halftoneImg = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
@@ -173,4 +179,15 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
 
     m_parent.filterFinishedCallback(halftoneImg);
   }
+
+  /**
+   * This method is supposed to return a string to put into the
+   * tabbar. Handy, since we actually need this.
+   *
+   */
+  @Override
+  public String getFilterName() {
+    return "Halftone";
+  }
+
 }

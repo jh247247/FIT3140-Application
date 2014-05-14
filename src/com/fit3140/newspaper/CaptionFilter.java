@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.util.Log;
 
 public class CaptionFilter extends Filter {
 
@@ -51,41 +52,55 @@ public class CaptionFilter extends Filter {
 
 	@Override
 	public void apply(Bitmap img) {
-		String caption = m_edittext.getText().toString();
-		TextPaint text = new TextPaint();
-		final int WIDTH = img.getWidth();
+	  if(img == null) {
+            Log.w("CaptionFilter","Trying to halftone a null image!");
+            // so for this case, we just never call the callback. Genius!
+            return;
+          }
+	  String caption = m_edittext.getText().toString();
+	  TextPaint text = new TextPaint();
+	  final int WIDTH = img.getWidth();
 
-		text.setColor(Color.BLACK);
-		text.setTextSize(20);
+	  text.setColor(Color.BLACK);
+	  text.setTextSize(20);
 
-		StaticLayout layout = new StaticLayout(caption, text, WIDTH,
-				Layout.Alignment.ALIGN_CENTER, 1, 0, true);
-		//A small space is included for a separator between the image and the
-		//caption.
-		int captionHeight = layout.getHeight() + 8;
+	  StaticLayout layout = new StaticLayout(caption, text, WIDTH,
+						 Layout.Alignment.ALIGN_CENTER, 1, 0, true);
+	  //A small space is included for a separator between the image and the
+	  //caption.
+	  int captionHeight = layout.getHeight() + 8;
 
-		Bitmap captionbmp = Bitmap.createBitmap(WIDTH, captionHeight,
-				Bitmap.Config.ARGB_8888);
-		Canvas captionc = new Canvas(captionbmp);
-		layout.draw(captionc);
+	  Bitmap captionbmp = Bitmap.createBitmap(WIDTH, captionHeight,
+						  Bitmap.Config.ARGB_8888);
+	  Canvas captionc = new Canvas(captionbmp);
+	  layout.draw(captionc);
 
-		final int HEIGHT = img.getHeight() + captionHeight;
+	  final int HEIGHT = img.getHeight() + captionHeight;
 
-		Bitmap captionedImg = Bitmap.createBitmap(WIDTH, HEIGHT,
-				Bitmap.Config.ARGB_8888);
-		Canvas c = new Canvas(captionedImg);
+	  Bitmap captionedImg = Bitmap.createBitmap(WIDTH, HEIGHT,
+						    Bitmap.Config.ARGB_8888);
+	  Canvas c = new Canvas(captionedImg);
 
-		Paint white = new Paint();
-		white.setColor(Color.WHITE);
+	  Paint white = new Paint();
+	  white.setColor(Color.WHITE);
 
-		c.drawRect(0, 0, WIDTH, HEIGHT, white);
-		c.drawBitmap(img, 0, 0, null);
-		c.drawBitmap(captionbmp, 0, HEIGHT - captionHeight +
-			     4, null);
+	  c.drawRect(0, 0, WIDTH, HEIGHT, white);
+	  c.drawBitmap(img, 0, 0, null);
+	  c.drawBitmap(captionbmp, 0, HEIGHT - captionHeight +
+		       4, null);
 
-		// have to use callback to return image.
-		// there is a plan for this, just wait.
-		m_parent.filterFinishedCallback(captionedImg);
+	  // have to use callback to return image.
+	  // there is a plan for this, just wait.
+	  m_parent.filterFinishedCallback(captionedImg);
 	}
 
+  /**
+   * This method is supposed to return a string to put into the
+   * tabbar. Handy, since we actually need this.
+   *
+   */
+  @Override
+  public String getFilterName() {
+    return "Caption";
+  }
 }

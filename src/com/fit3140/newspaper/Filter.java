@@ -31,4 +31,12 @@ abstract
    * @param img The image to apply the filter to.
    */
   public abstract void apply(Bitmap img);
+
+  /**
+   * This method is supposed to return the filter name.
+   * Should we really care about different languages?
+   *
+   */
+
+  public abstract String getFilterName();
 }
