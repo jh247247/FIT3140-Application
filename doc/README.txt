@@ -1,5 +1,5 @@
 Product Overview:
-TODONameOfApp is an application for android that allows you to load images
+Old Newspaper App is an application for android that allows you to load images
 from your device, apply a newspaper-style halftone filter to them and then
 share them elsewhere.
 
