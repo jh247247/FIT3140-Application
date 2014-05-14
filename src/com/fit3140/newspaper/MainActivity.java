@@ -68,8 +68,26 @@ public class MainActivity extends Activity implements
     //Toast toast = Toast.makeText(ctx, "This is from the callback!",
     //                             duration);
     //toast.show();
+    Context ctx = getApplicationContext();
 
     m_filteredImage = filteredImage;
+
+    Uri outputUri = ImageUtils.saveImagePrivate(m_filteredImage, ctx);
+    m_prevImageLoc = outputUri;
+    Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(outputUri,
+                                                                ctx);
+    // if there is no displayed image, get one.
+    if(m_tempImageRef == null) {
+      LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
+      View imageTest = ImageUtils.getCardImage(m_filteredImage, ctx, this,
+                                               (ViewGroup)findViewById(R.id.outputArea));
+      m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
+    } else {
+      // otherwise, just set.
+      m_tempImageRef.setImageBitmap(m_filteredImage);
+    }
+    Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
+
   }
 
   /**
@@ -329,21 +347,6 @@ public class MainActivity extends Activity implements
     filter.apply(img);
 
 
-    Uri outputUri = ImageUtils.saveImagePrivate(m_filteredImage, ctx);
-    m_prevImageLoc = outputUri;
-    Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(outputUri,
-								ctx);
-    // if there is no displayed image, get one.
-    if(m_tempImageRef == null) {
-      LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
-      View imageTest = ImageUtils.getCardImage(m_filteredImage, ctx, this,
-					       (ViewGroup)findViewById(R.id.outputArea));
-      m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
-    } else {
-      // otherwise, just set.
-      m_tempImageRef.setImageBitmap(m_filteredImage);
-    }
-    Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
   }
 
   @Override
