@@ -24,6 +24,8 @@ import android.graphics.Paint;
 
 public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
 {
+  private static final int MIN_FILTER_GRIDSIZE = 5;
+
   // This is a setting for basic halftoning, other implementations
   // come later.
   private int m_gridSize;
@@ -76,7 +78,7 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
 	  m_gridSizeBar = (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
 
 	  //FIXME
-	  m_gridSizeText.setText("0");
+	  m_gridSizeText.setText("5");
 	  m_gridSizeBar.setOnSeekBarChangeListener(this);
 
 	  // Inflate the layout for this fragment
@@ -90,8 +92,8 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
    *
    */
   protected void setGridSize(int gridsize) {
-    m_gridSize = gridsize;
-    m_gridSizeText.setText(String.valueOf(gridsize));
+    m_gridSize = gridsize+MIN_FILTER_GRIDSIZE;
+    m_gridSizeText.setText(String.valueOf(gridsize+MIN_FILTER_GRIDSIZE));
   }
 
   /**

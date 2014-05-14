@@ -29,7 +29,7 @@
 	  android:layout_height="wrap_content"
 	  android:layout_alignParentRight="true"
 	  android:layout_below="@id/grid_size_header"
-	  android:max="100"/>
+	  android:max="95"/>
 
     <TextView
         android:id="@+id/grid_size_text"

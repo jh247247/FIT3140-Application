@@ -18,6 +18,9 @@ import android.graphics.Bitmap;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.support.v4.view.ViewPager;
+import android.widget.LinearLayout;
+import android.content.res.Configuration;
+import android.widget.ScrollView;
 
 import android.view.ViewGroup;
 
@@ -346,5 +349,46 @@ public class MainActivity extends Activity implements
   @Override
   public void onClick(View v) {
 
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+
+    LinearLayout oriLayout = (LinearLayout)
+      findViewById(R.id.oriLayout);
+    LinearLayout filterLayout = (LinearLayout)
+      findViewById(R.id.filterLayout);
+    LinearLayout.LayoutParams filterlp = (LinearLayout.LayoutParams)
+      filterLayout.getLayoutParams();
+
+    LinearLayout imageLayout = (LinearLayout)
+      findViewById(R.id.imageLayout);
+    LinearLayout.LayoutParams imagelp = (LinearLayout.LayoutParams)
+      imageLayout.getLayoutParams();
+
+
+    // Checks the orientation of the screen
+    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+    {
+      Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+      oriLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+      filterlp.height = LinearLayout.LayoutParams.MATCH_PARENT;
+      imagelp.height = LinearLayout.LayoutParams.MATCH_PARENT;
+
+      filterlp.width = 0;
+      imagelp.width = 0;
+    } else if (newConfig.orientation ==
+	       Configuration.ORIENTATION_PORTRAIT){
+      Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+
+      oriLayout.setOrientation(LinearLayout.VERTICAL);
+      filterlp.height = 0;
+      imagelp.height = 0;
+
+      filterlp.width = LinearLayout.LayoutParams.MATCH_PARENT;
+      imagelp.width = LinearLayout.LayoutParams.MATCH_PARENT;
+    }
   }
 }

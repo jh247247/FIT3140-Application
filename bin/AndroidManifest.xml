@@ -22,7 +22,8 @@
       <uses-library android:name="android.test.runner" />
   <activity
       android:name=".MainActivity"
-      android:label="@string/title_activity_main" >
+      android:label="@string/title_activity_main"
+      android:configChanges="orientation|keyboardHidden">
     <intent-filter>
       <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +34,7 @@
       <category android:name="android.intent.category.DEFAULT" />
       <data android:mimeType="image/*" />
     </intent-filter>
+
   </activity>
   </application>
 
