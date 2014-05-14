@@ -18,19 +18,16 @@ public class FilterInterfaceAdapter extends FragmentPagerAdapter {
     // have to add fragments...
     m_fragmentList.add(new HalftoneFilter());
     m_fragmentList.add(new CaptionFilter());
-    Log.wtf("FilterInterfaceAdapter","Init done!");
-    Log.wtf("FilterInterfaceAdapter","Pages: " + m_fragmentList.size());
+
   }
 
   @Override
   public int getCount() {
-    Log.wtf("FilterInterfaceAdapter","Asked for size: " + m_fragmentList.size());
     return m_fragmentList.size();
   }
 
   @Override
   public Fragment getItem(int position) {
-    Log.wtf("FilterInterfaceAdapter","Getting item " + position);
     return m_fragmentList.get(position);
   }
 

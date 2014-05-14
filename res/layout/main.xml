@@ -8,22 +8,47 @@
     android:layout_height="match_parent">
   <LinearLayout
       android:id="@+id/imageLayout"
-      android:layout_weight="1"
+      android:layout_weight="2"
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="0dp">
-  <ScrollView
-      android:id="@+id/outputScroller"
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1">
+    <ScrollView
+	android:id="@+id/outputScroller"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="0dp"
+	android:layout_weight="1">
+      <LinearLayout
+    	  android:id="@+id/outputArea"
+     	  android:orientation="horizontal"
+      	  android:layout_width="match_parent"
+      	  android:layout_height="wrap_content"/>
+    </ScrollView>
     <LinearLayout
-    	android:id="@+id/outputArea"
-     	android:orientation="horizontal"
-      	android:layout_width="match_parent"
-      	android:layout_height="wrap_content"/>
-  </ScrollView>
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+      <Button
+          android:id="@+id/shareButton"
+          style="@style/CardActionButton"
+	  android:layout_weight="1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+	  android:gravity="left|center_vertical"
+	  android:drawableLeft="@drawable/ic_action_share"
+	  android:onClick="onClickShare"
+          android:text="@string/share" />
+      <Button
+          android:id="@+id/saveButton"
+          style="@style/CardActionButton"
+	  android:layout_weight="1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+	  android:gravity="left|center_vertical"
+	  android:drawableLeft="@drawable/ic_action_save"
+	  android:onClick="onClickSave"
+          android:text="@string/save" />
+    </LinearLayout>
   </LinearLayout>
   <LinearLayout
       android:id="@+id/filterLayout"

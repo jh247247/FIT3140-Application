@@ -21,6 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.widget.LinearLayout;
 import android.content.res.Configuration;
 import android.widget.ScrollView;
+import android.widget.Button;
 
 import android.view.ViewGroup;
 
@@ -81,7 +82,10 @@ public class MainActivity extends Activity implements
       LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
       View imageTest = ImageUtils.getCardImage(m_filteredImage, ctx, this,
                                                (ViewGroup)findViewById(R.id.outputArea));
-      m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
+      m_tempImageRef =
+	(ImageView)imageTest.findViewById(R.id.card_image);
+      // show buttons to since we have a image to share again.
+      setButtonVisibility(Button.VISIBLE);
     } else {
       // otherwise, just set.
       m_tempImageRef.setImageBitmap(m_filteredImage);
@@ -113,6 +117,12 @@ public class MainActivity extends Activity implements
     pager.setAdapter(m_filterAdapter);
 
     m_tempImageRef = null;
+
+
+    // hide buttons to avoid sharing/saving null pointers.
+    setButtonVisibility(Button.GONE);
+
+
 
     // Get intent, action and MIME type
     Intent intent = getIntent();
@@ -296,6 +306,9 @@ public class MainActivity extends Activity implements
     } else {
       m_tempImageRef.setImageBitmap(displayImg);
     }
+
+    setButtonVisibility(Button.VISIBLE);
+
     Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
   }
 
@@ -308,6 +321,9 @@ public class MainActivity extends Activity implements
    */
 
   public void onClickSave(View v){
+    if(m_filteredImage == null) {
+      Log.w("MainActivity","We really should not be here...");
+    }
     Context ctx = getApplicationContext();
     // make the button actually do something.
     Uri file =
@@ -393,5 +409,10 @@ public class MainActivity extends Activity implements
       filterlp.width = LinearLayout.LayoutParams.MATCH_PARENT;
       imagelp.width = LinearLayout.LayoutParams.MATCH_PARENT;
     }
+  }
+
+  private void setButtonVisibility(int vis) {
+    ((Button)findViewById(R.id.saveButton)).setVisibility(vis);
+    ((Button)findViewById(R.id.shareButton)).setVisibility(vis);
   }
 }

@@ -110,7 +110,7 @@ public class ImageUtils {
      * @param ctx context of the application.
      * @return Bitmap scaled to the width of the screen.
      */
-    public static Bitmap loadImageScaledToScreenWidth(Uri img, Context ctx) {
+  public static Bitmap loadImageScaledToScreenWidth(Uri img, Context ctx) {
         DisplayMetrics metrics = new DisplayMetrics();
         // casting is okay in this case, since we should really get what we want...
         ((WindowManager)ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);

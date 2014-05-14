@@ -38,25 +38,25 @@ public final class R {
         public static final int action_settings=0x7f0a0000;
         public static final int apply_filter=0x7f0a0015;
         public static final int button1=0x7f0a0004;
-        public static final int caption_header=0x7f0a0008;
-        public static final int caption_text=0x7f0a0009;
+        public static final int caption_header=0x7f0a0006;
+        public static final int caption_text=0x7f0a0007;
         public static final int card_action=0x7f0a0003;
         public static final int card_body=0x7f0a0002;
         public static final int card_heading=0x7f0a0001;
         public static final int card_image=0x7f0a0005;
         public static final int filterLayout=0x7f0a0012;
         public static final int filterPager=0x7f0a0013;
-        public static final int grid_size_header=0x7f0a000a;
-        public static final int grid_size_seekbar=0x7f0a000b;
-        public static final int grid_size_text=0x7f0a000c;
-        public static final int imageLayout=0x7f0a000f;
-        public static final int imageView=0x7f0a000d;
-        public static final int oriLayout=0x7f0a000e;
-        public static final int outputArea=0x7f0a0011;
-        public static final int outputScroller=0x7f0a0010;
+        public static final int grid_size_header=0x7f0a0008;
+        public static final int grid_size_seekbar=0x7f0a0009;
+        public static final int grid_size_text=0x7f0a000a;
+        public static final int imageLayout=0x7f0a000d;
+        public static final int imageView=0x7f0a000b;
+        public static final int oriLayout=0x7f0a000c;
+        public static final int outputArea=0x7f0a000f;
+        public static final int outputScroller=0x7f0a000e;
         public static final int pager_title_strip=0x7f0a0014;
-        public static final int saveButton=0x7f0a0007;
-        public static final int shareButton=0x7f0a0006;
+        public static final int saveButton=0x7f0a0011;
+        public static final int shareButton=0x7f0a0010;
     }
     public static final class integer {
         public static final int config_slide_time=0x7f060000;

@@ -38,30 +38,5 @@
         android:adjustViewBounds="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
-    <LinearLayout
-        android:id="@+id/card_action"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-	android:gravity="right|center_vertical"
-        android:layout_height="wrap_content">
-      <Button
-          android:id="@+id/shareButton"
-          style="@style/CardActionButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-	  android:gravity="left|center_vertical"
-	  android:drawableLeft="@drawable/ic_action_share"
-	  android:onClick="onClickShare"
-          android:text="@string/share" />
-      <Button
-          android:id="@+id/saveButton"
-          style="@style/CardActionButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-	  android:gravity="left|center_vertical"
-	  android:drawableLeft="@drawable/ic_action_save"
-	  android:onClick="onClickSave"
-          android:text="@string/save" />
-      </LinearLayout>
   </LinearLayout>
 </LinearLayout>
