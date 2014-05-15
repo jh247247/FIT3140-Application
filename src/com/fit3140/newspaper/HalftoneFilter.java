@@ -158,6 +158,9 @@ public class HalftoneFilter extends Filter
   }
 
   protected Bitmap rotateImage(Bitmap img, int angle) {
+    if(angle == 0){
+      return img;
+    }
     Matrix m = new Matrix();
     m.setRotate(angle,
 		(float) img.getWidth()/2,
@@ -226,6 +229,20 @@ public class HalftoneFilter extends Filter
     }
     return halftoneImg;
   }
+
+  protected Bitmap cutOutCenterBitmap(Bitmap img, int w, int h){
+    int wDiff = img.getWidth() - w;
+    int hDiff = img.getHeight() - h;
+    if(wDiff == 0 && hDiff == 0) {
+      return img;
+    }
+    Log.v("HaltoneFilter","wDiff: " + wDiff + " hDiff: " + hDiff);
+    Log.v("HaltoneFilter","w: " + img.getWidth() + " h: " + img.getHeight());
+    return Bitmap.createBitmap(img,
+			       wDiff, hDiff,
+			       img.getWidth() - wDiff,
+			       img.getHeight() - hDiff);
+  }
   /**
    * This should apply the halftoning filter to the image by making
    * several threads that process each line(?) or block of the
@@ -239,12 +256,33 @@ public class HalftoneFilter extends Filter
       // so for this case, we just never call the callback. Genius!
       return;
     }
-    // reuse refs to save memory.
-    img = downScaleImage(img, m_gridSize);
-    //img = rotateImage(img, m_gridAngle);
-    img = halftoneImage(img);
-    //img = rotateImage(img, m_gridAngle);
-    m_parent.filterFinishedCallback(img);
+
+    int w = img.getWidth();
+    int h = img.getHeight();
+
+
+    // recycle refs to save memory.
+    Bitmap imgDownScaled = downScaleImage(img, m_gridSize);
+
+
+    //Bitmap imgRotated = rotateImage(imgDownScaled, m_gridAngle);
+    //if(imgRotated != imgDownScaled) {
+    //  imgDownScaled.recycle();
+    //}
+
+
+    Bitmap imgHalftoned = halftoneImage(imgDownScaled);
+    imgDownScaled.recycle();
+
+    //Bitmap imgRotated2 = rotateImage(imgHalftoned, m_gridAngle + 240);
+    //if(imgHalftoned != imgRotated2) {
+    //  imgHalftoned.recycle();
+    //}
+    //Bitmap imgCut = cutOutCenterBitmap(imgHalftoned, w, h);
+    //imgRotated2.recycle();
+
+
+    m_parent.filterFinishedCallback(imgHalftoned);
   }
 
   /**
