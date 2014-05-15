@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
  * worried about later on.
  *
  */
-abstract
+public abstract
   class Filter extends android.app.Fragment {
   /**
    * This is a class that the parent is typecasted to. Mainly it is

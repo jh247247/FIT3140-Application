@@ -357,7 +357,6 @@ public class MainActivity extends Activity implements
     Context ctx = getApplicationContext();
     Bitmap img = ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
 
-    // much better.
     ViewPager vp = (ViewPager) findViewById(R.id.filterPager);
     Filter filter = (Filter) m_filterAdapter.getItem(vp.getCurrentItem());
     filter.apply(img);
