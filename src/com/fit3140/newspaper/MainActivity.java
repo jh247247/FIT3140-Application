@@ -22,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.widget.Button;
+import java.io.IOException;
 
 import android.view.ViewGroup;
 
@@ -191,6 +192,10 @@ public class MainActivity extends Activity implements
 			       ACTIVITY_CAPTURE_IMAGE);
       }
       return true;
+
+      // This is not accessible in any way, but we might need it
+      // later.
+      // Also not causing any harm by leaving it in.
     case R.id.action_settings:
       Log.v("MainActivity", "Calling up settings...");
       int duration = Toast.LENGTH_SHORT;
@@ -353,6 +358,9 @@ public class MainActivity extends Activity implements
 
   }
 
+
+  // this handles orientation change, because that sort of stuff is
+  // kinda important...
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
@@ -394,20 +402,30 @@ public class MainActivity extends Activity implements
     }
   }
 
+  // set the 'save' and 'share' button visibility.
   private void setButtonVisibility(int vis) {
     ((Button)findViewById(R.id.saveButton)).setVisibility(vis);
     ((Button)findViewById(R.id.shareButton)).setVisibility(vis);
   }
 
 
-  // these two methods might be better off in their own class or
+  // these method might be better off in their own class or
   // something.
   // adapter pattern maybe? Right now it is just code smell.
   private Uri saveCurrentImage() {
     Context ctx = getApplicationContext();
     Image currImg = (Image)
       m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
-    return currImg.saveImage(m_filteredImage, ctx);
+
+    Uri outUri = null;
+    try {
+      outUri = currImg.copyImageToPublic();
+    }
+    catch (IOException e) {
+      // TODO TOAST STUFF
+      Log.e("MainActivity.saveCurrentImage","Cannot copy to public dir: " + e);
+    }
+    return outUri;
   }
 
 

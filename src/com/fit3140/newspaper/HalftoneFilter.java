@@ -14,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+import android.graphics.Matrix;
 
 /**
  * This class applies a halftoning filter to the passed in
@@ -23,7 +24,7 @@ import android.util.Log;
  *
  */
 
-public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
+public class HalftoneFilter extends Filter
 {
   private static final int MIN_FILTER_GRIDSIZE = 5;
 
@@ -32,6 +33,10 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
   private int m_gridSize;
   private SeekBar m_gridSizeBar;
   private TextView m_gridSizeText;
+
+  private int m_gridAngle;
+  private SeekBar m_gridAngleBar;
+  private TextView m_gridAngleText;
 
   // Parent typecasted to this so that we can actually call some stuff
   // on it.
@@ -44,6 +49,49 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
   // need them.
   //protected double m_gridAngle;
   //protected enum m_shapeType {CIRCLE, DIAMOND, RECTANGLE}
+
+
+  private class gridSizeHandler implements OnSeekBarChangeListener {
+    @Override
+    public void onProgressChanged(SeekBar seekBar,
+				  int progress,
+				  boolean fromUser) {
+      setGridSize(progress);
+    }
+
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+
+    }
+
+  }
+
+  private class gridAngleHandler implements OnSeekBarChangeListener {
+    @Override
+    public void onProgressChanged(SeekBar seekBar,
+				  int progress,
+				  boolean fromUser) {
+      setGridAngle(progress);
+    }
+
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+
+    }
+
+  }
 
   /**
    * This method is called when the fragment is attached to an
@@ -75,20 +123,27 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
 	  View ret = inflater.inflate(R.layout.fragment_filter_halftone,
 			  container, false);
 
-	  m_gridSizeText = (TextView)ret.findViewById(R.id.grid_size_text);
-	  m_gridSizeBar = (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
+	  m_gridSizeText =
+	    (TextView)ret.findViewById(R.id.grid_size_text);
+          m_gridSizeBar =
+	    (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
 
-	  //FIXME
-	  m_gridSizeText.setText("5");
-	  m_gridSizeBar.setOnSeekBarChangeListener(this);
+	  m_gridAngleText =
+	    (TextView)ret.findViewById(R.id.grid_angle_text);
+          m_gridAngleBar =
+	    (SeekBar)ret.findViewById(R.id.grid_angle_seekbar);
 
-	  // Inflate the layout for this fragment
+
+          m_gridSizeBar.setOnSeekBarChangeListener(new gridSizeHandler());
+	  m_gridAngleBar.setOnSeekBarChangeListener(new gridAngleHandler());
+
+          // Inflate the layout for this fragment
 	  return ret;
   }
 
 
   /**
-   * This method should set the grid size for the halftoning when the
+2   * This method should set the grid size for the halftoning when the
    * user changes it in the displayed fragment.
    *
    */
@@ -97,26 +152,80 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
     m_gridSizeText.setText(String.valueOf(gridsize+MIN_FILTER_GRIDSIZE));
   }
 
-  /**
-   * This gets called whenever any child seekbar gets changed.
-   *
-   */
-  @Override
-    public void onProgressChanged(SeekBar seekBar,
-				  int progress,
-				  boolean fromUser) {
-    // currently placeholder. Can be changed.
-    setGridSize(progress);
+  protected void setGridAngle(int gridangle) {
+    m_gridAngle = gridangle;
+    m_gridAngleText.setText(String.valueOf(gridangle));
   }
 
-  public void onStartTrackingTouch(SeekBar seekBar) {
-
+  protected Bitmap rotateImage(Bitmap img, int angle) {
+    Matrix m = new Matrix();
+    m.setRotate(angle,
+		(float) img.getWidth()/2,
+		(float) img.getHeight()/2);
+    try {
+      Bitmap newImg = Bitmap.createBitmap(
+				      img, 0, 0, img.getWidth(), img.getHeight(), m, true);
+      if (img != newImg) {
+	img.recycle();
+	img = newImg;
+      }
+    } catch (OutOfMemoryError ex) {
+      throw ex;
+    }
+    return img;
   }
 
-  public void onStopTrackingTouch(SeekBar seekBar) {
-
+  protected Bitmap downScaleImage(Bitmap img, int scaleFactor) {
+    return Bitmap.createScaledBitmap(img, img.getHeight()/scaleFactor,
+				     img.getWidth()/scaleFactor, true);
   }
 
+  protected Bitmap halftoneImage(Bitmap img) {
+    final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
+    Bitmap halftoneImg = Bitmap.createBitmap(WIDTH*m_gridSize,
+					     HEIGHT*m_gridSize,
+					     Bitmap.Config.ARGB_8888);
+    Canvas c = new Canvas(halftoneImg);
+    Paint black = new Paint(),
+      white = new Paint();
+    black.setColor(Color.BLACK);
+    white.setColor(Color.WHITE);
+    int raw, red, green, blue;
+
+    float totalValue, maxValue, averageValue;
+    float dotRadius;
+
+    c.drawRect(0, 0, halftoneImg.getWidth(),
+	       halftoneImg.getHeight(), white);
+
+    for (int x = 0; x < WIDTH; x++) {
+      for (int y = 0; y < HEIGHT; y++) {
+	raw = img.getPixel(x,y);
+
+	red = Color.red(raw);
+	green = Color.green(raw);
+	blue = Color.blue(raw);
+
+	totalValue = (0.3f * red + 0.59f * green + 0.11f * blue) / 255.0f;
+	maxValue = 1.0f;
+
+
+	//With this line, averageValue now represents "the
+	//percentage of blackness in the m_gridSize square"
+	averageValue = 100.0f * (1.0f - (totalValue / maxValue));
+
+	//This function roughly maps out to making the area
+	//of the dots equal to averageValue% of the area of
+	//the m_gridSize square.
+	dotRadius = (float) (Math.sqrt(averageValue + 4) - 2) * m_gridSize * 2 / 25;
+
+	c.drawCircle(x*m_gridSize + m_gridSize / 2,
+		     y*m_gridSize + m_gridSize / 2,
+		     dotRadius, black);
+      }
+    }
+    return halftoneImg;
+  }
   /**
    * This should apply the halftoning filter to the image by making
    * several threads that process each line(?) or block of the
@@ -130,51 +239,12 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
       // so for this case, we just never call the callback. Genius!
       return;
     }
-    final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
-
-    Bitmap halftoneImg = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
-    Canvas c = new Canvas(halftoneImg);
-    Paint black = new Paint(),
-      white = new Paint();
-    black.setColor(Color.BLACK);
-    white.setColor(Color.WHITE);
-    int[] pixels = new int[m_gridSize * m_gridSize];
-    int red, green, blue;
-
-    float totalValue, maxValue, averageValue;
-    float dotRadius;
-
-    c.drawRect(0, 0, WIDTH, HEIGHT, white);
-
-    for (int x = 0; x < WIDTH; x += m_gridSize) {
-      for (int y = 0; y < HEIGHT; y += m_gridSize) {
-	totalValue = 0;
-	maxValue = 0;
-
-	img.getPixels(pixels, 0, m_gridSize, x, y,
-		      Math.min(m_gridSize, WIDTH - x), Math.min(m_gridSize, HEIGHT - y));
-	for (int i = 0; i < pixels.length; i++) {
-	  red = Color.red(pixels[i]);
-	  green = Color.green(pixels[i]);
-	  blue = Color.blue(pixels[i]);
-	  totalValue += (0.3f * red + 0.59f * green + 0.11f * blue) / 255.0f;
-	  maxValue += 1.0f;
-	}
-
-	//With this line, averageValue now represents "the
-	//percentage of blackness in the m_gridSize square"
-	averageValue = 100.0f * (1.0f - (totalValue / maxValue));
-
-	//This function roughly maps out to making the area
-	//of the dots equal to averageValue% of the area of
-	//the m_gridSize square.
-	dotRadius = (float) (Math.sqrt(averageValue + 4) - 2) * m_gridSize * 2 / 25;
-
-	c.drawCircle(x + m_gridSize / 2, y + m_gridSize / 2, dotRadius, black);
-      }
-    }
-
-    m_parent.filterFinishedCallback(halftoneImg);
+    // reuse refs to save memory.
+    img = downScaleImage(img, m_gridSize);
+    //img = rotateImage(img, m_gridAngle);
+    img = halftoneImage(img);
+    //img = rotateImage(img, m_gridAngle);
+    m_parent.filterFinishedCallback(img);
   }
 
   /**

@@ -191,7 +191,7 @@ class Image extends android.app.Fragment {
    * @param dst destination
    * @throws java.io.IOException in case of any problems
    */
-  public void copyImageToPublic() throws IOException {
+  public Uri copyImageToPublic() throws IOException {
     File inFile = new File(m_imgLoc.getPath());
 
     Date date = new Date();
@@ -210,5 +210,6 @@ class Image extends android.app.Fragment {
       if (outChannel != null)
 	outChannel.close();
     }
+    return Uri.fromFile(outFile);
   }
 }

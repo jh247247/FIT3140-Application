@@ -12,6 +12,7 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent">
 
+    <!-- Grid size -->
     <TextView
         android:id="@+id/grid_size_header"
         android:layout_width="fill_parent"
@@ -22,14 +23,13 @@
         android:textColor="@color/cardTextDark"
         android:textSize="20sp"
         android:textStyle="italic" />
-
     <SeekBar
-	  android:id="@+id/grid_size_seekbar"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_alignParentRight="true"
-	  android:layout_below="@id/grid_size_header"
-	  android:max="95"/>
+        android:id="@+id/grid_size_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/grid_size_header"
+        android:max="95"/>
 
     <TextView
         android:id="@+id/grid_size_text"
@@ -37,7 +37,39 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/grid_size_seekbar"
         android:layout_alignParentRight="true"
-        android:text="@string/hello_world"
+        android:text="0"
+        android:textColor="@color/cardTextDark"
+        android:textSize="16sp"
+        android:textStyle="italic" />
+
+    <!-- angle -->
+    <TextView
+        android:id="@+id/angle_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="4dp"
+        android:text="@string/angle"
+        android:textColor="@color/cardTextDark"
+        android:textSize="20sp"
+        android:textStyle="italic"
+	android:layout_below="@id/grid_size_seekbar"/>
+
+    <SeekBar
+        android:id="@+id/grid_angle_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/angle_header"
+        android:max="45"/>
+
+    <TextView
+        android:id="@+id/grid_angle_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/grid_angle_seekbar"
+        android:layout_alignParentRight="true"
+        android:text="0"
         android:textColor="@color/cardTextDark"
         android:textSize="16sp"
         android:textStyle="italic" />
