@@ -135,7 +135,12 @@ public class HalftoneFilter extends Filter
 
 
           m_gridSizeBar.setOnSeekBarChangeListener(new gridSizeHandler());
-	  m_gridAngleBar.setOnSeekBarChangeListener(new gridAngleHandler());
+	  m_gridAngleBar.setOnSeekBarChangeListener(new
+	  gridAngleHandler());
+
+	  // make sure the default settings are sane.
+	  setGridSize(0);
+	  setGridAngle(0);
 
           // Inflate the layout for this fragment
 	  return ret;
