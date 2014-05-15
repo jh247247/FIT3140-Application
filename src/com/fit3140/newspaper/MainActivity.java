@@ -266,9 +266,6 @@ public class MainActivity extends Activity implements
     }
   }
 
-  // This is a class level reference to the latest half-tone image.
-  Bitmap m_halfToneImage = null;
-
   /**
    * Loads an image from a Uri, scales it to the screen and adds it
    * to the main LinearLayout.
@@ -335,11 +332,19 @@ public class MainActivity extends Activity implements
     Log.v("MainActivity.onClickApply","Applying filter to image.");
     Log.v("MainActivity.onClickApply","Current Item index: " +
 	  m_imageViewerPager);
-
-    Image currImg =
-      (Image)m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
-    Bitmap img = currImg.getBitmap();
-    Log.v("MainActivity.onClickApply","Current Item: " + currImg);
+    // get a ref to the object to verify if we can actually typecast.
+    Object imgObj =
+      m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
+    if(!(imgObj instanceof Image)) {
+      Log.w("MainActivity.onClickApply",
+	    "Image returned is not image!");
+      Toast.makeText(this, "Need to load image first!",
+		     Toast.LENGTH_SHORT).show();
+      return;
+    }
+    // if we get here, the image returned is of the correct type.
+    // that means we can typecast.
+    Bitmap img = ((Image)imgObj).getBitmap();
 
     Log.v("MainActivity.onClickApply","Image loaded.");
 
