@@ -4,7 +4,7 @@
   <string name="action_imageFromCamera">Load From Camera</string>
   <string name="app_name">NowLayout</string>
   <string name="hello_world">Hello World!</string>
-  <string name="title_activity_main">Now Layout</string>
+  <string name="title_activity_main">Old Newspaper App</string>
   <string name="card_body_default">This is the default body text,
   you should never see this.</string>
   <string name="share">Share</string>
@@ -13,5 +13,5 @@
   <string name="caption_hint">Write caption here</string>
   <string name="gridsize">Halftone Grid Size</string>
   <string name="apply">Apply</string>
-  <string name="image_header">Filtered Image</string>
+  <string name="image_header">Image</string>
 </resources>

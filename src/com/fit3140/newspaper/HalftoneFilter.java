@@ -168,10 +168,7 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
 	//This function roughly maps out to making the area
 	//of the dots equal to averageValue% of the area of
 	//the m_gridSize square.
-	dotRadius = (float) (Math.sqrt(averageValue + 8) - 2) * m_gridSize * 2 / 25;
-	if (averageValue > 90.0f) {
-	  dotRadius += (float) Math.pow(averageValue - 90.0f, 2) / 100;
-	}
+	dotRadius = (float) (Math.sqrt(averageValue + 4) - 2) * m_gridSize * 2 / 25;
 
 	c.drawCircle(x + m_gridSize / 2, y + m_gridSize / 2, dotRadius, black);
       }

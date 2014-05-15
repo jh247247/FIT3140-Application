@@ -1,4 +1,4 @@
-#+Title: Chunky Spikes
+#+Title: Milestones
 
 * DONE Loading
 ** DONE From file
@@ -10,11 +10,11 @@
 ** DONE Edit picture (basic)
 ** DONE Halftoning (basic)
    Halftoning with different dot sizes
-** TODO Halftoning (advanced)
+** TODO Halftoning (colored)
    Halftoning with color
-** TODO Halftoning (wow, much halftone)
+** TODO Halftoning (optional/advanced)
    Haltoning with different dot types/angles whatever.
-** TODO Adding text
+** DONE Adding text
 ** TODO "Old newspaper effect"
 * DONE Integration
 ** DONE Intent to share
