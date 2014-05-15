@@ -126,7 +126,7 @@ public class HalftoneFilter extends Filter implements OnSeekBarChangeListener
   @Override
   public void apply (Bitmap img) {
     if(img == null) {
-      Log.v("HalftoneFilter","Trying to halftone a null image!");
+      Log.w("HalftoneFilter","Trying to halftone a null image!");
       // so for this case, we just never call the callback. Genius!
       return;
     }

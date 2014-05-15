@@ -18,9 +18,9 @@ import android.graphics.Bitmap;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.support.v4.view.ViewPager;
-import android.widget.LinearLayout;
+//ActivityInfo is used to force emulators in to landscape mode if necessary.
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.widget.ScrollView;
 import android.widget.Button;
 
 import android.view.ViewGroup;
