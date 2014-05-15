@@ -41,6 +41,9 @@ public class MainActivity extends Activity implements
   private static final int ACTIVITY_SELECT_IMAGE=1;
   private static final int ACTIVITY_CAPTURE_IMAGE=2;
 
+  private static final int IMAGE_VIEWPAGER_IMAGE_MARGIN = -75;
+
+
   /* Other constants */
 
   /*This is all the changing data lives, ones that should be saved upon
@@ -51,47 +54,24 @@ public class MainActivity extends Activity implements
   // Planned to be used for loading the full res image when needed.
   private Uri m_prevImageLoc;
 
-  // This has to be changed later on when the final image view system
-  // is added. Maybe the scrolling will be kept, so that each image
-  //has its own share/save stuff.
-  private ImageView m_tempImageRef;
-
   // this gets set by the callback.
   private Bitmap m_filteredImage;
 
-  private FilterInterfaceAdapter m_filterAdapter;
+  // Adapters for the two swipy interfaces.
+  private FilterInterfaceAdapter m_filterInterface;
+  private ViewPager m_filterInterfacePager;
+  private ImageViewer m_imageViewer;
+  private ViewPager m_imageViewerPager;
 
   @Override
   public void filterFinishedCallback(Bitmap filteredImage) {
     Log.v("MainActivity", "Image used callback!");
-    //Context ctx = getApplicationContext();
-    //int duration = Toast.LENGTH_SHORT;
-    //Toast toast = Toast.makeText(ctx, "This is from the callback!",
-    //                             duration);
-    //toast.show();
     Context ctx = getApplicationContext();
 
     m_filteredImage = filteredImage;
-
-    Uri outputUri = ImageUtils.saveImagePrivate(m_filteredImage, ctx);
-    m_prevImageLoc = outputUri;
-    Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(outputUri,
-                                                                ctx);
-    // if there is no displayed image, get one.
-    if(m_tempImageRef == null) {
-      LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
-      View imageTest = ImageUtils.getCardImage(m_filteredImage, ctx, this,
-                                               (ViewGroup)findViewById(R.id.outputArea));
-      m_tempImageRef =
-	(ImageView)imageTest.findViewById(R.id.card_image);
-      // show buttons to since we have a image to share again.
-      setButtonVisibility(Button.VISIBLE);
-    } else {
-      // otherwise, just set.
-      m_tempImageRef.setImageBitmap(m_filteredImage);
-    }
-    Toast.makeText(ctx, "Done!", Toast.LENGTH_SHORT).show();
-
+    m_prevImageLoc = Image.saveImage(m_filteredImage, ctx);
+    m_imageViewer.addImage(m_prevImageLoc.toString());
+    m_imageViewerPager.setCurrentItem(m_imageViewer.getCount()-1);
   }
 
   /**
@@ -112,11 +92,17 @@ public class MainActivity extends Activity implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
-    ViewPager pager = (ViewPager)findViewById(R.id.filterPager);
-    m_filterAdapter = new FilterInterfaceAdapter(getFragmentManager());
-    pager.setAdapter(m_filterAdapter);
+    m_filterInterfacePager = (ViewPager)findViewById(R.id.filterPager);
+    m_imageViewerPager = (ViewPager)findViewById(R.id.imagePager);
+    m_imageViewer = new ImageViewer(getFragmentManager());
+    m_filterInterface = new
+      FilterInterfaceAdapter(getFragmentManager());
 
-    m_tempImageRef = null;
+    m_filterInterfacePager.setAdapter(m_filterInterface);
+    m_imageViewerPager.setAdapter(m_imageViewer);
+    // this apparently does not have an equivalent in xml...
+    m_imageViewerPager.setPageMargin(IMAGE_VIEWPAGER_IMAGE_MARGIN);
+
 
 
     // hide buttons to avoid sharing/saving null pointers.
@@ -288,24 +274,11 @@ public class MainActivity extends Activity implements
   private void addImageToUI(Uri uri) {
     if(uri == null) return; // cbf.
     Context ctx = getApplicationContext();
+    Log.v("MainActivity", "Loading image from: " + uri.toString());
 
-    Toast.makeText(ctx, "Loading image...", Toast.LENGTH_SHORT).show();
-
-    // FIXME
-    Bitmap displayImg = ImageUtils.loadImageScaledToScreenWidth(uri,
-								ctx);
-    m_filteredImage = ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
-
-    // if the view has already been made, modify it. Else, make a
-    // new card.
-    if(m_tempImageRef == null) {
-      LinearLayout container = (LinearLayout) findViewById(R.id.outputArea);
-      View imageTest = ImageUtils.getCardImage(displayImg, ctx, this,
-					       (ViewGroup)findViewById(R.id.outputArea));
-      m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
-    } else {
-      m_tempImageRef.setImageBitmap(displayImg);
-    }
+    m_imageViewer.addImage(uri.toString());
+    ViewPager imagePager = (ViewPager)findViewById(R.id.imagePager);
+    imagePager.setAdapter(m_imageViewer );
 
     setButtonVisibility(Button.VISIBLE);
 
@@ -326,8 +299,7 @@ public class MainActivity extends Activity implements
     }
     Context ctx = getApplicationContext();
     // make the button actually do something.
-    Uri file =
-      ImageUtils.saveImagePublic(m_filteredImage,ctx);
+    saveCurrentImage();
   }
 
   /**
@@ -355,15 +327,27 @@ public class MainActivity extends Activity implements
 
   public void onClickApply(View view) {
     Context ctx = getApplicationContext();
-    Bitmap img = ImageUtils.convertUriToBitmap(m_prevImageLoc, ctx, null);
+    Log.v("MainActivity.onClickApply","Applying filter to image.");
+    Log.v("MainActivity.onClickApply","Current Item index: " +
+	  m_imageViewerPager);
 
-    ViewPager vp = (ViewPager) findViewById(R.id.filterPager);
-    Filter filter = (Filter) m_filterAdapter.getItem(vp.getCurrentItem());
+    Image currImg =
+      (Image)m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
+    Bitmap img = currImg.getBitmap();
+    Log.v("MainActivity.onClickApply","Current Item: " + currImg);
+
+    Log.v("MainActivity.onClickApply","Image loaded.");
+
+    Filter filter = (Filter)
+      m_filterInterface.getItem(m_filterInterfacePager.getCurrentItem());
+    Log.v("MainActivity.onClickApply","Applying...");
     filter.apply(img);
+
 
 
   }
 
+  // have to keep this here apparently. Annoying.
   @Override
   public void onClick(View v) {
 
@@ -414,4 +398,17 @@ public class MainActivity extends Activity implements
     ((Button)findViewById(R.id.saveButton)).setVisibility(vis);
     ((Button)findViewById(R.id.shareButton)).setVisibility(vis);
   }
+
+
+  // these two methods might be better off in their own class or
+  // something.
+  // adapter pattern maybe? Right now it is just code smell.
+  private Uri saveCurrentImage() {
+    Context ctx = getApplicationContext();
+    Image currImg = (Image)
+      m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
+    return currImg.saveImage(m_filteredImage, ctx);
+  }
+
+
 }

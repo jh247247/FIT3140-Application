@@ -46,14 +46,14 @@ public final class R {
         public static final int card_image=0x7f0a0005;
         public static final int filterLayout=0x7f0a0012;
         public static final int filterPager=0x7f0a0013;
+        public static final int fragment_imgView=0x7f0a000b;
         public static final int grid_size_header=0x7f0a0008;
         public static final int grid_size_seekbar=0x7f0a0009;
         public static final int grid_size_text=0x7f0a000a;
-        public static final int imageLayout=0x7f0a000d;
-        public static final int imageView=0x7f0a000b;
-        public static final int oriLayout=0x7f0a000c;
-        public static final int outputArea=0x7f0a000f;
-        public static final int outputScroller=0x7f0a000e;
+        public static final int imageLayout=0x7f0a000e;
+        public static final int imagePager=0x7f0a000f;
+        public static final int imageView=0x7f0a000c;
+        public static final int oriLayout=0x7f0a000d;
         public static final int pager_title_strip=0x7f0a0014;
         public static final int saveButton=0x7f0a0011;
         public static final int shareButton=0x7f0a0010;
@@ -68,8 +68,9 @@ public final class R {
         public static final int card_info=0x7f030003;
         public static final int fragment_filter_caption=0x7f030004;
         public static final int fragment_filter_halftone=0x7f030005;
-        public static final int image=0x7f030006;
-        public static final int main=0x7f030007;
+        public static final int fragment_image=0x7f030006;
+        public static final int image=0x7f030007;
+        public static final int main=0x7f030008;
     }
     public static final class menu {
         public static final int actionbar_main=0x7f090000;
