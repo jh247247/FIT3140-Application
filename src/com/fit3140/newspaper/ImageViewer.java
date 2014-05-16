@@ -1,6 +1,5 @@
 package com.fit3140.newspaper;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.os.Bundle;
@@ -62,8 +61,8 @@ public class ImageViewer extends FragmentStatePagerAdapter {
   }
 
   public void addImage(String imgLoc) {
-    m_fragmentList.add((Fragment)Image.newInstance(imgLoc));
-    Log.v("ImageViewer.addImage","size: " + m_fragmentList.size());
+    m_fragmentList.add((Fragment)ImageFragment.newInstance(imgLoc));
+    Log.v("ImageViewer.addImageFragment","size: " + m_fragmentList.size());
     notifyDataSetChanged();
   }
 }

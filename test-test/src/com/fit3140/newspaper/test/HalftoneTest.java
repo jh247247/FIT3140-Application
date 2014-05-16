@@ -4,28 +4,31 @@
 
 package com.fit3140.newspaper.test;
 
-import com.fit3140.newspaper.ImageUtils;
+import java.io.ByteArrayOutputStream;
+
+import com.fit3140.newspaper.ImageFragment;
+import com.fit3140.newspaper.ImageViewer;
 import com.fit3140.newspaper.MainActivity;
-import com.fit3140.newspaper.R;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
+import android.provider.MediaStore.Images;
+import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
 public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	private MainActivity main;
-	private ImageView m_tempImageRef;
+	private ImageViewer imgViewer;
+	private ViewPager imageViewerPager;
 	private Button applyButton;
+	private ImageFragment currentImage;
+	private Bitmap currentBitmap;
 	
 	private Paint black = new Paint();
 	private Paint white = new Paint();
@@ -42,10 +45,12 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 			Log.w("HalftoneTest", "setUp threw exception: " + e);
 			e.printStackTrace();
 		}
-		
 		main = getActivity();
 		applyButton = (Button) main.findViewById(
 				com.fit3140.newspaper.R.id.apply_filter);
+		imgViewer = new ImageViewer(main.getFragmentManager());
+		imageViewerPager = (ViewPager) main.findViewById(
+				com.fit3140.newspaper.R.id.imagePager);
 		
 		black.setColor(Color.BLACK);
 		white.setColor(Color.WHITE);
@@ -53,27 +58,27 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	}
 	
 	/**
-	 * Uses the UI thread to put an image in to the UI, because tests aren't allowed to do that normally.
-	 * This doesn't actually do much except for give the test observer some visual information - the
-	 * filter applying method doesn't look in the UI for the image.
+	 * Puts an image in to the UI directly - bypassing the need to access the gallery or camera.
 	 * 
-	 * @param 	img			The image to put in to the UI. It's made final to appease eclipse and because
-	 * 						it's not going to get changed in any tests anyway.
+	 * @param 	img		The image to put in to the UI.
 	 */
 	
-	public void putImageInUI(final Bitmap img) {
-	    main.runOnUiThread(
-	            new Runnable()
-	            {
-	                @Override
-	                public void run()
-	                {
-	            		View imageTest = ImageUtils.getCardImage(img, main.getApplicationContext(), main,
-	            				(ViewGroup) main.findViewById(R.id.outputArea));
-	            	    m_tempImageRef = (ImageView)imageTest.findViewById(R.id.card_image);
-	                }
-	            }
-	        );
+	public void putImageInUI(Bitmap img) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		img.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+		String path = Images.Media.insertImage(main.getContentResolver(), img, "TEST",
+				"Image automatically created for testing.");
+		imgViewer.addImage(path);
+	}
+	
+	/**
+	 * Gets the bitmap that the imageViewerPager's currently displaying and puts it
+	 * in to currentBitmap.
+	 */
+	
+	public void getImageFromUI() {
+		currentImage = (ImageFragment)imgViewer.getItem(imageViewerPager.getCurrentItem());
+		currentBitmap = currentImage.getBitmap();
 	}
 	
 	/**
@@ -88,11 +93,13 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	    c.drawRect(0, 0, 20, 20, blue);
 	    
 	    putImageInUI(testImg);
+	    //Note that the apply button is not clicked - the image doesn't change.
+	    getImageFromUI();
 	    
 		boolean hasChanged = false;
-		for (int x = 0; x < testImg.getWidth(); x++) {
-			for (int y = 0; y < testImg.getHeight(); y++) {
-				if (testImg.getPixel(x, y) != Color.BLUE) {
+		for (int x = 0; x < currentBitmap.getWidth(); x++) {
+			for (int y = 0; y < currentBitmap.getHeight(); y++) {
+				if (currentBitmap.getPixel(x, y) != Color.BLUE) {
 					hasChanged = true;
 				}
 			}
@@ -112,14 +119,13 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	    c.drawRect(0, 0, 20, 20, blue);
 	    
 	    putImageInUI(testImg);
-	    
 	    TouchUtils.clickView(this, applyButton);
+	    getImageFromUI();
 	    
-		Bitmap outputImg = ((BitmapDrawable) m_tempImageRef.getDrawable()).getBitmap();
 		boolean hasChanged = false;
-		for (int x = 0; x < outputImg.getWidth(); x++) {
-			for (int y = 0; y < outputImg.getHeight(); y++) {
-				if (outputImg.getPixel(x, y) != Color.BLUE) {
+		for (int x = 0; x < currentBitmap.getWidth(); x++) {
+			for (int y = 0; y < currentBitmap.getHeight(); y++) {
+				if (currentBitmap.getPixel(x, y) != Color.BLUE) {
 					hasChanged = true;
 				}
 			}
@@ -129,23 +135,23 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	
 	/**
 	 * Tests that if a white image is input in to the halftone filter, a white image is also output.
+	 * Has an underscore to make it test after the first two.
 	 */
 	
-	public void testWhiteImage() {
+	public void test_WhiteImage() {
 		Bitmap whiteImg = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
 		Canvas wc = new Canvas(whiteImg);
 	    
 	    wc.drawRect(0, 0, 20, 20, white);
 		
 	    putImageInUI(whiteImg);
-	    
 	    TouchUtils.clickView(this, applyButton);
+		getImageFromUI();
 		
-		Bitmap outputImg = ((BitmapDrawable) m_tempImageRef.getDrawable()).getBitmap();
 		boolean allWhite = true;
-		for (int x = 0; x < outputImg.getWidth(); x++) {
-			for (int y = 0; y < outputImg.getHeight(); y++) {
-				if (outputImg.getPixel(x, y) != Color.WHITE) {
+		for (int x = 0; x < currentBitmap.getWidth(); x++) {
+			for (int y = 0; y < currentBitmap.getHeight(); y++) {
+				if (currentBitmap.getPixel(x, y) != Color.WHITE) {
 					allWhite = false;
 				}
 			}
@@ -155,23 +161,23 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	
 	/**
 	 * Tests that if a black image is input in to the halftone filter, a black image is also output.
+	 * Has an underscore to make it test after the first two.
 	 */
 
-	public void testBlackImage() {
+	public void test_BlackImage() {
 		Bitmap blackImg = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
 	    Canvas bc = new Canvas(blackImg);
 	    
 	    bc.drawRect(0, 0, 20, 20, black);
 		
 	    putImageInUI(blackImg);
-	    
 	    TouchUtils.clickView(this, applyButton);
+		getImageFromUI();
 		
-		Bitmap outputImg = ((BitmapDrawable) m_tempImageRef.getDrawable()).getBitmap();
 		boolean allBlack = true;
-		for (int x = 0; x < outputImg.getWidth(); x++) {
-			for (int y = 0; y < outputImg.getHeight(); y++) {
-				if (outputImg.getPixel(x, y) != Color.BLACK) {
+		for (int x = 0; x < currentBitmap.getWidth(); x++) {
+			for (int y = 0; y < currentBitmap.getHeight(); y++) {
+				if (currentBitmap.getPixel(x, y) != Color.BLACK) {
 					allBlack = false;
 				}
 			}

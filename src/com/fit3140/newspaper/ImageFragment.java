@@ -1,6 +1,5 @@
 package com.fit3140.newspaper;
 
-import android.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
@@ -17,16 +16,12 @@ import android.view.WindowManager;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import android.os.Environment;
-import java.nio.channels.FileChannel;
 import java.io.IOException;
-import android.widget.Toast;
 
 
-// probably should have come up with a better name for this class...
-class Image extends android.app.Fragment {
+public class ImageFragment extends android.app.Fragment {
   // get the image location from args etc.
   private static final String IMG_LOC = "imgLoc";
   private static final int IMG_DOWNSCALE_FOR_UI = 3;
@@ -42,9 +37,9 @@ class Image extends android.app.Fragment {
   // mem, it can get a few meg back by freeing this.
   private ImageView m_imgView;
 
-  public static Image newInstance(String imgLoc) {
+  public static ImageFragment newInstance(String imgLoc) {
     // needs to show a downscaled image if needed
-    Image f = new Image();
+    ImageFragment f = new ImageFragment();
 
     // pass in the args to the made fragment
     Bundle args = new Bundle();
@@ -60,7 +55,7 @@ class Image extends android.app.Fragment {
 			   ViewGroup container,
 			   Bundle savedInstanceState) {
 
-    Log.v("Image","Have to set up the UI for this fragment");
+    Log.v("ImageFragment","Have to set up the UI for this fragment");
     View ret = inflater.inflate(R.layout.fragment_image,
 				container, false);
     m_imgView =
@@ -68,7 +63,7 @@ class Image extends android.app.Fragment {
 
     String imgLocStr =  (String)getArguments().getCharSequence(IMG_LOC,null);;
     if(imgLocStr == null) {
-      Log.w("Image", "Somehow a null uri was passed in as an arg.");
+      Log.w("ImageFragment", "Somehow a null uri was passed in as an arg.");
       // what do we do???
       return null;
     }
@@ -79,12 +74,12 @@ class Image extends android.app.Fragment {
     m_dispImg = loadImageScaledToScreenWidth(m_imgLoc, getActivity());
     m_imgView.setImageBitmap(m_dispImg);
     // Inflate the layout for this fragment
-    Log.v("Image","Great success!");
+    Log.v("ImageFragment","Great success!");
     return ret;
   }
 
   public Bitmap getBitmap() {
-    Log.v("Image","Loading image");
+    Log.v("ImageFragment","Loading image");
     return convertUriToBitmap(m_imgLoc, getActivity(), null);
   }
 
@@ -107,7 +102,7 @@ class Image extends android.app.Fragment {
       imageStream = ctx.getContentResolver().openInputStream(loc);
     }
     catch (Exception e) {
-      Log.w("ImageUtils", "openInputStream() threw exception: " + e);
+      Log.w("ImageFragment", "openInputStream() threw exception: " + e);
       return null;
     }
     return BitmapFactory.decodeStream(imageStream, null, opt);
@@ -165,7 +160,7 @@ class Image extends android.app.Fragment {
 
   public static Uri saveImage(Bitmap img, Context ctx,int vis) {
     if (img == null) {
-      Log.e("ImageUtils.saveImage",
+      Log.e("ImageFragment.saveImage",
 	    "Input image is null!");
       return null;
     }
@@ -174,10 +169,10 @@ class Image extends android.app.Fragment {
     String timestamp = sdf.format(date);
     String loc = null;
     if(vis == PRIVATE) {
-      Log.v("ImageUtils.saveImage","Saving to private dir...");
+      Log.v("ImageFragment.saveImage","Saving to private dir...");
       loc = ctx.getExternalFilesDir(null).getAbsolutePath();
     } else if (vis == PUBLIC) {
-      Log.v("ImageUtils.saveImage","Saving to public dir...");
+      Log.v("ImageFragment.saveImage","Saving to public dir...");
       loc =
  	Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     } else {
@@ -192,7 +187,7 @@ class Image extends android.app.Fragment {
       img.compress(Bitmap.CompressFormat.JPEG, 50, outStream);
       outStream.close();
     } catch (Exception e) {
-      Log.e("ImageUtils.saveImage", "OutputStream threw exception: " +
+      Log.e("ImageFragment.saveImage", "OutputStream threw exception: " +
 	    e);
       return null;
     }

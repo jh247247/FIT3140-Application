@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements
     Context ctx = getApplicationContext();
 
     m_filteredImage = filteredImage;
-    m_prevImageLoc = Image.saveImage(m_filteredImage, ctx, Image.PRIVATE);
+    m_prevImageLoc = ImageFragment.saveImage(m_filteredImage, ctx, ImageFragment.PRIVATE);
     m_imageViewer.addImage(m_prevImageLoc.toString());
     m_imageViewerPager.setCurrentItem(m_imageViewer.getCount()-1);
   }
@@ -127,7 +127,7 @@ public class MainActivity extends Activity implements
 	//handleSendMultipleImages(intent); // Handle multiple images being sent
       }
     }
-
+    
     //Use this line to test landscape mode if the emulator/device is usually
     //forced in to portrait mode.
     //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -274,7 +274,7 @@ public class MainActivity extends Activity implements
    * @return None
    */
   private void addImageToUI(Uri uri) {
-    if(uri == null) return; // cbf.
+    if(uri == null) return;
     Context ctx = getApplicationContext();
     Log.v("MainActivity", "Loading image from: " + uri.toString());
 
@@ -302,7 +302,6 @@ public class MainActivity extends Activity implements
 
     Log.v("MainActivity","Uri: " + path);
     if(path == null) {
-      // wait a second...
       Log.e("Mainactivity.onClickSave","Saving current image returned null!");
       return;
     }
@@ -341,7 +340,7 @@ public class MainActivity extends Activity implements
 	  m_imageViewerPager);
 
 
-    Image currImg = getCurrentImage();
+    ImageFragment currImg = getCurrentImage();
     if(currImg == null) {
       Log.w("MainActivity.onClickApply",
             "Image returned is not image!");
@@ -430,7 +429,7 @@ public class MainActivity extends Activity implements
     Context ctx = getApplicationContext();
 
 
-    Image currImg = getCurrentImage();
+    ImageFragment currImg = getCurrentImage();
     if(currImg == null) {
       Log.w("MainActivity.onClickApply",
             "Image returned is not image!");
@@ -459,14 +458,14 @@ public class MainActivity extends Activity implements
     // get a ref to the object to verify if we can actually typecast.
     Object imgObj =
       m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
-    return (imgObj instanceof Image);
+    return (imgObj instanceof ImageFragment);
   }
 
-  private Image getCurrentImage() {
+  private ImageFragment getCurrentImage() {
     if(!checkCurrentImage()) {
       return null;
     }
-    return (Image)m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
+    return (ImageFragment)m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
 
   }
 }
