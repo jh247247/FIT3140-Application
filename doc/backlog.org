@@ -1,0 +1,34 @@
+#+Title: Project Backlog
+
+* DONE Loading
+** DONE From file
+   Prerequesite for User Story #1.
+   Using an android intent so that saves time and will actually
+   integrate with the interface that the user is used to .
+** DONE From camera
+   Prerequesite for User Story #1.
+   Load the image, save the image and display the bitmap
+* TODO Processing
+** DONE Editing Images (Proof of concept)
+   Draw black dots on an image.
+** DONE Halftoning (basic) (User Story #1)
+   "As an app user, I want to be able to take an image from storage or the camera and make a halftone photo."
+   Halftoning with different dot sizes
+** TODO Halftoning (colored)
+   Halftoning with color
+** TODO Halftoning (optional/advanced)
+*** DONE Halftoning on different angles (User Story #4)
+	"As an app user, I want to be able to specify the angle of the halftone grid"
+*** TODO Halftoning with different shapes (User Story #5)
+	"As an app user, I want to choose between circles, diamonds and rectangles as the shapes in my halftone grid."
+** DONE Adding text (User Story #2)
+   "As an app user, I want to add captions to a halftoned image."
+** TODO "Old newspaper effect"
+   Mainly a visual thing - give the app and images it creates an old brown paper kind of look.
+* DONE Integration
+** DONE Intent to share (User Story #3)
+   "As an app user, I want to share an image via social media."
+   Have an intent to share with any app that will accept an image
+   (hopefully facebook etc)
+** DONE Save image to file
+   Save the processed image to a file, so that the user can look at it later
