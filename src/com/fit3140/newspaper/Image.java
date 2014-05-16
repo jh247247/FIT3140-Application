@@ -29,6 +29,7 @@ import android.widget.Toast;
 class Image extends android.app.Fragment {
   // get the image location from args etc.
   private static final String IMG_LOC = "imgLoc";
+  private static final int IMG_DOWNSCALE_FOR_UI = 3;
 
   // used for image saving.
   public static final int PUBLIC = 0;
@@ -130,7 +131,7 @@ class Image extends android.app.Fragment {
     BitmapFactory.Options dims = getImageDimsFromUri(img, ctx);
 
     BitmapFactory.Options opt = new BitmapFactory.Options();
-    opt.inSampleSize = dims.outWidth/metrics.widthPixels;
+    opt.inSampleSize = dims.outWidth*IMG_DOWNSCALE_FOR_UI/metrics.widthPixels;
     return convertUriToBitmap(img,
 					 ctx, opt);
   }

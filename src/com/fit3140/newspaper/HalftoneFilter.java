@@ -161,26 +161,29 @@ public class HalftoneFilter extends Filter
     m_gridAngle = gridangle;
     m_gridAngleText.setText(String.valueOf(gridangle));
   }
-
-  protected Bitmap rotateImage(Bitmap img, int angle) {
+  protected Bitmap rotateImageAround(Bitmap img, int angle, int x, int y) {
     if(angle == 0){
       return img;
     }
     Matrix m = new Matrix();
-    m.setRotate(angle,
-		(float) img.getWidth()/2,
-		(float) img.getHeight()/2);
+    m.setRotate(angle,x,y);
+
     try {
       Bitmap newImg = Bitmap.createBitmap(
-				      img, 0, 0, img.getWidth(), img.getHeight(), m, true);
+                                          img, 0, 0, img.getWidth(), img.getHeight(), m, true);
       if (img != newImg) {
-	img.recycle();
-	img = newImg;
+        img.recycle();
+        img = newImg;
       }
     } catch (OutOfMemoryError ex) {
       throw ex;
     }
     return img;
+  }
+  protected Bitmap rotateImageCenter(Bitmap img, int angle) {
+    return rotateImageAround(img, angle,
+			     img.getWidth()/2,
+			     img.getHeight());
   }
 
   protected Bitmap downScaleImage(Bitmap img, int scaleFactor) {
@@ -192,7 +195,7 @@ public class HalftoneFilter extends Filter
     final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
     Bitmap halftoneImg = Bitmap.createBitmap(WIDTH*m_gridSize,
 					     HEIGHT*m_gridSize,
-					     Bitmap.Config.ARGB_8888);
+					     Bitmap.Config.RGB_565);
     Canvas c = new Canvas(halftoneImg);
     Paint black = new Paint(),
       white = new Paint();
@@ -232,6 +235,7 @@ public class HalftoneFilter extends Filter
 		     dotRadius, black);
       }
     }
+    img.recycle();
     return halftoneImg;
   }
 
@@ -242,11 +246,21 @@ public class HalftoneFilter extends Filter
       return img;
     }
     Log.v("HaltoneFilter","wDiff: " + wDiff + " hDiff: " + hDiff);
-    Log.v("HaltoneFilter","w: " + img.getWidth() + " h: " + img.getHeight());
-    return Bitmap.createBitmap(img,
-			       wDiff, hDiff,
-			       img.getWidth() - wDiff,
-			       img.getHeight() - hDiff);
+    Log.v("HaltoneFilter","w: " + img.getWidth() + " h: " +
+	  img.getHeight());
+    if(wDiff < 0 || hDiff < 0) {
+      Log.e("HalftoneFilter","One or more of the difference is < 0!");
+      return img;
+    }
+    Bitmap retVal =  Bitmap.createBitmap(img,
+					 wDiff/2, hDiff/2,
+					 w,h);
+    if(retVal == null) {
+      Log.e("HalftoneFilter","Downscaling the image failed!");
+      return img;
+    }
+    img.recycle();
+    return retVal;
   }
   /**
    * This should apply the halftoning filter to the image by making
@@ -270,24 +284,14 @@ public class HalftoneFilter extends Filter
     Bitmap imgDownScaled = downScaleImage(img, m_gridSize);
 
 
-    //Bitmap imgRotated = rotateImage(imgDownScaled, m_gridAngle);
-    //if(imgRotated != imgDownScaled) {
-    //  imgDownScaled.recycle();
-    //}
+    Bitmap imgRotated = rotateImageCenter(imgDownScaled, m_gridAngle);
+    Bitmap imgHalftoned = halftoneImage(imgRotated);
 
+    Bitmap imgRotated2 = rotateImageCenter(imgHalftoned, -m_gridAngle);
 
-    Bitmap imgHalftoned = halftoneImage(imgDownScaled);
-    imgDownScaled.recycle();
+    Bitmap imgCut = cutOutCenterBitmap(imgRotated2, w, h);
 
-    //Bitmap imgRotated2 = rotateImage(imgHalftoned, m_gridAngle + 240);
-    //if(imgHalftoned != imgRotated2) {
-    //  imgHalftoned.recycle();
-    //}
-    //Bitmap imgCut = cutOutCenterBitmap(imgHalftoned, w, h);
-    //imgRotated2.recycle();
-
-
-    m_parent.filterFinishedCallback(imgHalftoned);
+    m_parent.filterFinishedCallback(imgCut);
   }
 
   /**
