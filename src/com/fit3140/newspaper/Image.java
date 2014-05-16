@@ -22,13 +22,18 @@ import java.io.FileOutputStream;
 import android.os.Environment;
 import java.nio.channels.FileChannel;
 import java.io.IOException;
+import android.widget.Toast;
 
 
 // probably should have come up with a better name for this class...
 class Image extends android.app.Fragment {
   // get the image location from args etc.
   private static final String IMG_LOC = "imgLoc";
-  private static final int IMAGE_LOAD_DOWNSCALE_FACTOR = 2;
+
+  // used for image saving.
+  public static final int PUBLIC = 0;
+  public static final int PRIVATE = 1;
+
 
   private Uri m_imgLoc;
   private Bitmap m_dispImg;
@@ -125,8 +130,7 @@ class Image extends android.app.Fragment {
     BitmapFactory.Options dims = getImageDimsFromUri(img, ctx);
 
     BitmapFactory.Options opt = new BitmapFactory.Options();
-    opt.inSampleSize = dims.outWidth*
-      IMAGE_LOAD_DOWNSCALE_FACTOR/metrics.widthPixels;
+    opt.inSampleSize = dims.outWidth/metrics.widthPixels;
     return convertUriToBitmap(img,
 					 ctx, opt);
   }
@@ -158,17 +162,28 @@ class Image extends android.app.Fragment {
    * @return The uri to the saved image
    */
 
-  public static Uri saveImage(Bitmap img, Context ctx) {
+  public static Uri saveImage(Bitmap img, Context ctx,int vis) {
     if (img == null) {
       Log.e("ImageUtils.saveImage",
 	    "Input image is null!");
+      return null;
     }
     Date date = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
     String timestamp = sdf.format(date);
+    String loc = null;
+    if(vis == PRIVATE) {
+      Log.v("ImageUtils.saveImage","Saving to private dir...");
+      loc = ctx.getExternalFilesDir(null).getAbsolutePath();
+    } else if (vis == PUBLIC) {
+      Log.v("ImageUtils.saveImage","Saving to public dir...");
+      loc =
+ 	Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+    } else {
+      return null;
+    }
 
-    File file = new File(ctx.getExternalFilesDir(null)
-			 + "/" + timestamp + ".jpg");
+    File file = new File( loc + "/" + timestamp + ".jpg");
 
 
     try {
@@ -191,25 +206,9 @@ class Image extends android.app.Fragment {
    * @param dst destination
    * @throws java.io.IOException in case of any problems
    */
-  public Uri copyImageToPublic() throws IOException {
-    File inFile = new File(m_imgLoc.getPath());
 
-    Date date = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-    String timestamp = sdf.format(date);
-    File outFile = new
-      File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-           + "/" + timestamp + ".jpg");
-    FileChannel inChannel = new FileInputStream(inFile).getChannel();
-    FileChannel outChannel = new FileOutputStream(outFile).getChannel();
-    try {
-      inChannel.transferTo(0, inChannel.size(), outChannel);
-    } finally {
-      if (inChannel != null)
-	inChannel.close();
-      if (outChannel != null)
-	outChannel.close();
-    }
-    return Uri.fromFile(outFile);
+  public Uri copyImageToPublic() throws IOException {
+    Bitmap img = getBitmap();
+    return saveImage(img,getActivity(),PUBLIC);
   }
 }

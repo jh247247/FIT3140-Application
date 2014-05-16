@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements
     Context ctx = getApplicationContext();
 
     m_filteredImage = filteredImage;
-    m_prevImageLoc = Image.saveImage(m_filteredImage, ctx);
+    m_prevImageLoc = Image.saveImage(m_filteredImage, ctx, Image.PRIVATE);
     m_imageViewer.addImage(m_prevImageLoc.toString());
     m_imageViewerPager.setCurrentItem(m_imageViewer.getCount()-1);
   }
@@ -296,12 +296,19 @@ public class MainActivity extends Activity implements
    */
 
   public void onClickSave(View v){
-    if(m_filteredImage == null) {
-      Log.w("MainActivity","We really should not be here...");
-    }
     Context ctx = getApplicationContext();
     // make the button actually do something.
-    saveCurrentImage();
+    Uri path = saveCurrentImage();
+
+    Log.v("MainActivity","Uri: " + path);
+    if(path == null) {
+      // wait a second...
+      Log.e("Mainactivity.onClickSave","Saving current image returned null!");
+      return;
+    }
+    Toast.makeText(this, "Image saved to:" + path.getPath(),
+                   Toast.LENGTH_SHORT).show();
+
   }
 
   /**
@@ -332,19 +339,21 @@ public class MainActivity extends Activity implements
     Log.v("MainActivity.onClickApply","Applying filter to image.");
     Log.v("MainActivity.onClickApply","Current Item index: " +
 	  m_imageViewerPager);
-    // get a ref to the object to verify if we can actually typecast.
-    Object imgObj =
-      m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
-    if(!(imgObj instanceof Image)) {
+
+
+    Image currImg = getCurrentImage();
+    if(currImg == null) {
       Log.w("MainActivity.onClickApply",
-	    "Image returned is not image!");
+            "Image returned is not image!");
       Toast.makeText(this, "Need to load image first!",
-		     Toast.LENGTH_SHORT).show();
+                     Toast.LENGTH_SHORT).show();
       return;
     }
+
     // if we get here, the image returned is of the correct type.
     // that means we can typecast.
-    Bitmap img = ((Image)imgObj).getBitmap();
+    Bitmap img = (currImg).getBitmap();
+
 
     Log.v("MainActivity.onClickApply","Image loaded.");
 
@@ -386,7 +395,7 @@ public class MainActivity extends Activity implements
     // Checks the orientation of the screen
     if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
     {
-      Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+
       oriLayout.setOrientation(LinearLayout.HORIZONTAL);
 
       filterlp.height = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -396,7 +405,7 @@ public class MainActivity extends Activity implements
       imagelp.width = 0;
     } else if (newConfig.orientation ==
 	       Configuration.ORIENTATION_PORTRAIT){
-      Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+
 
       oriLayout.setOrientation(LinearLayout.VERTICAL);
       filterlp.height = 0;
@@ -419,8 +428,17 @@ public class MainActivity extends Activity implements
   // adapter pattern maybe? Right now it is just code smell.
   private Uri saveCurrentImage() {
     Context ctx = getApplicationContext();
-    Image currImg = (Image)
-      m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
+
+
+    Image currImg = getCurrentImage();
+    if(currImg == null) {
+      Log.w("MainActivity.onClickApply",
+            "Image returned is not image!");
+      Toast.makeText(this, "Need to load image first!",
+                     Toast.LENGTH_SHORT).show();
+      return null;
+    }
+
 
     Uri outUri = null;
     try {
@@ -429,9 +447,26 @@ public class MainActivity extends Activity implements
     catch (IOException e) {
       // TODO TOAST STUFF
       Log.e("MainActivity.saveCurrentImage","Cannot copy to public dir: " + e);
+      Toast.makeText(this, "Image save failed: " + e,
+                     Toast.LENGTH_SHORT).show();
     }
+    Toast.makeText(this, "Image saved to: " + outUri.getPath(),
+                   Toast.LENGTH_SHORT).show();
     return outUri;
   }
 
+  private boolean checkCurrentImage(){
+    // get a ref to the object to verify if we can actually typecast.
+    Object imgObj =
+      m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
+    return (imgObj instanceof Image);
+  }
 
+  private Image getCurrentImage() {
+    if(!checkCurrentImage()) {
+      return null;
+    }
+    return (Image)m_imageViewer.getItem(m_imageViewerPager.getCurrentItem());
+
+  }
 }
