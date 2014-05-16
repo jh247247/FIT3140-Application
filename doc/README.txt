@@ -9,6 +9,9 @@ Jack Hosemans and Thomas Parasiuk
 Currently Implemented:
 Image loading from gallery, camera, share intent from other apps.
 Applying halftone filter to image.
+-Grid size can be chosen by user.
+-Grid rotation can be chosen by user.
+
 Applying caption to image.
 Saving image on device.
 Sharing image to other apps.
