@@ -65,4 +65,11 @@ public class ImageViewer extends FragmentStatePagerAdapter {
     Log.v("ImageViewer.addImageFragment","size: " + m_fragmentList.size());
     notifyDataSetChanged();
   }
+
+  // go back to "No Images" screen.
+  // used when specifying a new source image.
+  public void clearAllImages() {
+    m_fragmentList = new ArrayList<Fragment>();
+    notifyDataSetChanged();
+  }
 }

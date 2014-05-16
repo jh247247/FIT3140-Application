@@ -127,7 +127,7 @@ public class MainActivity extends Activity implements
 	//handleSendMultipleImages(intent); // Handle multiple images being sent
       }
     }
-    
+
     //Use this line to test landscape mode if the emulator/device is usually
     //forced in to portrait mode.
     //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -246,6 +246,8 @@ public class MainActivity extends Activity implements
 	// image (or halftoned image) later.
 	m_prevImageLoc = selectedImage;
 
+	// setting new source image, clear all current images
+	m_imageViewer.clearAllImages();
 	// does what it says on the tin.
 	addImageToUI(selectedImage);
       }
@@ -260,6 +262,8 @@ public class MainActivity extends Activity implements
 	// given up in the intent somehow, but this way is how
 	// it works in kit kat apparently.
 
+	// setting new source image, clear all current images
+        m_imageViewer.clearAllImages();
 	addImageToUI(m_prevImageLoc);
       }
       break;
