@@ -1,5 +1,12 @@
 /**
- * Halftone Filter tests
+ * Halftone Filter tests.
+ * 
+ * Currently these tests don't work. I've tried several ways of putting the image in to the UI
+ * and taking it back out and none of them seem to work - even very reductive and hacky attempts
+ * like turning a lot of private attributes in the app public and accessing them directly...
+ * 
+ * If you hard-code the halftoning algorithm directly in to the tests instead of trying to access
+ * the app itself, the tests all succeed.
  */
 
 package com.fit3140.newspaper.test;
@@ -14,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.provider.MediaStore.Images;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
@@ -29,6 +37,7 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	private Button applyButton;
 	private ImageFragment currentImage;
 	private Bitmap currentBitmap;
+	private String path;
 	
 	private Paint black = new Paint();
 	private Paint white = new Paint();
@@ -51,6 +60,7 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 		imgViewer = new ImageViewer(main.getFragmentManager());
 		imageViewerPager = (ViewPager) main.findViewById(
 				com.fit3140.newspaper.R.id.imagePager);
+		path = null;
 		
 		black.setColor(Color.BLACK);
 		white.setColor(Color.WHITE);
@@ -59,6 +69,7 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	
 	/**
 	 * Puts an image in to the UI directly - bypassing the need to access the gallery or camera.
+	 * FIXME Doesn't actually work - don't really know why.
 	 * 
 	 * @param 	img		The image to put in to the UI.
 	 */
@@ -66,7 +77,11 @@ public class HalftoneTest extends ActivityInstrumentationTestCase2<MainActivity>
 	public void putImageInUI(Bitmap img) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		img.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-		String path = Images.Media.insertImage(main.getContentResolver(), img, "TEST",
+		if (path != null) {
+			//Don't really want a whole bunch of images lying around after the tests are done.
+			main.getContentResolver().delete(Uri.parse(path), null, null); 
+		}
+		path = Images.Media.insertImage(main.getContentResolver(), img, "TEST",
 				"Image automatically created for testing.");
 		imgViewer.addImage(path);
 	}

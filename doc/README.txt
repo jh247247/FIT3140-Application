@@ -24,8 +24,8 @@ Once the image has been edited to your liking, press the share or save
 buttons to share or save it.
 
 Known Bugs/Limitations:
-Halftone filter is not well optimised - takes a while to process larger images,
-especially with small grid sizes.
+Halftone filter could perhaps be further optimised.
+It may take a little bit of time to process larger images, especially with small grid sizes.
 
 On devices with very small resolutions (Mostly a problem for emulators) some of
 the application can be cut off the bottom of the screen.

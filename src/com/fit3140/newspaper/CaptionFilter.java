@@ -44,10 +44,9 @@ public class CaptionFilter extends Filter {
 
 	/**
 	 * Applies a caption to the given image.
-	 * Current limitations/issues:
-	 * Text size is hardcoded. Should be larger for large images and smaller
-	 * for large captions (or something like that)
-	 * Font is default, could maybe be changed later if there's a better one.
+	 * Once it's done it calls back with the new captioned image.
+	 * 
+	 * @param	img	The given image.
 	 */
 
 	@Override
@@ -62,7 +61,7 @@ public class CaptionFilter extends Filter {
 	  final int WIDTH = img.getWidth();
 
 	  text.setColor(Color.BLACK);
-	  text.setTextSize(20);
+	  text.setTextSize(img.getHeight() / 8);
 
 	  StaticLayout layout = new StaticLayout(caption, text, WIDTH,
 						 Layout.Alignment.ALIGN_CENTER, 1, 0, true);
@@ -89,15 +88,12 @@ public class CaptionFilter extends Filter {
 	  c.drawBitmap(captionbmp, 0, HEIGHT - captionHeight +
 		       4, null);
 
-	  // have to use callback to return image.
-	  // there is a plan for this, just wait.
 	  m_parent.filterFinishedCallback(captionedImg);
 	}
 
   /**
    * This method is supposed to return a string to put into the
-   * tabbar. Handy, since we actually need this.
-   *
+   * tab bar. Handy, since we actually need this.
    */
   @Override
   public String getFilterName() {

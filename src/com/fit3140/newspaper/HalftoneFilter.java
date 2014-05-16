@@ -43,11 +43,7 @@ public class HalftoneFilter extends Filter
   private Filter.FilterCallBack m_parent;
 
 
-  // These are just here because they were easy to write.
-  // Should give ideas on how to implement the more advance halftoning
-  // later on. Uncomment so that they are actually defined when we
-  // need them.
-  //protected double m_gridAngle;
+  //Possible but as of now unimplemented feature.
   //protected enum m_shapeType {CIRCLE, DIAMOND, RECTANGLE}
 
 
