@@ -184,8 +184,8 @@ public class HalftoneFilter extends Filter
   }
 
   protected Bitmap downScaleImage(Bitmap img, int scaleFactor) {
-    return Bitmap.createScaledBitmap(img, img.getHeight()/scaleFactor,
-				     img.getWidth()/scaleFactor, true);
+    return Bitmap.createScaledBitmap(img, img.getWidth()/scaleFactor,
+				     img.getHeight()/scaleFactor, true);
   }
 
   protected Bitmap halftoneImage(Bitmap img) {

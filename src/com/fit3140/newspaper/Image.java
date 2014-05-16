@@ -191,7 +191,9 @@ class Image extends android.app.Fragment {
       img.compress(Bitmap.CompressFormat.JPEG, 50, outStream);
       outStream.close();
     } catch (Exception e) {
-      Log.e("ImageUtils.saveImage", "OutputStream threw exception: " + e);
+      Log.e("ImageUtils.saveImage", "OutputStream threw exception: " +
+	    e);
+      return null;
     }
 
     Uri imgUri = Uri.fromFile(file);
