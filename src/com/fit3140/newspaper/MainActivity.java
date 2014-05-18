@@ -128,9 +128,8 @@ public class MainActivity extends Activity implements
       }
     }
 
-    //Use this line to test landscape mode if the emulator/device is usually
-    //forced in to portrait mode.
-    //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    // force detection of the current configuration.
+    onConfigurationChanged(getResources().getConfiguration());
   }
 
   /**
