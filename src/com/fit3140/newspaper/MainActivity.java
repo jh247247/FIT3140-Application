@@ -119,12 +119,8 @@ public class MainActivity extends Activity implements
     // Handle intents from other apps
     if (Intent.ACTION_SEND.equals(action) && type != null) {
       if (type.startsWith("image/")) {
+	// load the image to the ui.
 	addImageToUI((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM));
-      }
-    } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-      // What do we do with multiple images?!
-      if (type.startsWith("image/")) {
-	//handleSendMultipleImages(intent); // Handle multiple images being sent
       }
     }
 
