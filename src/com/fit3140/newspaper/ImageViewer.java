@@ -15,7 +15,8 @@ import android.view.Gravity;
 import java.util.ArrayList;
 
 public class ImageViewer extends FragmentStatePagerAdapter {
-  private class NoImages extends Fragment {
+  public static class NoImages extends Fragment {
+	  
     @Override
     public View onCreateView(LayoutInflater inflater,
 			   ViewGroup container,

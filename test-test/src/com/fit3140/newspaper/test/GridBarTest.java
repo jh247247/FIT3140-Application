@@ -50,7 +50,7 @@ public class GridBarTest extends ActivityInstrumentationTestCase2<MainActivity> 
 		//Same thing but in landscape mode.
 		main.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-		TouchUtils.clickView(this,  gridbar);
+		TouchUtils.tapView(this, gridbar);
 		assertTrue("grid_size_text does not update correctly in landscape mode.",
 				(gridtext.getText().equals("54")));
 	}
