@@ -52,7 +52,7 @@ public class CaptionFilter extends Filter {
 	@Override
 	public void apply(Bitmap img) {
 	  if(img == null) {
-            Log.w("CaptionFilter","Trying to halftone a null image!");
+            Log.w("CaptionFilter","Trying to caption a null image!");
             // so for this case, we just never call the callback. Genius!
             return;
           }
