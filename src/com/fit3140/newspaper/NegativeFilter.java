@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Layout;
@@ -43,7 +45,7 @@ public class NegativeFilter extends Filter {
 	/**
 	 * Applies a negative filter to the given image.
 	 * Once it's done it calls back with the negative image.
-	 * 
+	 *
 	 * @param	img	The given image.
 	 */
 
@@ -54,34 +56,23 @@ public class NegativeFilter extends Filter {
             // so for this case, we just never call the callback. Genius!
             return;
           }
-	  final int WIDTH = img.getWidth(),
-			  HEIGHT = img.getHeight();
-	  int raw, red, green, blue, grey;
-
-	  Bitmap negativedImg = Bitmap.createBitmap(WIDTH, HEIGHT,
+	  Bitmap bmpGrayscale = Bitmap.createBitmap(img.getWidth(),
+						    img.getHeight(),
 						    Bitmap.Config.ARGB_8888);
-	  Canvas c = new Canvas(negativedImg);
-	  Paint p = new Paint();
-	  
-	  for (int x = 0; x < WIDTH; x++) {
-		  for (int y = 0; y < HEIGHT; y++) {
-			  
-			  raw = img.getPixel(x, y);
-			  red = Color.red(raw);
-			  green = Color.green(raw);
-			  blue = Color.blue(raw);
+	  Canvas c = new Canvas(bmpGrayscale);
+	  Paint paint = new Paint();
+	  // take grayscale, invert.
+	  float[] mat = new float[] {-0.3f, -0.59f, -0.11f, 0, 255,
+				     -0.3f, -0.59f, -0.11f, 0, 255,
+				     -0.3f, -0.59f, -0.11f, 0, 255,
+				     0, 0, 0, 1, 0};
+          ColorMatrix cm = new ColorMatrix(mat);
+	  ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
 
-			  grey = (int) (0.3f * red + 0.59f * green + 0.11f * blue);
-			  grey = 255 - grey;
-			  
-			  //Set paint to negatived grey color - fully opaque.
-			  p.setARGB(255, grey, grey, grey);
-			  //Draw a single pixel at (x, y) with this color.
-			  c.drawPoint(x, y, p);
-		  }
-	  }
 
-	  m_parent.filterFinishedCallback(negativedImg);
+	  paint.setColorFilter(f);
+	  c.drawBitmap(img, 0, 0, paint);
+	  m_parent.filterFinishedCallback(bmpGrayscale);
 	}
 
   /**
