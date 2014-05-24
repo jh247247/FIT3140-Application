@@ -8,6 +8,10 @@
     android:paddingRight="20dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
+  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
   <RelativeLayout
       android:layout_width="fill_parent"
       android:layout_height="fill_parent">
@@ -74,5 +78,24 @@
         android:textSize="16sp"
         android:textStyle="italic" />
 
+    <!-- shape -->
+    <TextView
+        android:id="@+id/shape_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="4dp"
+        android:text="@string/halftone_shape"
+        android:textColor="@color/cardTextDark"
+        android:textSize="20sp"
+        android:textStyle="italic"
+	android:layout_below="@id/grid_angle_seekbar"/>
+
+    <Spinner
+	android:id="@+id/halftone_shape_spinner"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/shape_header"/>
   </RelativeLayout>
+  </ScrollView>
 </LinearLayout>

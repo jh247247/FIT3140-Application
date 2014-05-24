@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -37,6 +39,8 @@ public class HalftoneFilter extends Filter
   private int m_gridAngle;
   private SeekBar m_gridAngleBar;
   private TextView m_gridAngleText;
+
+  private Spinner m_shapeSpinner;
 
   // Parent typecasted to this so that we can actually call some stuff
   // on it.
@@ -128,6 +132,16 @@ public class HalftoneFilter extends Filter
 	    (TextView)ret.findViewById(R.id.grid_angle_text);
           m_gridAngleBar =
 	    (SeekBar)ret.findViewById(R.id.grid_angle_seekbar);
+
+	  Spinner m_shapeSpinner = (Spinner) ret.findViewById(R.id.halftone_shape_spinner);
+	  // Create an ArrayAdapter using the string array and a default spinner layout
+	  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
+									       R.array.halftone_types_array,
+									       R.layout.card_spinner_item);
+	  // Specify the layout to use when the list of choices appears
+	  adapter.setDropDownViewResource(R.layout.card_spinner_dropdown);
+	  // Apply the adapter to the spinner
+	  m_shapeSpinner.setAdapter(adapter);
 
 
           m_gridSizeBar.setOnSeekBarChangeListener(new gridSizeHandler());

@@ -15,5 +15,11 @@
   <string name="apply">Apply</string>
   <string name="image_header">Image</string>
   <string name="angle">Halftone Grid Angle</string>
+  <string name="halftone_shape">Halftone Shape</string>
   <string name="negative">Negative (no options)</string>
+  <string-array name="halftone_types_array">
+        <item>Circles</item>
+	<item>Rectangles</item>
+	<item>Diamonds</item>
+  </string-array>
 </resources>
