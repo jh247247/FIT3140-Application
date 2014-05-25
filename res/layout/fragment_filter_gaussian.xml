@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+  <RelativeLayout
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent">
+
+    <!-- radius -->
+    <TextView
+        android:id="@+id/radius_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="4dp"
+        android:text="@string/radius"
+        android:textColor="@color/cardTextDark"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+    <SeekBar
+        android:id="@+id/radius_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/radius_header"
+        android:max="13"/>
+
+    <TextView
+        android:id="@+id/radius_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/radius_seekbar"
+        android:layout_alignParentRight="true"
+        android:text="0"
+        android:textColor="@color/cardTextDark"
+        android:textSize="16sp"
+        android:textStyle="italic" />
+
+    <!-- sigma -->
+    <TextView
+        android:id="@+id/sigma_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="4dp"
+        android:text="@string/sigma"
+        android:textColor="@color/cardTextDark"
+        android:textSize="20sp"
+        android:textStyle="italic"
+	android:layout_below="@id/radius_seekbar"/>
+
+    <SeekBar
+        android:id="@+id/sigma_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/sigma_header"
+        android:max="9"/>
+
+    <TextView
+        android:id="@+id/sigma_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/sigma_seekbar"
+        android:layout_alignParentRight="true"
+        android:text="0"
+        android:textColor="@color/cardTextDark"
+        android:textSize="16sp"
+        android:textStyle="italic" />
+  </RelativeLayout>
+  </ScrollView>
+</LinearLayout>

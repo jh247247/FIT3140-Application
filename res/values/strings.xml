@@ -22,4 +22,6 @@
 	<item>Rectangles</item>
 	<item>Diamonds</item>
   </string-array>
+  <string name="radius">Radius</string>
+  <string name="sigma">Sigma</string>
 </resources>

@@ -19,6 +19,7 @@ public class FilterInterfaceAdapter extends FragmentPagerAdapter {
     m_fragmentList.add(new HalftoneFilter());
     m_fragmentList.add(new CaptionFilter());
     m_fragmentList.add(new NegativeFilter());
+    m_fragmentList.add(new GaussianBlurFilter());
 
   }
 

@@ -244,8 +244,8 @@ public class HalftoneFilter extends Filter
   protected Bitmap halftoneImage(Bitmap img) {
     final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
     Bitmap halftoneImg = Bitmap.createBitmap(WIDTH*m_gridSize,
-					     HEIGHT*m_gridSize,
-					     Bitmap.Config.RGB_565);
+                                             HEIGHT*m_gridSize,
+                                             Bitmap.Config.RGB_565);
     Canvas c = new Canvas(halftoneImg);
     Paint black = new Paint(),
       white = new Paint();
@@ -313,8 +313,8 @@ public class HalftoneFilter extends Filter
       return img;
     }
     Bitmap retVal =  Bitmap.createBitmap(img,
-					 wDiff/2, hDiff/2,
-					 w,h);
+                                         wDiff/2, hDiff/2,
+                                         w,h);
     if(retVal == null) {
       Log.e("HalftoneFilter","Downscaling the image failed!");
       return img;
