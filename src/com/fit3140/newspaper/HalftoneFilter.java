@@ -21,13 +21,13 @@ import android.util.Log;
 import android.graphics.Matrix;
 
 /**
- * This class applies a halftoning filter to the passed in
- * image. Shouldn't be too complicated but should also be flexible
- * enough to allow for application of any angle of grid and any
- * halftoning image type.
- *
+ * Filter subclass for making halftoned images.
+ * Handles halftone grids of varying angles, sizes and shapes.
+ * 
+ * @author 	<a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
+ * 			<a href="mailto:tjpar4@student.monash.edu">Thomas Parasiuk</a>
+ * @modified	May 2014
  */
-
 public class HalftoneFilter extends Filter
 {
   private static final int MIN_FILTER_GRIDSIZE = 5;
@@ -56,11 +56,23 @@ public class HalftoneFilter extends Filter
   // on it.
   private Filter.FilterCallBack m_parent;
 
-
-
-
+/**
+ * Class for handling changes in the grid size bar.
+ * 
+ * @author Jack Hosemans and Thomas Parasiuk
+ * @modified	May 2014
+ */
   private class gridSizeHandler implements OnSeekBarChangeListener {
-    @Override
+	  
+    /**
+     * Sets the grid size every time the bar's value changes.
+     * 
+     * @param seekBar	The bar itself. Not used.
+     * @param progress	The current value of the bar.
+     * @param fromUser	Whether the change was caused by the user or not.
+     * 					Not used.
+     */
+	@Override
     public void onProgressChanged(SeekBar seekBar,
 				  int progress,
 				  boolean fromUser) {
@@ -68,10 +80,16 @@ public class HalftoneFilter extends Filter
     }
 
 
+	/**
+	 * Not used.
+	 */
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
     }
+    /**
+     * Not used.
+     */
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
@@ -80,7 +98,23 @@ public class HalftoneFilter extends Filter
 
   }
 
+  
+  /**
+   * Class for handling changes in the grid angle bar.
+   * 
+   * @author Jack Hosemans and Thomas Parasiuk
+   * @modified	May 2014
+   */
   private class gridAngleHandler implements OnSeekBarChangeListener {
+	  
+	/**
+	 * Sets the grid size every time the bar's value changes.
+	 * 
+	 * @param seekBar	The bar itself. Not used.
+	 * @param progress	The current value of the bar.
+	 * @param fromUser	Whether the change was caused by the user or not.
+	 * 					Not used.
+	 */
     @Override
     public void onProgressChanged(SeekBar seekBar,
 				  int progress,
@@ -88,11 +122,16 @@ public class HalftoneFilter extends Filter
       setGridAngle(progress);
     }
 
-
+    /**
+     * Not used.
+     */
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
     }
+    /**
+     * Not used.
+     */
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
@@ -100,8 +139,24 @@ public class HalftoneFilter extends Filter
     }
 
   }
-
+  
+  
+  /**
+   * Drop-down menu class used for selecting halftone shapes.
+   * 
+   * @author Jack Hosemans and Thomas Parasiuk
+   * @modified	May 2014
+   */
+  
   private class shapeSpinnerHandler implements OnItemSelectedListener {
+	/** 
+	 * Called whenever an item is selected. Used to set the halftone shape.
+	 * 
+	 * @param parent Not used.
+	 * @param view Not used.
+	 * @param pos The position of the item that's been selected.
+	 * @param id Not used.
+	 */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
       // pos relates directly to the defined constants. Is gud.
@@ -109,17 +164,19 @@ public class HalftoneFilter extends Filter
       m_shapeType = pos;
     }
 
+    /**
+     * Not used.
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
   }
 
-    /**
+  /**
    * This method is called when the fragment is attached to an
    * activity. Fortunately the activity also passes in itself to
    * this. This means that we can override it and use the passed in
    * activity to attach a callback to the Activity.
-   *
    */
   @Override
   public void onAttach(Activity activity) {
@@ -136,6 +193,10 @@ public class HalftoneFilter extends Filter
 	  }
   }
 
+  /**
+   * Called when the view is created.
+   * Inflates the view and then sets up the seekbars, text, etc.
+   */
   @Override
   public View onCreateView(LayoutInflater inflater,
 			   ViewGroup container,
@@ -182,7 +243,11 @@ public class HalftoneFilter extends Filter
   /**
    * This method should set the grid size for the halftoning when the
    * user changes it in the displayed fragment.
+   * 
+   * Note that the bar's minimum value is actually 0, this method is
+   * where the minimum is added to make the range 5-100.
    *
+   * @param	The new value of the grid size bar.
    */
   protected void setGridSize(int gridsize) {
     m_gridSize = gridsize+MIN_FILTER_GRIDSIZE;
@@ -192,7 +257,8 @@ public class HalftoneFilter extends Filter
   /**
    * This method sets the grid angle, taking in an integer to set it
    * to. Also updates the text ui element to reflect the change.
-   * @param gridangle angle in degrees to set the angle to.
+   * 
+   * @param gridangle The value, in degrees, to set the angle to.
    */
   protected void setGridAngle(int gridangle) {
     m_gridAngle = gridangle;
@@ -202,11 +268,13 @@ public class HalftoneFilter extends Filter
 
   /**
    * Rotates the given bitmap around the center of the image by the
-   * given angle (in degrees)
+   * given angle (in degrees).
+   * 
    * Note that the original image is recycled if the rotation is successful.
-   * @param img bitmap to rotate.
-   * @param angle angle to rotate image by.
-   * @return rotated image
+   * 
+   * @param img The bitmap to rotate.
+   * @param angle The angle to rotate image by.
+   * @return 	The rotated image
    */
   protected Bitmap rotateImageCenter(Bitmap img, int angle) {
     if(angle == 0){
@@ -232,15 +300,23 @@ public class HalftoneFilter extends Filter
 
   /**
    * Downscales an image by a given factor.
-   * @param img bitmap to scale
-   * @param scaleFactor amount to scale by.
-   * @return scaled image.
+   * 
+   * @param img The bitmap to scale
+   * @param scaleFactor The amount to scale by.
+   * @return 	The scaled image.
    */
   protected Bitmap downScaleImage(Bitmap img, int scaleFactor) {
     return Bitmap.createScaledBitmap(img, img.getWidth()/scaleFactor,
 				     img.getHeight()/scaleFactor, true);
   }
 
+  /**
+   * Applies a halftone filter to the given image using the current
+   * settings.
+   * 
+   * @param img The image to be halftoned.
+   * @return	The halftoned image.
+   */
   protected Bitmap halftoneImage(Bitmap img) {
     final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
     Bitmap halftoneImg = Bitmap.createBitmap(WIDTH*m_gridSize,
@@ -299,6 +375,15 @@ public class HalftoneFilter extends Filter
     return halftoneImg;
   }
 
+  /**
+   * Removes any border around the image caused by rotating it.
+   * 
+   * @param img The image to be cropped.
+   * @param w	The width that the image should be.
+   * @param h	The height that the image should be.
+   * @return	The cropped image.
+   */
+  
   protected Bitmap cutOutCenterBitmap(Bitmap img, int w, int h){
     int wDiff = img.getWidth() - w;
     int hDiff = img.getHeight() - h;
@@ -322,11 +407,13 @@ public class HalftoneFilter extends Filter
     img.recycle();
     return retVal;
   }
+  
   /**
    * This should apply the halftoning filter to the image by making
    * several threads that process each line(?) or block of the
    * image. Should be faster/smarter/better than the other basic implementation.
    *
+   * @param	The image that the filter will be applied to.
    */
   @Override
   public void apply (Bitmap img) {
@@ -349,7 +436,7 @@ public class HalftoneFilter extends Filter
       Bitmap imgDownScaled = downScaleImage(img, m_gridSize);
 
 
-    // ternary op is for when the shape selected is a diamond.
+    // Tertiary op is for when the shape selected is a diamond.
     // pretty much square halftoning, but rotated 45 degrees for a
     // "diamond" shape.
     Bitmap imgRotated = rotateImageCenter(imgDownScaled,
@@ -367,7 +454,6 @@ public class HalftoneFilter extends Filter
   /**
    * This method is supposed to return a string to put into the
    * tabbar. Handy, since we actually need this.
-   *
    */
   @Override
   public String getFilterName() {

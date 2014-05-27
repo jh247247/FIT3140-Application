@@ -15,11 +15,23 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.util.Log;
 
+/**
+ * Filter subclass for making captioned images.
+ * 
+ * @author 	<a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
+ * 			<a href="mailto:tjpar4@student.monash.edu">Thomas Parasiuk</a>
+ * @modified	May 2014
+ */
+
 public class CaptionFilter extends Filter {
 
 	private Filter.FilterCallBack m_parent;
 	private EditText m_edittext;
 
+	/**
+	 * Called when the fragment is attached to an activity.
+	 * Also used to set up callbacks.
+	 */
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
@@ -31,6 +43,11 @@ public class CaptionFilter extends Filter {
 		}
 	}
 
+	/**
+	 * Called when the view is created.
+	 * Inflates the view then sets up the text-entering field for the
+	 * caption's text.
+	 */
 	public View onCreateView(LayoutInflater inflater,
 			ViewGroup container,
 			Bundle savedInstanceState) {

@@ -3,24 +3,30 @@ package com.fit3140.newspaper;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.util.Log;
 
+/**
+ * Filter subclass for making negatived greyscale images.
+ * 
+ * @author 	<a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
+ * 			<a href="mailto:tjpar4@student.monash.edu">Thomas Parasiuk</a>
+ * @modified	May 2014
+ */
 public class NegativeFilter extends Filter {
 
 	private Filter.FilterCallBack m_parent;
-
+	
+	/**
+	 * Called when the fragment is attached to an activity.
+	 * Also used to set up callbacks.
+	 */
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
@@ -32,6 +38,11 @@ public class NegativeFilter extends Filter {
 		}
 	}
 
+	/**
+	 * Called when the view is created.
+	 * The negative filter has no options, so it just gets inflated and then
+	 * it's done.
+	 */
 	public View onCreateView(LayoutInflater inflater,
 			ViewGroup container,
 			Bundle savedInstanceState) {

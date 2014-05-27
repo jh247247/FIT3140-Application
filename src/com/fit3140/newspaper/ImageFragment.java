@@ -78,6 +78,12 @@ public class ImageFragment extends android.app.Fragment {
     return ret;
   }
 
+  /**
+   * Gets the bitmap stored in the image fragment.
+   * 
+   * @return	The bitmap in the image fragment.
+   */
+  
   public Bitmap getBitmap() {
     Log.v("ImageFragment","Loading image");
     return convertUriToBitmap(m_imgLoc, getActivity(), null);
@@ -115,7 +121,7 @@ public class ImageFragment extends android.app.Fragment {
    * Loads an image scaled to the current screen width (for UI speed purposes)
    *
    * @param img Uri of the image to load.
-   * @param ctx context of the application.
+   * @param ctx The context of the application.
    * @return Bitmap scaled to the width of the screen.
    */
   private static Bitmap loadImageScaledToScreenWidth(Uri img, Context ctx) {
@@ -198,7 +204,7 @@ public class ImageFragment extends android.app.Fragment {
   }
 
   /**
-   * copy file from source to destination
+   * Copies the file from source to destination
    *
    * @param src source
    * @param dst destination

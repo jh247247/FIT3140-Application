@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.content.Context;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,17 +23,17 @@ import android.content.res.Configuration;
 import android.widget.Button;
 import java.io.IOException;
 
-import android.view.ViewGroup;
-
 import android.util.Log;
 
 /**
  * MainActivity is the activity that android first launches when being
  * started by the user.
  *
- * @author <a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
+ * @author 	<a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
+ * 			<a href="mailto:tjpar4@student.monash.edu">Thomas Parasiuk</a>
  * @version 1.0
  */
+
 public class MainActivity extends Activity implements
 					     View.OnClickListener, Filter.FilterCallBack{
   /*This is where all the constants for this activity live.*/
@@ -64,6 +63,13 @@ public class MainActivity extends Activity implements
   private ImageViewer m_imageViewer;
   private ViewPager m_imageViewerPager;
 
+  /**
+   * Handles callbacks from filters. Adds the image in the callback
+   * to the image pager and sets the current image to it.
+   * 
+   * @param	filteredImage	The image that the filter returned.
+   */
+  
   @Override
   public void filterFinishedCallback(Bitmap filteredImage) {
     Log.v("MainActivity", "Image used callback!");
@@ -83,9 +89,8 @@ public class MainActivity extends Activity implements
    * restore the state depending on what data is in there. Currently
    * it does not do that.
    *
-   * @param param savedInstanceState is the state that the app was
-   * in when it was closed. Data should be restored from there.
-   * @return None
+   * @param savedInstanceState The state that the app was in when it
+   * was closed. Data should be restored from there.
    */
 
 
@@ -133,9 +138,9 @@ public class MainActivity extends Activity implements
    * (on devices that have it) or when the overflow button in the
    * actionbar is pressed.
    *
-   * @param menu is the menu view that (should be) inflated when
+   * @param menu The menu view that (should be) inflated when
    * this method is called
-   * @return true when the menu is displayed and false when it is not
+   * @return True when the menu is displayed and false when it is not
    */
 
   @Override
@@ -150,8 +155,8 @@ public class MainActivity extends Activity implements
   /**
    * Called whenever an option item is selected.
    *
-   * @param item the item that was selected
-   * @return false if the menu is to persist, true if it is to be destroyed
+   * @param item The item that was selected
+   * @return False if the menu is to persist, true if it is to be destroyed
    */
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -218,10 +223,9 @@ public class MainActivity extends Activity implements
   /**
    * Called whenever a launched activity returns with or without data.
    *
-   * @param requestCode code that the activity was called with
-   * @param resultCode code that the activity returned with
+   * @param requestCode Code that the activity was called with
+   * @param resultCode Code that the activity returned with
    * @param data Data that was returned from the activity
-   * @return None
    */
   @Override
   protected void onActivityResult(int requestCode, int resultCode,
@@ -269,8 +273,7 @@ public class MainActivity extends Activity implements
    * Loads an image from a Uri, scales it to the screen and adds it
    * to the main LinearLayout.
    *
-   * @param uri Uri of the image to add
-   * @return None
+   * @param uri Uri of the image to add.
    */
   private void addImageToUI(Uri uri) {
     if(uri == null) return;
@@ -291,11 +294,9 @@ public class MainActivity extends Activity implements
    * TODO
    *
    * @param v The view that caused the click event
-   * @return None
    */
 
   public void onClickSave(View v){
-    Context ctx = getApplicationContext();
     // make the button actually do something.
     Uri path = saveCurrentImage();
 
@@ -314,7 +315,6 @@ public class MainActivity extends Activity implements
    * the imageCard.
    *
    * @param view The view that caused the click event
-   * @return None
    */
 
   public void onClickShare(View view) {
@@ -329,11 +329,9 @@ public class MainActivity extends Activity implements
    * Applies the currently paged-to filter to whatever image is loaded in.
    *
    * @param view The view that caused the click event
-   * @return None
    */
 
   public void onClickApply(View view) {
-    Context ctx = getApplicationContext();
     Log.v("MainActivity.onClickApply","Applying filter to image.");
     Log.v("MainActivity.onClickApply","Current Item index: " +
 	  m_imageViewerPager);
@@ -371,8 +369,12 @@ public class MainActivity extends Activity implements
   }
 
 
-  // this handles orientation change, because that sort of stuff is
-  // kinda important...
+  /**
+   * Changes the layout to match the new configuration whenever
+   * it changes.
+   * 
+   * @param newConfig The new configuration.
+   */
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
@@ -414,7 +416,12 @@ public class MainActivity extends Activity implements
     }
   }
 
-  // set the 'save' and 'share' button visibility.
+  /**
+   * Sets the visibility of the share and save buttons - this is
+   * used to make them only appear when an image is loaded in.
+   * 
+   * @param vis	The visibility to set the buttons to.
+   */
   private void setButtonVisibility(int vis) {
     ((Button)findViewById(R.id.saveButton)).setVisibility(vis);
     ((Button)findViewById(R.id.shareButton)).setVisibility(vis);
@@ -425,9 +432,6 @@ public class MainActivity extends Activity implements
   // something.
   // adapter pattern maybe? Right now it is just code smell.
   private Uri saveCurrentImage() {
-    Context ctx = getApplicationContext();
-
-
     ImageFragment currImg = getCurrentImage();
     if(currImg == null) {
       Log.w("MainActivity.onClickApply",
