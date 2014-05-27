@@ -16,13 +16,17 @@
    Halftoning with different dot sizes
 ** TODO Halftoning (colored)
    Halftoning with color
-** TODO Halftoning (optional/advanced)
+** DONE Halftoning (advanced)
 *** DONE Halftoning on different angles (User Story #4)
 	"As an app user, I want to be able to specify the angle of the halftone grid"
-*** TODO Halftoning with different shapes (User Story #5)
+*** DONE Halftoning with different shapes (User Story #5)
 	"As an app user, I want to choose between circles, diamonds and rectangles as the shapes in my halftone grid."
 ** DONE Adding text (User Story #2)
    "As an app user, I want to add captions to a halftoned image."
+** DONE Making "Film Negative"-Style Images (User Story #6)
+   "As an app user, I want to produce an image that looks like a black and white film negative."
+** DONE Gaussian Blur (User Story #7)
+   "As an app user, I want to produce an image with a Gaussian Blur."
 ** TODO "Old newspaper effect"
    Mainly a visual thing - give the app and images it creates an old brown paper kind of look.
 * DONE Integration
