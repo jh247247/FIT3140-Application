@@ -31,6 +31,7 @@ import android.graphics.Matrix;
 public class HalftoneFilter extends Filter
 {
   private static final int MIN_FILTER_GRIDSIZE = 5;
+  private static final int MIN_FILTER_SIDERATIO = 1;
 
   // This is a setting for basic halftoning, other implementations
   // come later.
@@ -50,6 +51,8 @@ public class HalftoneFilter extends Filter
   private final static int SHAPE_DIAMOND = 2;
 
   private int m_sideRatio;
+  private SeekBar m_sideRatioBar;
+  private TextView m_sideRatioText;
 
 
   // Parent typecasted to this so that we can actually call some stuff
@@ -100,7 +103,7 @@ public class HalftoneFilter extends Filter
 
 
   /**
-* Class for handling changes in the grid angle bar.
+   * Class for handling changes in the grid angle bar.
    *
    * @author Jack Hosemans and Thomas Parasiuk
    * @modified	May 2014
@@ -148,7 +151,7 @@ public class HalftoneFilter extends Filter
    * @author Jack Hosemans and Thomas Parasiuk
    * @modified  May 2014
    */
-  private class gridRatioHandler implements OnSeekBarChangeListener {
+  private class sideRatioHandler implements OnSeekBarChangeListener {
 
     /**
      * Sets the shape ratio every time the bar's value changes.
@@ -162,7 +165,7 @@ public class HalftoneFilter extends Filter
     public void onProgressChanged(SeekBar seekBar,
                                   int progress,
                                   boolean fromUser) {
-      //setGridSize(progress);
+      setSideRatio(progress);
     }
 
 
@@ -206,7 +209,7 @@ public class HalftoneFilter extends Filter
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
       // pos relates directly to the defined constants. Is gud.
       Log.v("shapeSpinnerHandler","Selection: " + pos);
-      m_shapeType = pos;
+      setShapeType(pos);
     }
 
     /**
@@ -257,28 +260,41 @@ public class HalftoneFilter extends Filter
 	    (SeekBar)ret.findViewById(R.id.grid_size_seekbar);
 
 	  // get data from the grid angle
-	  m_gridAngleText =
-	    (TextView)ret.findViewById(R.id.grid_angle_text);
+          m_gridAngleText =
+            (TextView)ret.findViewById(R.id.grid_angle_text);
           m_gridAngleBar =
-	    (SeekBar)ret.findViewById(R.id.grid_angle_seekbar);
+            (SeekBar)ret.findViewById(R.id.grid_angle_seekbar);
+
+	  // get data from the grid ratio
+          m_sideRatioText =
+            (TextView)ret.findViewById(R.id.ratio_text);
+          m_sideRatioBar =
+            (SeekBar)ret.findViewById(R.id.ratio_seekbar);
 
 	  // have to setup the stuff in the spinner so that there is
 	  // something to display.
 	  Spinner m_shapeSpinner = (Spinner) ret.findViewById(R.id.halftone_shape_spinner);
-	  ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
-									       R.array.halftone_types_array,
-									       R.layout.card_spinner_item);
+	  ArrayAdapter<CharSequence> adapter =
+	    ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
+					    R.array.halftone_types_array,
+					    R.layout.card_spinner_item);
+
 	  adapter.setDropDownViewResource(R.layout.card_spinner_dropdown);
 	  // Apply the adapter to the spinner
 	  m_shapeSpinner.setAdapter(adapter);
 
+	  // set the listener to an instantiation of one of our
+	  // internal classes.
 	  m_shapeSpinner.setOnItemSelectedListener(new shapeSpinnerHandler());
           m_gridSizeBar.setOnSeekBarChangeListener(new gridSizeHandler());
 	  m_gridAngleBar.setOnSeekBarChangeListener(new gridAngleHandler());
+	  m_sideRatioBar.setOnSeekBarChangeListener(new sideRatioHandler());
 
-	  // make sure the default settings are sane.
+          // make sure the default settings are sane.
 	  setGridSize(0);
 	  setGridAngle(0);
+	  setSideRatio(0);
+	  setShapeType(SHAPE_CIRCLE);
 
           // Inflate the layout for this fragment
 	  return ret;
@@ -299,7 +315,26 @@ public class HalftoneFilter extends Filter
     m_gridSizeText.setText(String.valueOf(gridsize+MIN_FILTER_GRIDSIZE));
   }
 
-  /**
+  protected void setSideRatio(int ratio) {
+    m_sideRatio = ratio+MIN_FILTER_SIDERATIO;
+    m_sideRatioText.setText("1:"+String.valueOf(m_sideRatio));
+  }
+
+  protected void enableSideRatioSeekbar(boolean state) {
+    m_sideRatioBar.setEnabled(state);
+  }
+
+  protected void setShapeType(int shape) {
+    // we do not want the side ratio to be enabled EVER for circles
+    if(shape != SHAPE_CIRCLE) {
+      enableSideRatioSeekbar(true);
+    } else {
+      enableSideRatioSeekbar(false);
+    }
+    m_shapeType = shape;
+  }
+
+    /**
    * This method sets the grid angle, taking in an integer to set it
    * to. Also updates the text ui element to reflect the change.
    *
@@ -347,12 +382,25 @@ public class HalftoneFilter extends Filter
    * Downscales an image by a given factor.
    *
    * @param img The bitmap to scale
-   * @param scaleFactor The amount to scale by.
+   * @param scaleFactorX The amount to scale by in the X direction
+   * @param scaleFactorX The amount to scale by in the Y direction
    * @return 	The scaled image.
    */
-  protected Bitmap downScaleImage(Bitmap img, int scaleFactor) {
-    return Bitmap.createScaledBitmap(img, img.getWidth()/scaleFactor,
-				     img.getHeight()/scaleFactor, true);
+  protected Bitmap downScaleImage(Bitmap img, double scaleFactorX,
+				  double scaleFactorY) {
+    Log.v("HalftoneFilter","XscaleFactor = " +
+          scaleFactorX);
+    Log.v("HalftoneFilter","YScaleFactor = " +
+          scaleFactorY);
+
+    Log.v("HalftoneFilter","New image width = " +
+          (int)(img.getWidth()/scaleFactorX));
+    Log.v("HalftoneFilter","New image height = " +
+	  (int)(img.getHeight()/scaleFactorY));
+
+    return Bitmap.createScaledBitmap(img,
+				     (int)(img.getWidth()/scaleFactorX),
+                                     (int)(img.getHeight()/scaleFactorY), true);
   }
 
   /**
@@ -364,6 +412,7 @@ public class HalftoneFilter extends Filter
    */
   protected Bitmap halftoneImage(Bitmap img) {
     final int WIDTH = img.getWidth(), HEIGHT = img.getHeight();
+
     Bitmap halftoneImg = Bitmap.createBitmap(WIDTH*m_gridSize,
                                              HEIGHT*m_gridSize,
                                              Bitmap.Config.RGB_565);
@@ -471,25 +520,41 @@ public class HalftoneFilter extends Filter
     int w = img.getWidth();
     int h = img.getHeight();
     int rotAngle = m_gridAngle;
-    // diamond = square + 45 degrees
+    // diamond = rectangle + 45 degrees
     if(m_shapeType == SHAPE_DIAMOND) {
       Log.v("HalftoneFilter","Angle increase 45 degrees!");
       rotAngle += 45;
     }
 
+    if(m_shapeType == SHAPE_DIAMOND) {
+      img = downScaleImage(img, 1, m_sideRatio);
+    }
 
-      Bitmap imgDownScaled = downScaleImage(img, m_gridSize);
+    Bitmap imgDownScaled =   downScaleImage(img, m_gridSize, m_gridSize);
 
-
-    // Tertiary op is for when the shape selected is a diamond.
+      // Tertiary op is for when the shape selected is a diamond.
     // pretty much square halftoning, but rotated 45 degrees for a
     // "diamond" shape.
     Bitmap imgRotated = rotateImageCenter(imgDownScaled,
 					  rotAngle);
+
+    if(m_shapeType == SHAPE_RECTANGLE) {
+       imgRotated = downScaleImage(imgRotated, 1, m_sideRatio);
+    }
+
+
     Bitmap imgHalftoned = halftoneImage(imgRotated);
+
+    if(m_shapeType == SHAPE_RECTANGLE) {
+      imgHalftoned = downScaleImage(imgHalftoned, 1, 1/(double)m_sideRatio);
+    }
 
     Bitmap imgRotated2 = rotateImageCenter(imgHalftoned,
 					   -rotAngle);
+
+    if(m_shapeType == SHAPE_DIAMOND) {
+      imgRotated2 = downScaleImage(imgRotated2, 1, 1/(double)m_sideRatio);
+    }
 
     Bitmap imgCut = cutOutCenterBitmap(imgRotated2, w, h);
 
