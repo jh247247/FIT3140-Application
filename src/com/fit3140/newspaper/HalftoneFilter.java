@@ -23,7 +23,7 @@ import android.graphics.Matrix;
 /**
  * Filter subclass for making halftoned images.
  * Handles halftone grids of varying angles, sizes and shapes.
- * 
+ *
  * @author 	<a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
  * 			<a href="mailto:tjpar4@student.monash.edu">Thomas Parasiuk</a>
  * @modified	May 2014
@@ -46,43 +46,43 @@ public class HalftoneFilter extends Filter
   // This is the type of shape to use.
   private int m_shapeType;
   private final static int SHAPE_CIRCLE = 0;
-  // ASSUMPTION: user will not want to change ratio of side len for
-  // rect. will make things too difficult anyway. keep it a square.
   private final static int SHAPE_RECTANGLE = 1;
   private final static int SHAPE_DIAMOND = 2;
+
+  private int m_sideRatio;
 
 
   // Parent typecasted to this so that we can actually call some stuff
   // on it.
   private Filter.FilterCallBack m_parent;
 
-/**
- * Class for handling changes in the grid size bar.
- * 
- * @author Jack Hosemans and Thomas Parasiuk
- * @modified	May 2014
- */
+  /**
+   * Class for handling changes in the grid size bar.
+   *
+   * @author Jack Hosemans and Thomas Parasiuk
+   * @modified  May 2014
+   */
   private class gridSizeHandler implements OnSeekBarChangeListener {
-	  
+
     /**
      * Sets the grid size every time the bar's value changes.
-     * 
-     * @param seekBar	The bar itself. Not used.
-     * @param progress	The current value of the bar.
-     * @param fromUser	Whether the change was caused by the user or not.
-     * 					Not used.
+     *
+     * @param seekBar   The bar itself. Not used.
+     * @param progress  The current value of the bar.
+     * @param fromUser  Whether the change was caused by the user or not.
+     *                                  Not used.
      */
-	@Override
+    @Override
     public void onProgressChanged(SeekBar seekBar,
-				  int progress,
-				  boolean fromUser) {
+                                  int progress,
+                                  boolean fromUser) {
       setGridSize(progress);
     }
 
 
-	/**
-	 * Not used.
-	 */
+    /**
+     * Not used.
+     */
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -98,18 +98,18 @@ public class HalftoneFilter extends Filter
 
   }
 
-  
+
   /**
-   * Class for handling changes in the grid angle bar.
-   * 
+* Class for handling changes in the grid angle bar.
+   *
    * @author Jack Hosemans and Thomas Parasiuk
    * @modified	May 2014
    */
   private class gridAngleHandler implements OnSeekBarChangeListener {
-	  
+
 	/**
 	 * Sets the grid size every time the bar's value changes.
-	 * 
+	 *
 	 * @param seekBar	The bar itself. Not used.
 	 * @param progress	The current value of the bar.
 	 * @param fromUser	Whether the change was caused by the user or not.
@@ -139,19 +139,64 @@ public class HalftoneFilter extends Filter
     }
 
   }
-  
-  
+
+
+  /**
+   * Class for setting the ratio between sides for the
+   * rectangle/diamond shapes.
+   *
+   * @author Jack Hosemans and Thomas Parasiuk
+   * @modified  May 2014
+   */
+  private class gridRatioHandler implements OnSeekBarChangeListener {
+
+    /**
+     * Sets the shape ratio every time the bar's value changes.
+     *
+     * @param seekBar   The bar itself. Not used.
+     * @param progress  The current value of the bar.
+     * @param fromUser  Whether the change was caused by the user or not.
+     *                                  Not used.
+     */
+    @Override
+    public void onProgressChanged(SeekBar seekBar,
+                                  int progress,
+                                  boolean fromUser) {
+      //setGridSize(progress);
+    }
+
+
+    /**
+     * Not used.
+     */
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+    /**
+     * Not used.
+     */
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+
+    }
+
+  }
+
+
+
   /**
    * Drop-down menu class used for selecting halftone shapes.
-   * 
+   *
    * @author Jack Hosemans and Thomas Parasiuk
    * @modified	May 2014
    */
-  
+
   private class shapeSpinnerHandler implements OnItemSelectedListener {
-	/** 
+	/**
 	 * Called whenever an item is selected. Used to set the halftone shape.
-	 * 
+	 *
 	 * @param parent Not used.
 	 * @param view Not used.
 	 * @param pos The position of the item that's been selected.
@@ -243,7 +288,7 @@ public class HalftoneFilter extends Filter
   /**
    * This method should set the grid size for the halftoning when the
    * user changes it in the displayed fragment.
-   * 
+   *
    * Note that the bar's minimum value is actually 0, this method is
    * where the minimum is added to make the range 5-100.
    *
@@ -257,7 +302,7 @@ public class HalftoneFilter extends Filter
   /**
    * This method sets the grid angle, taking in an integer to set it
    * to. Also updates the text ui element to reflect the change.
-   * 
+   *
    * @param gridangle The value, in degrees, to set the angle to.
    */
   protected void setGridAngle(int gridangle) {
@@ -269,9 +314,9 @@ public class HalftoneFilter extends Filter
   /**
    * Rotates the given bitmap around the center of the image by the
    * given angle (in degrees).
-   * 
+   *
    * Note that the original image is recycled if the rotation is successful.
-   * 
+   *
    * @param img The bitmap to rotate.
    * @param angle The angle to rotate image by.
    * @return 	The rotated image
@@ -300,7 +345,7 @@ public class HalftoneFilter extends Filter
 
   /**
    * Downscales an image by a given factor.
-   * 
+   *
    * @param img The bitmap to scale
    * @param scaleFactor The amount to scale by.
    * @return 	The scaled image.
@@ -313,7 +358,7 @@ public class HalftoneFilter extends Filter
   /**
    * Applies a halftone filter to the given image using the current
    * settings.
-   * 
+   *
    * @param img The image to be halftoned.
    * @return	The halftoned image.
    */
@@ -377,13 +422,13 @@ public class HalftoneFilter extends Filter
 
   /**
    * Removes any border around the image caused by rotating it.
-   * 
+   *
    * @param img The image to be cropped.
    * @param w	The width that the image should be.
    * @param h	The height that the image should be.
    * @return	The cropped image.
    */
-  
+
   protected Bitmap cutOutCenterBitmap(Bitmap img, int w, int h){
     int wDiff = img.getWidth() - w;
     int hDiff = img.getHeight() - h;
@@ -407,7 +452,7 @@ public class HalftoneFilter extends Filter
     img.recycle();
     return retVal;
   }
-  
+
   /**
    * This should apply the halftoning filter to the image by making
    * several threads that process each line(?) or block of the

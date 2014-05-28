@@ -23,5 +23,5 @@
 	<item>Diamonds</item>
   </string-array>
   <string name="radius">Radius</string>
-  <string name="sigma">Sigma</string>
+  <string name="ratio">Grid Ratio</string>
 </resources>

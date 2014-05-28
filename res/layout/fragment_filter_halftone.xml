@@ -16,17 +16,37 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent">
 
+
+    <!-- shape -->
+    <TextView
+        android:id="@+id/shape_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="4dp"
+        android:text="@string/halftone_shape"
+        android:textColor="@color/cardTextDark"
+        android:textSize="20sp"
+        android:textStyle="italic"/>
+    <Spinner
+        android:id="@+id/halftone_shape_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/shape_header"/>
+
     <!-- Grid size -->
     <TextView
         android:id="@+id/grid_size_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
+	android:paddingTop="30dp"
         android:paddingLeft="4dp"
         android:text="@string/gridsize"
         android:textColor="@color/cardTextDark"
         android:textSize="20sp"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+	android:layout_below="@id/halftone_shape_spinner"/>
     <SeekBar
         android:id="@+id/grid_size_seekbar"
         android:layout_width="fill_parent"
@@ -44,7 +64,8 @@
         android:text="0"
         android:textColor="@color/cardTextDark"
         android:textSize="16sp"
-        android:textStyle="italic" />
+        android:textStyle="italic"/>
+
 
     <!-- angle -->
     <TextView
@@ -52,13 +73,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
+	android:paddingTop="30dp"
         android:paddingLeft="4dp"
         android:text="@string/angle"
         android:textColor="@color/cardTextDark"
         android:textSize="20sp"
         android:textStyle="italic"
-	android:layout_below="@id/grid_size_seekbar"/>
-
+        android:layout_below="@id/grid_size_seekbar"/>
     <SeekBar
         android:id="@+id/grid_angle_seekbar"
         android:layout_width="fill_parent"
@@ -66,7 +87,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/angle_header"
         android:max="45"/>
-
     <TextView
         android:id="@+id/grid_angle_text"
         android:layout_width="wrap_content"
@@ -78,24 +98,37 @@
         android:textSize="16sp"
         android:textStyle="italic" />
 
-    <!-- shape -->
+     <!-- shape side ratio -->
     <TextView
-        android:id="@+id/shape_header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:paddingLeft="4dp"
-        android:text="@string/halftone_shape"
-        android:textColor="@color/cardTextDark"
-        android:textSize="20sp"
-        android:textStyle="italic"
-	android:layout_below="@id/grid_angle_seekbar"/>
-
-    <Spinner
-	android:id="@+id/halftone_shape_spinner"
+	android:id="@+id/ratio_header"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:layout_below="@id/shape_header"/>
+	android:fontFamily="sans-serif-condensed"
+	android:paddingTop="30dp"
+	android:paddingLeft="4dp"
+	android:text="@string/ratio"
+	android:textColor="@color/cardTextDark"
+	android:textSize="20sp"
+	android:textStyle="italic"
+	android:layout_below="@id/grid_angle_seekbar"/>
+    <SeekBar
+	android:id="@+id/ratio_seekbar"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_alignParentRight="true"
+	android:layout_below="@id/ratio_header"
+	android:max="19"/>
+    <TextView
+	android:id="@+id/ratio_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_above="@id/ratio_seekbar"
+	android:layout_alignParentRight="true"
+	android:text="1:1"
+	android:textColor="@color/cardTextDark"
+	android:textSize="16sp"
+	android:textStyle="italic" />
+
   </RelativeLayout>
   </ScrollView>
 </LinearLayout>
