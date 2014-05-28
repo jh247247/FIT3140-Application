@@ -63,8 +63,8 @@ public class GaussianBlurFilter extends Filter {
 				  int progress,
 				  boolean fromUser) {
       setRadius(progress);
-      m_sigma = m_radius/3; // sigma pretty much has to be this
-      // otherwise it is kind of useless.
+
+
     }
 
 
@@ -148,6 +148,11 @@ public class GaussianBlurFilter extends Filter {
   protected void setRadius(int radius) {
     m_radius = radius + MIN_FILTER_RADIUS;
     m_radiusText.setText(String.valueOf(m_radius));
+    m_sigma = m_radius/3; // sigma pretty much has to be this
+    // otherwise it is kind of useless.
+    if(m_sigma == 0) {
+      m_sigma = 1;
+    }
   }
 
   /**
