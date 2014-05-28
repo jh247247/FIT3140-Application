@@ -14,7 +14,7 @@ import android.util.Log;
 import java.util.Arrays;
 
 /**
- * Filter subclass for applying gaussian blurs to images. 
+ * Filter subclass for applying gaussian blurs to images.
  * @author 	<a href="mailto:jmhos3@student.monash.edu">Jack Hosemans</a>
  * 			<a href="mailto:tjpar4@student.monash.edu">Thomas Parasiuk</a>
  * @modified 	May 2014
@@ -45,15 +45,15 @@ public class GaussianBlurFilter extends Filter {
 
   /**
    * Class for handling changes in gaussian blur radius size.
-   * 
+   *
    * @author Jack Hosemans and Thomas Parasiuk
    * @modified	May 2014
    */
     private class radiusHandler implements OnSeekBarChangeListener {
-    	
+
     /**
      * Sets the radius every time the bar changes.
-     * 
+     *
      * @param seekBar The bar itself. Not used.
      * @param progress The new value of the bar.
      * @param fromUser Whether the user caused the change or not. Not used.
@@ -63,6 +63,8 @@ public class GaussianBlurFilter extends Filter {
 				  int progress,
 				  boolean fromUser) {
       setRadius(progress);
+      m_sigma = m_radius/3; // sigma pretty much has to be this
+      // otherwise it is kind of useless.
     }
 
 
@@ -86,50 +88,15 @@ public class GaussianBlurFilter extends Filter {
 
   /**
    * Class for handling changes in gaussian blur sigma value.
-   * 
+   *
    * @author Jack Hosemans and Thomas Parasiuk
    * @modified	May 2014
    */
-    
-  private class sigmaHandler implements OnSeekBarChangeListener {
-	  
-	/**
-	 * Sets the radius every time the bar changes.
-	 * 
-	 * @param seekBar The bar itself. Not used.
-	 * @param progress The new value of the bar.
-	 * @param fromUser Whether the user caused the change or not. Not used.
-	 */
-    @Override
-    public void onProgressChanged(SeekBar seekBar,
-				  int progress,
-				  boolean fromUser) {
-      setSigma(progress);
-    }
 
-    /**
-     * Not used.
-     */
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-    
-    /**
-     * Not used.
-     */
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-
-    }
-
-  }
-
-	/**
-	 * Called when the fragment is attached to an activity.
-	 * Also used to set up callbacks.
-	 */
+  /**
+   * Called when the fragment is attached to an activity.
+   * Also used to set up callbacks.
+   */
   @Override
   public void onAttach(Activity activity) {
     // do whatever the inherited function is supposed to do.
@@ -144,7 +111,7 @@ public class GaussianBlurFilter extends Filter {
 				   " must implement Filter.FilterCallBack");
     }
   }
-  
+
   /**
    * Called when the view is created.
    * Inflates the view and then sets up the seekbars and text.
@@ -163,18 +130,10 @@ public class GaussianBlurFilter extends Filter {
     m_radiusBar =
       (SeekBar)ret.findViewById(R.id.radius_seekbar);
 
-    // get data from the grid angle
-    m_sigmaText =
-      (TextView)ret.findViewById(R.id.sigma_text);
-    m_sigmaBar =
-      (SeekBar)ret.findViewById(R.id.sigma_seekbar);
-
     m_radiusBar.setOnSeekBarChangeListener(new radiusHandler());
-    m_sigmaBar.setOnSeekBarChangeListener(new sigmaHandler());
 
     // make sure the default settings are sane.
     setRadius(0);
-    setSigma(0);
 
     // Inflate the layout for this fragment
     return ret;
@@ -183,7 +142,7 @@ public class GaussianBlurFilter extends Filter {
 
   /**
    * Sets the blur radius with an offset.
-   * 
+   *
    * @param radius	The new value for the radius.
    */
   protected void setRadius(int radius) {
@@ -192,25 +151,14 @@ public class GaussianBlurFilter extends Filter {
   }
 
   /**
-   * Sets the std deviation of the kernel generation with an offset.
-   * 
-   * @param	sigma	The new value for the sigma (the standard deviation)
-   */
-
-  protected void setSigma(int sigma) {
-    m_sigma = sigma + MIN_FILTER_SIGMA;
-    m_sigmaText.setText(String.valueOf(m_sigma));
-  }
-
-  /**
    * This method generates a 1D gaussian kernel scaled appropriately
    * to be used for convolution in the filter. The sum of the kernel
    * must be 256.
-   * 
+   *
    * @param radius The radius of the filter
    * @return array The gaussian kernel as an array.
    */
-  
+
   private int[] generateGaussianKernel(int radius, int sigma) {
     // have to generate the weights, the length of this is 2*radius+1.
     // weight has to be 256.
@@ -282,7 +230,7 @@ public class GaussianBlurFilter extends Filter {
 
   /**
    * Rounds a given number up to the next power of 2.
-   * 
+   *
    * @param in The number to round up.
    * @return number The number, rounded up to the next power of 2.
    */
@@ -297,10 +245,10 @@ public class GaussianBlurFilter extends Filter {
   /**
    * Applies the gaussian blur to a given image then uses the callback
    * to display the output.
-   * 
+   *
    * @param img The image to be blurred.
    */
-  
+
   public void apply (Bitmap img) {
     if(img == null) {
       Log.w("GaussianBlurFilter","Trying to halftone a null image!");
