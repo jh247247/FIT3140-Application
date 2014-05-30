@@ -36,3 +36,7 @@
    (hopefully facebook etc)
 ** DONE Save image to file
    Save the processed image to a file, so that the user can look at it later
+
+
+| Network destination | Netmask | Gateway | Cost (Metric) |
+|                     |         |         |

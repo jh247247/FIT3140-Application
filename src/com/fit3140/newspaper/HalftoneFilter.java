@@ -32,6 +32,9 @@ public class HalftoneFilter extends Filter
 {
   private static final int MIN_FILTER_GRIDSIZE = 5;
   private static final int MIN_FILTER_SIDERATIO = 1;
+  // fudge the brightness of the square halftone.
+  private static final double SQUARE_BRIGHTNESS_FUDGE = 0.75;
+
 
   // This is a setting for basic halftoning, other implementations
   // come later.
@@ -457,10 +460,10 @@ public class HalftoneFilter extends Filter
                        dotRadius, black);
 	} else {
 
-  	  c.drawRect(xCenter - dotRadius,
-                     yCenter - dotRadius,
-		     xCenter + dotRadius,
-                     yCenter + dotRadius,
+  	  c.drawRect(xCenter - (int)(dotRadius*SQUARE_BRIGHTNESS_FUDGE),
+                     yCenter - (int)(dotRadius*SQUARE_BRIGHTNESS_FUDGE),
+		     xCenter + (int)(dotRadius*SQUARE_BRIGHTNESS_FUDGE),
+                     yCenter + (int)(dotRadius*SQUARE_BRIGHTNESS_FUDGE),
 		     black);
 	}
       }
