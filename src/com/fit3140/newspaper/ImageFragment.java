@@ -80,10 +80,10 @@ public class ImageFragment extends android.app.Fragment {
 
   /**
    * Gets the bitmap stored in the image fragment.
-   * 
+   *
    * @return	The bitmap in the image fragment.
    */
-  
+
   public Bitmap getBitmap() {
     Log.v("ImageFragment","Loading image");
     return convertUriToBitmap(m_imgLoc, getActivity(), null);
@@ -180,12 +180,24 @@ public class ImageFragment extends android.app.Fragment {
     } else if (vis == PUBLIC) {
       Log.v("ImageFragment.saveImage","Saving to public dir...");
       loc =
- 	Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+ 	Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()
+	  + "/Newspaper/";
     } else {
       return null;
     }
 
-    File file = new File( loc + "/" + timestamp + ".jpg");
+    // make the destination folder if it does not exist
+    boolean destExists = true;
+    File dest = new File(loc);
+    if(!dest.exists()) {
+      destExists = dest.mkdir();
+    }
+
+    if(!destExists) {
+      Log.e("ImageFragment.saveImage","Destination folder does not exist and could not be created!");
+    }
+
+      File file = new File( loc + timestamp + ".jpg");
 
 
     try {
